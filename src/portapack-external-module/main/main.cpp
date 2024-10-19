@@ -70,14 +70,20 @@ enum class Command : uint16_t
     COMMAND_NONE = 0,
 
     // will respond with device_info
-    COMMAND_INFO = 0x18F0,
+    COMMAND_INFO = 1,
 
     // will respond with info of application
-    COMMAND_APP_INFO = 0xA90B,
+    COMMAND_APP_INFO,
 
     // will respond with application data
-    COMMAND_APP_TRANSFER = 0x4183,
-
+    COMMAND_APP_TRANSFER,
+    // Feature specific commands
+    COMMAND_GETFEATURE_MASK,
+    // Request feature specific data
+    COMMAND_GETFEAT_DATA_GPS,
+    COMMAND_GETFEAT_DATA_ORIENTATION,
+    COMMAND_GETFEAT_DATA_ENVIRONMENT,
+    COMMAND_GETFEAT_DATA_LIGHT,
     // UART specific commands
     COMMAND_UART_REQUESTDATA_SHORT = USER_COMMANDS_START,
     COMMAND_UART_REQUESTDATA_LONG,
