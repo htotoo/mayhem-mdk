@@ -14,10 +14,10 @@
 static_assert(sizeof(uart_app) % 32 == 0, "app size must be multiple of 32 bytes. fill with 0s");
 
 // NANO:D2 is NORA:J8 is ESP32:9 is GPIO:4
-#define I2C_SLAVE_SDA_IO GPIO_NUM_4
+#define I2C_SLAVE_SDA_IO GPIO_NUM_5
 
 // NANO:D3 is NORA:J7 is ESP32:10 is GPIO:5
-#define I2C_SLAVE_SCL_IO GPIO_NUM_5
+#define I2C_SLAVE_SCL_IO GPIO_NUM_6
 
 // A7 is GPIO:14
 #define UART_RX GPIO_NUM_14
