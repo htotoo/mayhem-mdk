@@ -124,7 +124,7 @@ extern "C" void app_main(void)
     PPHandler::set_module_version(1);
     PPHandler::init(I2C_SLAVE_SDA_IO, I2C_SLAVE_SCL_IO, ESP_SLAVE_ADDR);
     PPHandler::add_app(uart_app, sizeof(uart_app));
-    PPHandler::add_cutsom_command(COMMAND_UART_REQUESTDATA_SHORT, nullptr, [](pp_command_data_t data)
+    PPHandler::add_custom_command(COMMAND_UART_REQUESTDATA_SHORT, nullptr, [](pp_command_data_t data)
                                   {
                                       // 1 bit: more data available
                                       // 7 bit: data length [0 to 4]
@@ -145,7 +145,7 @@ extern "C" void app_main(void)
                                           (*data.data)[i + 1] = uart_queue.front();
                                           uart_queue.pop();
                                       } });
-    PPHandler::add_cutsom_command(COMMAND_UART_REQUESTDATA_LONG, nullptr, [](pp_command_data_t data)
+    PPHandler::add_custom_command(COMMAND_UART_REQUESTDATA_LONG, nullptr, [](pp_command_data_t data)
                                   {
                                     // 1 bit: more data available
                                     // 7 bit: data length [0 to 4]
@@ -170,13 +170,13 @@ extern "C" void app_main(void)
                                         (*data.data)[i + 1] = uart_queue.front();
                                         uart_queue.pop();
                                     } });
-    PPHandler::add_cutsom_command(COMMAND_UART_BAUDRATE_GET, nullptr, [](pp_command_data_t data)
+    PPHandler::add_custom_command(COMMAND_UART_BAUDRATE_GET, nullptr, [](pp_command_data_t data)
                                   {
                                     data.data->resize(4);
                                     esp_rom_printf("COMMAND_UART_BAUDRATE_GET: %d\n", baudrate);
                                     *(uint32_t *)(*data.data).data() = baudrate; });
 
-    PPHandler::add_cutsom_command(COMMAND_UART_BAUDRATE_INC, [](pp_command_data_t data)
+    PPHandler::add_custom_command(COMMAND_UART_BAUDRATE_INC, [](pp_command_data_t data)
                                   {
                                       deinitialize_uart();
                                       if (baudrate == baudrates.back())
@@ -189,7 +189,7 @@ extern "C" void app_main(void)
                                       esp_rom_printf("COMMAND_UART_BAUDRATE_INC: %d\n", baudrate);
                                       initialize_uart(baudrate); }, nullptr);
 
-    PPHandler::add_cutsom_command(COMMAND_UART_BAUDRATE_DEC, [](pp_command_data_t data)
+    PPHandler::add_custom_command(COMMAND_UART_BAUDRATE_DEC, [](pp_command_data_t data)
                                   {
                                     deinitialize_uart();
                                     if (baudrate == baudrates.front())
