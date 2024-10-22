@@ -87,22 +87,18 @@ class StandaloneViewMirror : public ui::View {
 
         option_sat.on_change = [this](size_t, ui::OptionsField::value_t v) {
             if (v != -1) {
-                std::string sn = "GOES 18";  // option_sat.options()[v].first;
-                button_set.set_text("b");
+                std::string sn = "";  // option_sat.options()[v].first;
                 Command cmd = Command::PPCMD_SATTRACK_SETSAT;
                 std::vector<uint8_t> data(sn.begin(), sn.end());
                 if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false) return;
-                button_set.set_text("bbb");
             }
         };
         button_set.on_select = [this](ui::Button&) {
             Command cmd = Command::PPCMD_SATTRACK_SETMGPS;
-            button_set.set_text("a");
             sat_mgps_t mgps;
             mgps.lat = getLat();
             mgps.lon = getLon();
             if (_api->i2c_read((uint8_t*)&cmd, 2, (uint8_t*)&mgps, sizeof(sat_mgps_t)) == false) return;
-            button_set.set_text("aaa");
         };
     }
 
