@@ -1,0 +1,6 @@
+{
+    "cmake.sourceDirectory": "/home/totoo/mayhem-mdk/src/uart",
+    "files.associations": {
+        "string_view": "cpp"
+    }
+}
