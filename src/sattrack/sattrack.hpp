@@ -26,7 +26,7 @@
 #include "ui/ui_widget.hpp"
 #include "ui/theme.hpp"
 #include "ui/string_format.hpp"
-
+#include <string.h>
 enum class Command : uint16_t {
     // UART specific commands
     PPCMD_SATTRACK_DATA = 0xa000,
@@ -67,6 +67,7 @@ class StandaloneViewMirror : public ui::View {
         add_children({&labels,
                       &option_sat,
                       &text_fixtime,
+                      &text_dbtime,
                       &text_elevation,
                       &text_azi,
                       &button_set,
@@ -87,10 +88,13 @@ class StandaloneViewMirror : public ui::View {
 
         option_sat.on_change = [this](size_t, ui::OptionsField::value_t v) {
             if (v != -1) {
-                std::string sn = "";  // option_sat.options()[v].first;
+                std::string sn = option_sat.selected_index_name();
                 Command cmd = Command::PPCMD_SATTRACK_SETSAT;
                 std::vector<uint8_t> data(sn.begin(), sn.end());
-                if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false) return;
+                data.insert(data.begin(), reinterpret_cast<uint8_t*>(&cmd), reinterpret_cast<uint8_t*>(&cmd) + sizeof(cmd));  // hacky way to i2c_transfer
+                text_elevation.set("?");
+                text_azi.set("?");
+                if (_api->i2c_read(data.data(), data.size(), nullptr, 0) == false) return;
             }
         };
         button_set.on_select = [this](ui::Button&) {
@@ -98,7 +102,10 @@ class StandaloneViewMirror : public ui::View {
             sat_mgps_t mgps;
             mgps.lat = getLat();
             mgps.lon = getLon();
-            if (_api->i2c_read((uint8_t*)&cmd, 2, (uint8_t*)&mgps, sizeof(sat_mgps_t)) == false) return;
+            std::vector<uint8_t> data(sizeof(sat_mgps_t));
+            memcpy(data.data(), &mgps, sizeof(sat_mgps_t));
+            data.insert(data.begin(), reinterpret_cast<uint8_t*>(&cmd), reinterpret_cast<uint8_t*>(&cmd) + sizeof(cmd));
+            if (_api->i2c_read(data.data(), data.size(), nullptr, 0) == false) return;
         };
     }
 
@@ -127,19 +134,23 @@ class StandaloneViewMirror : public ui::View {
 
         text_fixtime.set(to_string_dec_uint(data.hour) + ":" + to_string_dec_uint(data.minute) + ":" + to_string_dec_uint(data.second));
         text_dbtime.set(to_string_dec_uint(data.sat_year) + "-" + to_string_dec_uint(data.sat_month) + "-" + to_string_dec_uint(data.sat_day) + " " + to_string_dec_uint(data.sat_hour));
-        // text_elevation.set(to_string_decimal(data.elevation, 2));
-        // text_azi.set(to_string_decimal(data.azimuth, 2));
+        text_elevation.set(to_string_decimal_my(data.elevation, 2));
+        text_azi.set(to_string_decimal_my(data.azimuth, 2));
     }
 
    private:
     float getLat() {
         float tmp = /*mlat3.value() * 100 +*/ mlat2.value() * 10 + mlat1.value() + mlats1.value() * 0.1 + mlats2.value() * 0.01 + mlats3.value() * 0.001;
         if (mlatpn.selected_index_value() == 1) tmp = -tmp;
+        if (tmp > 90) tmp = 90;
+        if (tmp < -90) tmp = -90;
         return tmp;
     }
     float getLon() {
         float tmp = mlon3.value() * 100 + mlon2.value() * 10 + mlon1.value() + mlons1.value() * 0.1 + mlons2.value() * 0.01 + mlons3.value() * 0.001;
         if (mlonpn.selected_index_value() == 1) tmp = -tmp;
+        if (tmp > 180) tmp = 180;
+        if (tmp < -180) tmp = -180;
         return tmp;
     }
     void setLat(float lat) {
@@ -180,7 +191,7 @@ class StandaloneViewMirror : public ui::View {
     }
     uint8_t rfcnt = 0;  // refresh counter, inc with frame_sync
     ui::Text text_fixtime{{40, 4 + 2 * 16, 26 * 8, 16}};
-    ui::Text text_dbtime{{40, 4 + 3 * 16, 26 * 8, 16}};
+    ui::Text text_dbtime{{40, 4 + 3 * 16, 26 * 8, 16}, "?"};
     ui::Text text_elevation{{90, 4 + 5 * 16, 20 * 8, 16}};
     ui::Text text_azi{{90, 4 + 6 * 16, 20 * 8, 16}};
     ui::Button button_set{{230 - 5 * 8, 320 - 3 * 16, 5 * 8, 16}, "Set GPS"};
@@ -197,7 +208,7 @@ class StandaloneViewMirror : public ui::View {
             {"GOES 17", 6},
             {"GOES 18", 7},
             {"GOES 19", 8},
-            {"IIS", 9},
+            {"ISS", 9},
 
         }};
     ui::OptionsField mlatpn{
@@ -261,7 +272,7 @@ class StandaloneViewMirror : public ui::View {
     ui::NumberField mlon3{
         {40 + 10 * 8, 4},
         1,
-        {0, 9},
+        {0, 1},
         1,
         '0',
         true};
@@ -313,4 +324,54 @@ class StandaloneViewMirror : public ui::View {
         {{0 * 8, 4 + 6 * 16}, "Azimuth  :", ui::Theme::getInstance()->fg_light->foreground}};
 
     ui::Context& context_;
+
+    std::string to_string_decimal_my(float decimal, int8_t precision) {
+        if (precision < 0) precision = 0;
+        if (precision > 7) precision = 7;  // Limit precision to avoid overflow
+
+        // Handle special cases
+        if (decimal != decimal) return "NaN";  // Check for NaN
+        if (decimal == 1.0f / 0.0f) return "Inf";
+        if (decimal == -1.0f / 0.0f) return "-Inf";
+
+        char buffer[16];  // Buffer for string conversion
+        int idx = 0;
+        bool negative = decimal < 0;
+        if (negative) {
+            decimal = -decimal;
+            buffer[idx++] = '-';
+        }
+
+        int32_t intPart = (int32_t)decimal;
+        float fracPart = decimal - intPart;
+
+        // Convert integer part
+        if (intPart == 0) {
+            buffer[idx++] = '0';
+        } else {
+            char temp[10];
+            int tempIdx = 0;
+            while (intPart > 0) {
+                temp[tempIdx++] = '0' + (intPart % 10);
+                intPart /= 10;
+            }
+            while (tempIdx > 0) {
+                buffer[idx++] = temp[--tempIdx];
+            }
+        }
+
+        // Add fractional part if precision > 0
+        if (precision > 0) {
+            buffer[idx++] = '.';
+            for (int i = 0; i < precision; ++i) {
+                fracPart *= 10;
+                int digit = (int)fracPart;
+                buffer[idx++] = '0' + digit;
+                fracPart -= digit;
+            }
+        }
+
+        buffer[idx] = '\0';
+        return std::string(buffer);
+    }
 };

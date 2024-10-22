@@ -55,18 +55,6 @@ extern "C" void on_event(const uint32_t& events) {
         sattrackdata_t sattrackdata = *(sattrackdata_t*)data.data();
         standaloneViewMirror->got_data(sattrackdata);
     }
-
-    /* if (standaloneViewMirror->isBaudrateChanged()) {
-         Command cmd = Command::COMMAND_UART_BAUDRATE_GET;
-         std::vector<uint8_t> data(4);
-
-         if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false)
-             return;
-
-         uint32_t baudrate = *(uint32_t*)data.data();
-         standaloneViewMirror->set_baudrate(baudrate);
-         return;
-     }*/
 }
 
 extern "C" void shutdown() {
