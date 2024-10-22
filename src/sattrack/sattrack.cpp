@@ -50,10 +50,9 @@ extern "C" void on_event(const uint32_t& events) {
         Command cmd = Command::PPCMD_SATTRACK_DATA;
         std::vector<uint8_t> data(sizeof(sattrackdata_t));
 
-        if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false)
-            return;
+        if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false) return;
 
-        sattrackdata_t* sattrackdata = (sattrackdata_t*)data.data();
+        sattrackdata_t sattrackdata = *(sattrackdata_t*)data.data();
         standaloneViewMirror->got_data(sattrackdata);
     }
 
