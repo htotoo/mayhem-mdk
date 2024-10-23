@@ -50,6 +50,7 @@ typedef struct
     uint8_t sat_hour;
     float lat;  // where am i
     float lon;
+    uint8_t time_method;
 } sattrackdata_t;
 
 typedef struct
@@ -106,6 +107,7 @@ class StandaloneViewMirror : public ui::View {
             memcpy(data.data(), &mgps, sizeof(sat_mgps_t));
             data.insert(data.begin(), reinterpret_cast<uint8_t*>(&cmd), reinterpret_cast<uint8_t*>(&cmd) + sizeof(cmd));
             if (_api->i2c_read(data.data(), data.size(), nullptr, 0) == false) return;
+            option_sat.focus();
         };
     }
 
@@ -127,12 +129,27 @@ class StandaloneViewMirror : public ui::View {
     }
 
     void got_data(sattrackdata_t data) {
-        if (data.lat != 0 && data.lon != 0) {
+        if (data.lat != 0 || data.lon != 0) {
             setLat(data.lat);
             setLon(data.lon);
+        } else {
+            text_elevation.set("Please set");
+            text_azi.set("your location");
+            text_fixtime.set("");
+            return;
         }
-
-        text_fixtime.set(to_string_dec_uint(data.hour) + ":" + to_string_dec_uint(data.minute) + ":" + to_string_dec_uint(data.second));
+        if (data.time_method != 0) {
+            if (data.time_method == 1) {
+                text_fixtime.set("GPS, " + to_string_dec_uint(data.hour) + ":" + to_string_dec_uint(data.minute) + ":" + to_string_dec_uint(data.second));
+            } else {
+                text_fixtime.set("NTP, " + to_string_dec_uint(data.hour) + ":" + to_string_dec_uint(data.minute) + ":" + to_string_dec_uint(data.second));
+            }
+        } else {
+            text_fixtime.set("NO TIME");
+            text_elevation.set("GPS or WIFI");
+            text_azi.set("is needed");
+            return;
+        }
         text_dbtime.set(to_string_dec_uint(data.sat_year) + "-" + to_string_dec_uint(data.sat_month) + "-" + to_string_dec_uint(data.sat_day) + " " + to_string_dec_uint(data.sat_hour));
         text_elevation.set(to_string_decimal_my(data.elevation, 2));
         text_azi.set(to_string_decimal_my(data.azimuth, 2));
@@ -194,10 +211,10 @@ class StandaloneViewMirror : public ui::View {
     ui::Text text_dbtime{{40, 4 + 3 * 16, 26 * 8, 16}, "?"};
     ui::Text text_elevation{{90, 4 + 5 * 16, 20 * 8, 16}};
     ui::Text text_azi{{90, 4 + 6 * 16, 20 * 8, 16}};
-    ui::Button button_set{{230 - 5 * 8, 320 - 3 * 16, 5 * 8, 16}, "Set GPS"};
+    ui::Button button_set{{230 - 9 * 8, 320 - 4 * 16, 9 * 8, 20}, "Set GPS"};
     ui::OptionsField option_sat{
         {40, 4 + 1 * 16},
-        20,
+        8,
         {
             {"NOAA 15", 0},
             {"NOAA 18", 1},
@@ -315,10 +332,11 @@ class StandaloneViewMirror : public ui::View {
         true};
 
     ui::Labels labels{
-        {{40 + 5 * 8, 4}, ".", ui::Theme::getInstance()->fg_light->foreground},
+        {{40 + 4 * 8, 4}, ".", ui::Theme::getInstance()->fg_light->foreground},
+        {{40 + 13 * 8, 4}, ".", ui::Theme::getInstance()->fg_light->foreground},
         {{0 * 8, 4}, "GPS:", ui::Theme::getInstance()->fg_light->foreground},
         {{0 * 8, 4 + 1 * 16}, "Sat:", ui::Theme::getInstance()->fg_light->foreground},
-        {{0 * 8, 4 + 2 * 16}, "Fix:", ui::Theme::getInstance()->fg_light->foreground},
+        {{0 * 8, 4 + 2 * 16}, "Tim:", ui::Theme::getInstance()->fg_light->foreground},
         {{0 * 8, 4 + 3 * 16}, "DBT:", ui::Theme::getInstance()->fg_light->foreground},
         {{0 * 8, 4 + 5 * 16}, "Elevation:", ui::Theme::getInstance()->fg_light->foreground},
         {{0 * 8, 4 + 6 * 16}, "Azimuth  :", ui::Theme::getInstance()->fg_light->foreground}};
