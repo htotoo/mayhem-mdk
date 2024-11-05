@@ -38,13 +38,13 @@ class DigitalRain {
    private:
     ui::Painter painter{};
     static const int WIDTH = 240;
-    static const int HEIGHT = 320;
-    static const int MARGIN_TOP = 20;  // Added top margin
+    static const int HEIGHT = 325;
+    static const int MARGIN_TOP = 20;
     static const int CHAR_WIDTH = 5;
     static const int CHAR_HEIGHT = 8;
     static const int COLS = WIDTH / CHAR_WIDTH;
-    static const int ROWS = (HEIGHT - MARGIN_TOP) / CHAR_HEIGHT;  // Adjusted for margin
-    static const int MAX_DROPS = 24;
+    static const int ROWS = (HEIGHT - MARGIN_TOP) / CHAR_HEIGHT;
+    static const int MAX_DROPS = 36;
 
     const ui::Font& font = ui::font::fixed_5x8();
 
@@ -55,6 +55,7 @@ class DigitalRain {
         uint8_t speed;
         uint8_t morph_counter[16];
         char chars[16];
+        int16_t old_y;  // Track previous position for clearing
         bool active;
     };
 
@@ -70,6 +71,7 @@ class DigitalRain {
     void init_drop(uint8_t index, bool force_top = false) {
         drops[index].x = random(0, COLS - 1);
         drops[index].y = force_top ? -random(0, 5) : -5;
+        drops[index].old_y = drops[index].y;  // Initialize old position
         drops[index].length = random(5, 15);
         drops[index].speed = random(1, 3);
         drops[index].active = true;
@@ -77,6 +79,24 @@ class DigitalRain {
         for (uint8_t i = 0; i < 16; i++) {
             drops[index].chars[i] = char_set[random(0, 15)];
             drops[index].morph_counter[i] = random(2, 6);
+        }
+    }
+
+    void clear_drop_trail(const Drop& drop) {
+        // Convert to int16_t for consistent type comparison
+        int16_t start_y = std::max<int16_t>(0, drop.old_y - drop.length + 1);
+        int16_t end_y = std::min<int16_t>(ROWS - 1, drop.old_y);
+
+        if (start_y <= end_y) {
+            int16_t pixel_y = start_y * CHAR_HEIGHT + MARGIN_TOP;
+            uint16_t height = (end_y - start_y + 1) * CHAR_HEIGHT;
+
+            painter.fill_rectangle_unrolled8(
+                {static_cast<int16_t>(drop.x * CHAR_WIDTH),
+                 pixel_y,
+                 CHAR_WIDTH,
+                 height},
+                ui::Color::black());
         }
     }
 
@@ -92,6 +112,7 @@ class DigitalRain {
    public:
     DigitalRain() {
         std::srand(0);
+
         for (uint8_t i = 0; i < MAX_DROPS; ++i) {
             init_drop(i, true);
         }
@@ -101,34 +122,36 @@ class DigitalRain {
         for (uint8_t i = 0; i < MAX_DROPS; ++i) {
             if (!drops[i].active) continue;
 
+            // Store old position before updating
+            drops[i].old_y = drops[i].y;
+
+            // Update position
             drops[i].y += drops[i].speed;
             morph_characters(drops[i]);
 
+            // Reset drop if off screen
             if (drops[i].y - drops[i].length > ROWS) {
+                clear_drop_trail(drops[i]);  // Clear final position
                 init_drop(i);
             }
         }
     }
 
     void render() {
-        // Clear screen starting from margin_top
-        painter.fill_rectangle_unrolled8(
-            {0, MARGIN_TOP, WIDTH, HEIGHT - MARGIN_TOP},
-            ui::Color::black());
-
         for (uint8_t i = 0; i < MAX_DROPS; ++i) {
             if (!drops[i].active) continue;
 
+            // Clear previous position
+            clear_drop_trail(drops[i]);
+
+            // Draw new position
             for (uint8_t j = 0; j < drops[i].length; ++j) {
                 int y = drops[i].y - j;
                 if (y >= 0 && y < ROWS) {
-                    // Calculate position in pixels, adding MARGIN_TOP
                     ui::Point p{
                         static_cast<int16_t>(drops[i].x * CHAR_WIDTH),
-                        static_cast<int16_t>(y * CHAR_HEIGHT + MARGIN_TOP)  // Add margin
-                    };
+                        static_cast<int16_t>(y * CHAR_HEIGHT + MARGIN_TOP)};
 
-                    // Color calculation
                     ui::Color fg;
                     if (j == 0) {
                         fg = ui::Color::white();
@@ -139,7 +162,6 @@ class DigitalRain {
                         fg = ui::Color(0, intensity, 0);
                     }
 
-                    // Render character
                     std::string ch(1, drops[i].chars[j]);
                     painter.draw_string(
                         p,
@@ -152,13 +174,12 @@ class DigitalRain {
         }
     }
 };
+
 class StandaloneViewMirror : public ui::View {
    public:
     StandaloneViewMirror(ui::Context& context, const ui::Rect parent_rect)
         : View{parent_rect}, context_(context) {
-        set_style(ui::Theme::getInstance()->bg_dark);
-
-        // add_children({&console});
+        set_style(ui::Theme::getInstance()->bg_darkest);
     }
 
     ui::Context& context() const override {
@@ -169,6 +190,10 @@ class StandaloneViewMirror : public ui::View {
     }
 
     bool need_refresh() {
+        update++;
+        if (update % 2 == 0) {
+            return false;
+        }
         digitalRain.update();
         digitalRain.render();
         return true;
@@ -178,4 +203,5 @@ class StandaloneViewMirror : public ui::View {
     ui::Context& context_;
     ui::Console console{{0, 0, 240, 320}};
     DigitalRain digitalRain{};
+    uint8_t update = 0;
 };
