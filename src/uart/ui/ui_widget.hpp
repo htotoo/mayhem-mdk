@@ -857,7 +857,7 @@ namespace ui
         bool charge_{false};
 
         Style style{
-            .font = font::fixed_5x8,
+            .font = font::fixed_5x8(),
             .background = Theme::getInstance()->bg_dark->background,
             .foreground = Theme::getInstance()->bg_dark->foreground,
         };

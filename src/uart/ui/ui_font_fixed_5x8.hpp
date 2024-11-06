@@ -24,12 +24,13 @@
 
 #include "ui_text.hpp"
 
-namespace ui {
-namespace font {
+namespace ui
+{
+    namespace font
+    {
+        extern ui::Font &fixed_5x8();
 
-extern const ui::Font fixed_5x8;
-
-}  // namespace font
-}  // namespace ui
+    } // namespace font
+} // namespace ui
 
 #endif /*__UI_FONT_FIXED_5X8_H__*/

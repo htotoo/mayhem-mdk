@@ -36,10 +36,10 @@ def create_c_header(binary_file, header_file):
             line = ', '.join(f'0x{byte:02x}' for byte in binary_content[i:i+16])
             header_content += f"    {line},\n"
 
-        # Pad with zeroes if the size is not divisible by 64
-        remainder = len(binary_content) % 64
+        # Pad with zeroes if the size is not divisible by 128
+        remainder = len(binary_content) % 128
         if remainder != 0:
-            padding_size = 64 - remainder
+            padding_size = 128 - remainder
             header_content += f"    {', '.join('0x00' for _ in range(padding_size))},\n"
         
         header_content = header_content.rstrip(',\n') + "\n};\n"

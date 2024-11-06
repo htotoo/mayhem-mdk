@@ -23,6 +23,7 @@
 #include "ui_widget.hpp"
 #include "ui_painter.hpp"
 // #include "portapack.hpp"
+#include "standalone_application.hpp"
 
 #include <cstdint>
 #include <cstddef>
@@ -45,6 +46,7 @@ namespace ui
 
     void dirty_set()
     {
+        _api->set_dirty();
         ui_dirty = true;
     }
 
@@ -186,8 +188,7 @@ namespace ui
 
     bool Widget::has_focus()
     {
-        return false;
-        // TODO: wire standalone api: // return (context().focus_manager().focus_widget() == this);
+        return (context().focus_manager().focus_widget() == this);
     }
 
     bool Widget::on_key(const KeyEvent event)
@@ -220,7 +221,9 @@ namespace ui
 
     Context &Widget::context() const
     {
-        // TODO: wire standalone api: chDbgAssert(parent_, "parent_ is null",                    "Check that parent isn't null before deref.");
+        if (parent_ == nullptr)
+            _api->panic("parent__ is null");
+
         return parent()->context();
     }
 
@@ -235,7 +238,17 @@ namespace ui
 
     const Style &Widget::style() const
     {
-        return style_ ? *style_ : parent()->style();
+        if (style_ != nullptr)
+            return *style_;
+        else
+        {
+            auto p = parent();
+            if (p == nullptr)
+                // TODO: debug
+                while (true)
+                    ;
+            return p->style();
+        }
     }
 
     void Widget::visible(bool v)
@@ -794,7 +807,7 @@ namespace ui
 
         if (!hidden() && visible())
         {
-            // TODO: wire standalone api: display.fill_rectangle(screen_rect(), Theme::getInstance()->bg_darkest->background);
+            _api->fill_rectangle(screen_rect().left(), screen_rect().top(), screen_rect().width(), screen_rect().height(), Theme::getInstance()->bg_darkest->background.v);
         }
 
         pos = {0, 0};
@@ -843,8 +856,9 @@ namespace ui
                         if ((pos.x() + advance.x()) > rect.width())
                             crlf();
 
-                        // TODO: wire standalone api: Point pos_glyph{rect.left() + pos.x(), display.scroll_area_y(pos.y())};
-                        // TODO: wire standalone api: display.draw_glyph(pos_glyph, glyph, pen_color, s.background);
+                        Point pos_glyph{rect.left() + pos.x(), _api->scroll_area_y(pos.y())};
+                        _api->draw_bitmap(pos_glyph.x(), pos_glyph.y(), glyph.size().width(), glyph.size().height(), glyph.pixels(), pen_color.v, s.background.v);
+
                         pos += {advance.x(), 0};
                     }
                 }
@@ -890,6 +904,7 @@ namespace ui
         if (enable)
         {
             auto sr = screen_rect();
+
             auto line_height = style().font.line_height();
 
             // Count full lines that can fit in console's rectangle.
@@ -899,13 +914,13 @@ namespace ui
             // or some lines will end up vertically truncated.
             scroll_height = max_lines * line_height;
 
-            // TODO: wire standalone api: display.scroll_set_area(sr.top(), sr.top() + scroll_height);
-            // TODO: wire standalone api: display.scroll_set_position(0);
+            _api->scroll_set_area(sr.top(), sr.top() + scroll_height);
+            _api->scroll_set_position(0);
             scrolling_enabled = true;
         }
         else
         {
-            // TODO: wire standalone api: display.scroll_disable();
+            _api->scroll_disable();
             scrolling_enabled = false;
         }
     }
@@ -943,11 +958,11 @@ namespace ui
             pos = {0, scroll_height - line_height};
 
             // Scroll off the "top" line.
-            // TODO: wire standalone api: display.scroll(-line_height);
+            _api->scroll(-line_height);
 
             // Clear the new line at the "bottom".
-            // TODO: wire standalone api: Rect dirty{sr.left(), display.scroll_area_y(pos.y()), sr.width(), line_height};
-            // TODO: wire standalone api: display.fill_rectangle(dirty, s.background);
+            Rect dirty{sr.left(), _api->scroll_area_y(pos.y()), sr.width(), line_height};
+            _api->fill_rectangle(dirty.left(), dirty.top(), dirty.width(), dirty.height(), s.background.v);
         }
     }
 
@@ -2507,7 +2522,7 @@ namespace ui
         painter.draw_hline({rect.left() + 3, 0}, rect.width() - 6, battColor);
         if (percent_ > 100)
         { // error / unk
-            painter.draw_string({rect.left() + 2, rect.top() + 3}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, Theme::getInstance()->bg_dark->background, "?");
+            painter.draw_string({rect.left() + 2, rect.top() + 3}, font::fixed_5x8(), Theme::getInstance()->bg_dark->foreground, Theme::getInstance()->bg_dark->background, "?");
             return;
         }
         int8_t ppx = (rect.bottom() - 3) - (rect.top() + 2);                               // 11px max height to draw bars
@@ -2547,8 +2562,8 @@ namespace ui
             xdelta = 5;
         else if (txt_batt.length() == 2)
             xdelta = 2;
-        painter.draw_string({rect.left() + xdelta, rect.top()}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, bg, txt_batt);
-        painter.draw_string({rect.left(), rect.top() + 8}, font::fixed_5x8, Theme::getInstance()->bg_dark->foreground, bg, (charge_) ? "+%" : " %");
+        painter.draw_string({rect.left() + xdelta, rect.top()}, font::fixed_5x8(), Theme::getInstance()->bg_dark->foreground, bg, txt_batt);
+        painter.draw_string({rect.left(), rect.top() + 8}, font::fixed_5x8(), Theme::getInstance()->bg_dark->foreground, bg, (charge_) ? "+%" : " %");
     }
 
     void BatteryTextField::getAccessibilityText(std::string &result)

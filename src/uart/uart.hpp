@@ -26,16 +26,91 @@
 #include "ui/ui_widget.hpp"
 #include "ui/theme.hpp"
 
+#define USER_COMMANDS_START 0x7F01
+
+enum class Command : uint16_t
+{
+    // UART specific commands
+    COMMAND_UART_REQUESTDATA_SHORT = USER_COMMANDS_START,
+    COMMAND_UART_REQUESTDATA_LONG,
+    COMMAND_UART_BAUDRATE_INC,
+    COMMAND_UART_BAUDRATE_DEC,
+    COMMAND_UART_BAUDRATE_GET
+};
+
 class StandaloneViewMirror : public ui::View
 {
 public:
-    StandaloneViewMirror() : View{{0, 16, 240, 304}}
+    StandaloneViewMirror(ui::Context &context, const ui::Rect parent_rect) : View{parent_rect}, context_(context)
     {
-        add_children({&text});
+        set_style(ui::Theme::getInstance()->bg_dark);
 
-        text.set("Hello from standalone app!");
+        add_children({&text,
+                      &console,
+                      &button_n,
+                      &button_p
+
+        });
+
+        text.set("BR: " + std::to_string(baudrate_));
+
+        button_n.on_select = [this](ui::Button &)
+        {
+            Command cmd_dec = Command::COMMAND_UART_BAUDRATE_DEC;
+            _api->i2c_read((uint8_t *)&cmd_dec, 2, nullptr, 0);
+
+            baudrate_dirty_ = true;
+        };
+
+        button_p.on_select = [this](ui::Button &)
+        {
+            Command cmd_inc = Command::COMMAND_UART_BAUDRATE_INC;
+            _api->i2c_read((uint8_t *)&cmd_inc, 2, nullptr, 0);
+
+            baudrate_dirty_ = true;
+        };
+    }
+
+    ui::Console &get_console()
+    {
+        return console;
+    }
+
+    ui::Context &context() const override
+    {
+        return context_;
+    }
+
+    void focus() override
+    {
+        button_n.focus();
+    }
+
+    void set_baudrate(uint32_t baudrate)
+    {
+        baudrate_ = baudrate;
+        baudrate_dirty_ = false;
+
+        text.set("BR: " + std::to_string(baudrate_));
+
+        set_dirty();
+    }
+
+    bool isBaudrateChanged()
+    {
+        return baudrate_dirty_;
     }
 
 private:
-    ui::Text text{{24, 96, 200, 16}};
+    ui::Text text{{4, 4, 96, 16}};
+
+    ui::Button button_n{{100, 4, 16, 24}, "-"};
+    ui::Button button_p{{120, 4, 16, 24}, "+"};
+
+    ui::Console console{{0, 2 * 16, 240, 272}};
+
+    ui::Context &context_;
+
+    uint32_t baudrate_{115200};
+    bool baudrate_dirty_{true};
 };
