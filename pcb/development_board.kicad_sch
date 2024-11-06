@@ -8199,7 +8199,7 @@
 				(hide yes)
 			)
 		)
-		(property "Desc" "Without 6mm 100MΩ 300,000 Times 16V 3.3N 5.9mm 5mm Rectangle button Brick nogging SPST SMD Tactile Switches ROHS"
+		(property "Desc" "None Without 50mA 5.1mm 100000 Times 160gf 12V 5.1mm 1.5mm Round Button Standing paste SPST SMD Tactile Switches ROHS"
 			(at 259.08 140.97 0)
 			(effects
 				(font
@@ -8217,7 +8217,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C2925580"
+		(property "LCSC" "C318884"
 			(at 259.08 140.97 0)
 			(effects
 				(font
@@ -8226,7 +8226,7 @@
 				(hide yes)
 			)
 		)
-		(property "Part" "SKPSADE010"
+		(property "Part" "TS-1187A-B-A-B"
 			(at 259.08 140.97 0)
 			(effects
 				(font
@@ -9331,7 +9331,7 @@
 				(hide yes)
 			)
 		)
-		(property "Desc" "Without 6mm 100MΩ 300,000 Times 16V 3.3N 5.9mm 5mm Rectangle button Brick nogging SPST SMD Tactile Switches ROHS"
+		(property "Desc" "None Without 50mA 5.1mm 100000 Times 160gf 12V 5.1mm 1.5mm Round Button Standing paste SPST SMD Tactile Switches ROHS"
 			(at 222.25 135.89 0)
 			(effects
 				(font
@@ -9349,7 +9349,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C2925580"
+		(property "LCSC" "C318884"
 			(at 222.25 135.89 0)
 			(effects
 				(font
@@ -9358,7 +9358,7 @@
 				(hide yes)
 			)
 		)
-		(property "Part" "SKPSADE010"
+		(property "Part" "TS-1187A-B-A-B"
 			(at 222.25 135.89 0)
 			(effects
 				(font
@@ -10066,7 +10066,7 @@
 				(hide yes)
 			)
 		)
-		(property "Desc" "6V 17V 2 Unidirectional 5.25V SOT-23-6 ESD Protection Devices ROHS"
+		(property "Desc" "6A 12V 150W 6V Unidirectional 5V SOT-23-6 ESD and Surge Protection (TVS/ESD) ROHS"
 			(at 167.64 96.52 0)
 			(effects
 				(font
@@ -10084,7 +10084,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C7519"
+		(property "LCSC" "C2827654"
 			(at 167.64 96.52 0)
 			(effects
 				(font
