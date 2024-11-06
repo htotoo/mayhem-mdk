@@ -10402,7 +10402,7 @@
 		(layer "Edge.Cuts")
 		(uuid "a3d60b51-6354-42ca-bb1c-c87888727596")
 	)
-	(gr_text "21"
+	(gr_text "03"
 		(at 148.336 119.888 90)
 		(layer "F.SilkS")
 		(uuid "00d680fd-920c-4a4b-8a77-005371d4d906")
@@ -10415,7 +10415,7 @@
 			(justify bottom)
 		)
 	)
-	(gr_text "21"
+	(gr_text "15"
 		(at 148.336 107.188 90)
 		(layer "F.SilkS")
 		(uuid "00fbe355-d19b-4b61-9293-f45e938f2eeb")
@@ -10597,7 +10597,7 @@
 			(justify bottom)
 		)
 	)
-	(gr_text "21"
+	(gr_text "16"
 		(at 148.336 109.728 90)
 		(layer "F.SilkS")
 		(uuid "3e43ec85-08ea-420f-b748-c11980e31378")
@@ -10648,7 +10648,7 @@
 			(justify bottom)
 		)
 	)
-	(gr_text "21"
+	(gr_text "17"
 		(at 148.336 112.268 90)
 		(layer "F.SilkS")
 		(uuid "5af34242-1f86-4f0f-9056-55daad61abfa")
@@ -10700,7 +10700,7 @@
 			(justify bottom)
 		)
 	)
-	(gr_text "21"
+	(gr_text "18"
 		(at 148.336 114.808 90)
 		(layer "F.SilkS")
 		(uuid "78bf22d2-ecab-42a0-9d19-85cfdde9f465")
@@ -10752,7 +10752,7 @@
 			(justify bottom)
 		)
 	)
-	(gr_text "21"
+	(gr_text "08"
 		(at 148.336 117.348 90)
 		(layer "F.SilkS")
 		(uuid "9a3caf12-b459-4ac0-be1d-b08986f18ad9")
@@ -10829,7 +10829,7 @@
 			(justify bottom)
 		)
 	)
-	(gr_text "21"
+	(gr_text "07"
 		(at 148.336 104.648 90)
 		(layer "F.SilkS")
 		(uuid "bc5e35e2-9d5e-438c-83c6-4386187e2a15")
@@ -10842,7 +10842,7 @@
 			(justify bottom)
 		)
 	)
-	(gr_text "21"
+	(gr_text "04"
 		(at 148.336 102.108 90)
 		(layer "F.SilkS")
 		(uuid "bf765857-65cf-4f9f-8261-e78863d10892")
