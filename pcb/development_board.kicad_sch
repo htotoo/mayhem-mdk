@@ -4282,6 +4282,12 @@
 		(uuid "4588c7a3-8581-43ca-ae70-690fd66d0c96")
 	)
 	(junction
+		(at 254 93.98)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "47dd0b94-6a0d-40b0-8e2d-7925494c4e67")
+	)
+	(junction
 		(at 228.6 135.89)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4352,6 +4358,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "dee7e3cd-6071-4333-b5c0-7a570df6561f")
+	)
+	(junction
+		(at 261.62 93.98)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "def07740-2132-4711-8da1-31823a533439")
 	)
 	(junction
 		(at 254 146.05)
@@ -4635,6 +4647,16 @@
 	)
 	(wire
 		(pts
+			(xy 251.46 111.76) (xy 254 111.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0ea9780d-b21b-4f6b-8a3d-c9518ea832f3")
+	)
+	(wire
+		(pts
 			(xy 259.08 146.05) (xy 254 146.05)
 		)
 		(stroke
@@ -4652,6 +4674,16 @@
 			(type default)
 		)
 		(uuid "161211e1-b3e0-4ad3-801a-c1e3d83166b9")
+	)
+	(wire
+		(pts
+			(xy 254 93.98) (xy 261.62 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "175f60b9-9066-4dd4-b98d-1b0916a32073")
 	)
 	(wire
 		(pts
@@ -5115,6 +5147,26 @@
 	)
 	(wire
 		(pts
+			(xy 228.6 93.98) (xy 228.6 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b24f768c-d460-418f-aaee-e89da1f23259")
+	)
+	(wire
+		(pts
+			(xy 254 111.76) (xy 254 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b588cbf4-ce0f-4896-9ff4-5c3e57a364e8")
+	)
+	(wire
+		(pts
 			(xy 196.85 49.53) (xy 196.85 30.48)
 		)
 		(stroke
@@ -5305,6 +5357,16 @@
 	)
 	(wire
 		(pts
+			(xy 228.6 90.17) (xy 240.03 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e0f236a6-4f7d-4d39-a818-d8b4bfe80eba")
+	)
+	(wire
+		(pts
 			(xy 241.3 59.69) (xy 243.84 59.69)
 		)
 		(stroke
@@ -5312,6 +5374,26 @@
 			(type default)
 		)
 		(uuid "e54ac662-80a4-4612-aabc-022a05e3f500")
+	)
+	(wire
+		(pts
+			(xy 247.65 90.17) (xy 254 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e718bf01-861a-48b8-90d2-1b68b5f5ab6c")
+	)
+	(wire
+		(pts
+			(xy 222.25 93.98) (xy 228.6 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e782caa4-e590-4f35-a7db-6ee466fe516b")
 	)
 	(wire
 		(pts
@@ -5392,6 +5474,16 @@
 			(type default)
 		)
 		(uuid "f5e067dc-75de-4755-a97c-69c723c06014")
+	)
+	(wire
+		(pts
+			(xy 254 90.17) (xy 254 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f713c05a-d46e-45a4-8b48-9c36bc844603")
 	)
 	(wire
 		(pts
@@ -7404,28 +7496,6 @@
 			)
 		)
 	)
-	(global_label "EN"
-		(shape input)
-		(at 222.25 93.98 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "e537378a-e7aa-4569-80b6-4ff772b2cec4")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 227.7147 93.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "USB_D+"
 		(shape input)
 		(at 177.8 93.98 0)
@@ -7483,6 +7553,28 @@
 		(uuid "f31e21bf-2d9e-40b3-be9f-66ed2fbcbed1")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 26.9505 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "Vusb"
+		(shape input)
+		(at 243.84 111.76 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "f6abdfe7-9e26-4335-bc39-48390f716775")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 236.4401 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8534,6 +8626,110 @@
 			(project "development_board"
 				(path "/30a0cbd7-f112-4de1-a085-e2f25254799f"
 					(reference "J7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:D")
+		(at 243.84 90.17 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "34a2f9ad-1a05-4330-9dc6-5671241457da")
+		(property "Reference" "D3"
+			(at 243.84 83.82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "LMBR130T1G"
+			(at 243.84 86.36 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 243.84 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 243.84 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 243.84 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Desc" "30V 0.35V 1A SOD-123 Schottky Barrier Diodes (SBD) ROHS"
+			(at 243.84 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "JLC" "SOD-123"
+			(at 243.84 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C48974"
+			(at 243.84 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Part" "LMBR130T1G"
+			(at 243.84 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1b65a438-6b53-443c-a7e2-0fb89cee3013")
+		)
+		(pin "2"
+			(uuid "6beceda8-6c1d-4c2a-88f0-1d2eac3d0a93")
+		)
+		(instances
+			(project "development_board"
+				(path "/30a0cbd7-f112-4de1-a085-e2f25254799f"
+					(reference "D3")
 					(unit 1)
 				)
 			)
@@ -10818,6 +11014,42 @@
 				(hide yes)
 			)
 		)
+		(property "Desc" "SMD,18x19.2mm WiFi Modules ROHS"
+			(at 36.83 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "JLC" "SMD,18x19.2mm"
+			(at 36.83 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C3013946"
+			(at 36.83 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Part" "ESP32-S3-WROOM-1U-N16R8"
+			(at 36.83 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "8"
 			(uuid "6949acfc-05de-42c8-bdaa-d09549c906ec")
 		)
@@ -11537,6 +11769,33 @@
 		)
 		(property "Description" ""
 			(at 151.13 45.72 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Desc" "5A 1 16P Female Type-C SMD USB Connectors ROHS"
+			(at 158.75 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "JLC" "SMD"
+			(at 158.75 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C165948"
+			(at 158.75 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12367,6 +12626,112 @@
 			(project "development_board"
 				(path "/30a0cbd7-f112-4de1-a085-e2f25254799f"
 					(reference "J6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:D")
+		(at 247.65 111.76 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ff3f11f8-2a62-4aef-baab-dd79cd0030b4")
+		(property "Reference" "D4"
+			(at 246.3799 109.22 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "LMBR130T1G"
+			(at 248.9199 109.22 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Diode_SMD:D_SOD-123"
+			(at 247.65 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 247.65 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 247.65 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Desc" "30V 0.35V 1A SOD-123 Schottky Barrier Diodes (SBD) ROHS"
+			(at 247.65 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "JLC" "SOD-123"
+			(at 247.65 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C48974"
+			(at 247.65 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Part" "LMBR130T1G"
+			(at 247.65 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ca48b275-7fb6-477c-9008-9213b5d86973")
+		)
+		(pin "2"
+			(uuid "5113d131-abfd-441c-a9a1-d3a1737eb5a0")
+		)
+		(instances
+			(project "development_board"
+				(path "/30a0cbd7-f112-4de1-a085-e2f25254799f"
+					(reference "D4")
 					(unit 1)
 				)
 			)
