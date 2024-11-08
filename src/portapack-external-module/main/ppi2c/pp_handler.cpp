@@ -13,6 +13,11 @@ get_gps_data_CB PPHandler::gps_data_cb = nullptr;
 get_orientation_data_CB PPHandler::orientation_data_cb = nullptr;
 get_environment_data_CB PPHandler::environment_data_cb = nullptr;
 get_light_data_CB PPHandler::light_data_cb = nullptr;
+
+get_shell_data_size_CB PPHandler::shell_data_size_cb = nullptr;
+got_shell_data_CB PPHandler::got_shell_data_cb = nullptr;
+send_shell_data_CB PPHandler::send_shell_data_cb = nullptr;
+
 std::vector<app_list_element_t> PPHandler::app_list;
 std::vector<pp_custom_command_list_element_t> PPHandler::custom_command_list;
 uint32_t PPHandler::module_version = 1;
@@ -36,6 +41,8 @@ uint32_t PPHandler::get_appCount() {
     return (uint32_t)app_list.size();
 }
 
+// region Callback setters
+
 void PPHandler::set_get_features_CB(get_features_CB cb) {
     features_cb = cb;
 }
@@ -56,6 +63,20 @@ void PPHandler::set_get_light_data_CB(get_light_data_CB cb) {
     light_data_cb = cb;
 }
 
+void PPHandler::set_get_shell_data_size_CB(get_shell_data_size_CB cb) {
+    shell_data_size_cb = cb;
+}
+
+void PPHandler::set_got_shell_data_CB(got_shell_data_CB cb) {
+    got_shell_data_cb = cb;
+}
+
+void PPHandler::set_send_shell_data_CB(send_shell_data_CB cb) {
+    send_shell_data_cb = cb;
+}
+
+// endregion
+
 void PPHandler::set_module_name(std::string name) {
     strncpy(module_name, name.c_str(), 20);
     module_name[19] = 0;
@@ -65,6 +86,25 @@ void PPHandler::set_module_version(uint32_t version) {
     module_version = version;
 }
 
+bool PPHandler::add_app(uint8_t* binary, uint32_t size) {
+    if (size % 32 != 0 || size < sizeof(standalone_app_info)) {
+        esp_rom_printf("FAILED ADDING APP, BAD SIZE\n");
+        return false;
+    }
+
+    app_list.push_back({binary, size});
+    return true;
+}
+
+void PPHandler::add_custom_command(uint16_t command, pp_i2c_command got_command, pp_i2c_command send_command) {
+    pp_custom_command_list_element_t element;
+    element.command = command;
+    element.got_command = got_command;
+    element.send_command = send_command;
+    custom_command_list.push_back(element);
+}
+
+// when pp tx-es to us
 void PPHandler::on_command_ISR(Command command, std::vector<uint8_t> additional_data) {
     command_state = command;
 
@@ -83,11 +123,17 @@ void PPHandler::on_command_ISR(Command command, std::vector<uint8_t> additional_
 
         case Command::COMMAND_GETFEATURE_MASK:
             break;
+
+        case Command::COMMAND_SHELL_PPTOMOD_DATA:
+            if (got_shell_data_cb)
+                got_shell_data_cb(additional_data);
+            break;
         default:
             for (auto element : custom_command_list) {
                 if (element.command == (uint16_t)command) {
                     if (element.got_command) {
-                        pp_command_data_t data = {&additional_data};
+                        pp_command_data_t data;
+                        data.data = &additional_data;
                         element.got_command(data);
                     }
                     break;
@@ -126,6 +172,8 @@ bool PPHandler::i2c_slave_callback_ISR(struct i2c_slave_device_t* dev, I2CSlaveC
     }
     return true;
 }
+
+// this handle, when the PP needs data
 
 std::vector<uint8_t> PPHandler::on_send_ISR() {
     switch (command_state) {
@@ -196,6 +244,29 @@ std::vector<uint8_t> PPHandler::on_send_ISR() {
             return std::vector<uint8_t>((uint8_t*)&light, (uint8_t*)&light + sizeof(light));
         }
 
+        case Command::COMMAND_SHELL_MODTOPP_DATA_SIZE: {
+            uint16_t size = 0;
+            if (shell_data_size_cb)
+                size = shell_data_size_cb();
+            return std::vector<uint8_t>((uint8_t*)&size, (uint8_t*)&size + sizeof(size));
+        }
+
+        case Command::COMMAND_SHELL_MODTOPP_DATA: {
+            std::vector<uint8_t> data;
+            if (send_shell_data_cb) {
+                bool hasmore = false;
+                send_shell_data_cb(data, hasmore);
+                uint8_t pre = hasmore ? 0x80 : 0x00;
+                pre |= data.size();
+                data.insert(data.begin(), pre);
+                data.resize(65);
+            }
+            if (data.size() == 0) {
+                return {0xFF};
+            }
+            return data;
+        }
+
         default:
             for (auto element : custom_command_list) {
                 if (element.command == (uint16_t)command_state) {
@@ -212,22 +283,4 @@ std::vector<uint8_t> PPHandler::on_send_ISR() {
     }
 
     return {0xFF};
-}
-
-bool PPHandler::add_app(uint8_t* binary, uint32_t size) {
-    if (size % 32 != 0 || size < sizeof(standalone_app_info)) {
-        esp_rom_printf("FAILED ADDING APP, BAD SIZE\n");
-        return false;
-    }
-
-    app_list.push_back({binary, size});
-    return true;
-}
-
-void PPHandler::add_custom_command(uint16_t command, pp_i2c_command got_command, pp_i2c_command send_command) {
-    pp_custom_command_list_element_t element;
-    element.command = command;
-    element.got_command = got_command;
-    element.send_command = send_command;
-    custom_command_list.push_back(std::move(element));
 }
