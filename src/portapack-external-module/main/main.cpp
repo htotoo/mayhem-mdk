@@ -122,7 +122,6 @@ extern "C" void app_main(void)
     initialize_gpio();
     PPHandler::set_module_name("ESP32-S3-PPDEVKIT");
     PPHandler::set_module_version(1);
-    PPHandler::init(I2C_SLAVE_SDA_IO, I2C_SLAVE_SCL_IO, ESP_SLAVE_ADDR);
     PPHandler::add_app(uart_app, sizeof(uart_app));
     PPHandler::add_custom_command(COMMAND_UART_REQUESTDATA_SHORT, nullptr, [](pp_command_data_t data)
                                   {
@@ -202,7 +201,7 @@ extern "C" void app_main(void)
                                     esp_rom_printf("COMMAND_UART_BAUDRATE_DEC: %d\n", baudrate);
 
                                     initialize_uart(baudrate); }, nullptr);
-
+	PPHandler::init(I2C_SLAVE_SDA_IO, I2C_SLAVE_SCL_IO, ESP_SLAVE_ADDR);
     initialize_uart(baudrate);
     xTaskCreate(uart_task, "uart_task", 1024 * 2, (void *)0, 10, NULL);
     std::cout << "[PP MDK] PortaPack - Module Develoment Kit is ready." << std::endl;
