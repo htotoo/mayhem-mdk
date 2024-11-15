@@ -1,0 +1,35 @@
+{
+    "layout": {
+        "hspace": "3mm",
+        "vspace": "3mm",
+        "rows": "5",
+        "vbonecut": "False",
+        "hbonecut": "False"
+    },
+    "tabs": {
+        "type": "annotation"
+    },
+    "cuts": {
+        "type": "mousebites",
+        "drill": "0.6mm",
+        "spacing": "0.9mm",
+        "offset": "0.1mm"
+    },
+    "framing": {
+        "type": "frame",
+        "width": "8mm",
+        "cuts": "h"
+    },
+    "tooling": {
+        "type": "4hole",
+        "hoffset": "10mm",
+        "voffset": "5mm",
+        "soldermaskmargin": "3mm"
+    },
+    "fiducials": {
+        "type": "4fid",
+        "hoffset": "6mm",
+        "voffset": "5mm",
+        "opening": "2mm"
+    }
+}

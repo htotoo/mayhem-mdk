@@ -2755,6 +2755,167 @@
 				)
 			)
 		)
+		(symbol "Mechanical:Fiducial"
+			(exclude_from_sim yes)
+			(in_bom no)
+			(on_board yes)
+			(property "Reference" "FID"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "Fiducial"
+				(at 0 3.175 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Fiducial Marker"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "fiducial marker"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Fiducial*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Fiducial_0_1"
+				(circle
+					(center 0 0)
+					(radius 1.27)
+					(stroke
+						(width 0.508)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+		)
+		(symbol "Mechanical:MountingHole"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim yes)
+			(in_bom no)
+			(on_board yes)
+			(property "Reference" "H"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "MountingHole"
+				(at 0 3.175 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "~"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Mounting Hole without connection"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "mounting hole"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "MountingHole*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "MountingHole_0_1"
+				(circle
+					(center 0 0)
+					(radius 1.27)
+					(stroke
+						(width 1.27)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+		)
 		(symbol "Power_Protection:USBLC6-2SC6"
 			(pin_names hide)
 			(exclude_from_sim no)
@@ -3729,7 +3890,7 @@
 				)
 			)
 			(property "Value" "TYPE-C-31-M-12"
-				(at 8.636 2.286 0)
+				(at 9.906 -15.24 90)
 				(effects
 					(font
 						(size 1.524 1.524)
@@ -4129,6 +4290,80 @@
 					)
 				)
 			)
+			(symbol "TYPE-C-31-M-12_1_1"
+				(pin power_out line
+					(at 5.08 7.62 270)
+					(length 7.62)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "S1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 7.62 7.62 270)
+					(length 7.62)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "S2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 10.16 7.62 270)
+					(length 7.62)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "S3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_out line
+					(at 12.7 7.62 270)
+					(length 7.62)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "S4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
 		)
 		(symbol "power:GND"
 			(power)
@@ -4294,6 +4529,12 @@
 		(uuid "51702c92-96c5-4ebe-a2f5-5a626e1b9b2b")
 	)
 	(junction
+		(at 166.37 31.75)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "5e98b0fb-bcc3-44f0-a887-9707ff18a5e6")
+	)
+	(junction
 		(at 228.6 128.27)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4310,6 +4551,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "793d1344-5cab-46cc-a614-8ff1e41ee238")
+	)
+	(junction
+		(at 168.91 31.75)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "7e32604c-d2b6-4e20-b9af-23439b1e6756")
 	)
 	(junction
 		(at 261.62 34.29)
@@ -4330,10 +4577,10 @@
 		(uuid "9c256f77-dab7-44fc-af7a-35b6cd55cdc9")
 	)
 	(junction
-		(at 138.43 30.48)
+		(at 171.45 31.75)
 		(diameter 0)
 		(color 0 0 0 0)
-		(uuid "cc7defaf-8393-4467-aae9-f03bcf8aed25")
+		(uuid "a0b27452-7fd7-45a1-9fd2-62a97ca0edff")
 	)
 	(junction
 		(at 215.9 34.29)
@@ -4352,6 +4599,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "d90b7558-bb60-4649-b683-c14a5ceb2d0b")
+	)
+	(junction
+		(at 138.43 24.13)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "dd0e64c8-297b-469f-9c53-2fb3f54e5459")
 	)
 	(junction
 		(at 264.16 138.43)
@@ -5127,6 +5380,26 @@
 	)
 	(wire
 		(pts
+			(xy 168.91 31.75) (xy 171.45 31.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ab249154-0434-49da-915c-3f041ad2930f")
+	)
+	(wire
+		(pts
+			(xy 138.43 24.13) (xy 138.43 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ad0b0a1a-db62-4af4-8ba6-7a0d5e332cf7")
+	)
+	(wire
+		(pts
 			(xy 77.47 41.91) (xy 77.47 44.45)
 		)
 		(stroke
@@ -5167,7 +5440,7 @@
 	)
 	(wire
 		(pts
-			(xy 196.85 49.53) (xy 196.85 30.48)
+			(xy 196.85 49.53) (xy 196.85 24.13)
 		)
 		(stroke
 			(width 0)
@@ -5244,6 +5517,16 @@
 			(type default)
 		)
 		(uuid "c7e68a66-5af8-4031-9309-941e5c7010d8")
+	)
+	(wire
+		(pts
+			(xy 166.37 31.75) (xy 168.91 31.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c925b440-f8c1-4a2e-8f52-f25e93720cd2")
 	)
 	(wire
 		(pts
@@ -5337,7 +5620,7 @@
 	)
 	(wire
 		(pts
-			(xy 138.43 21.59) (xy 138.43 30.48)
+			(xy 138.43 21.59) (xy 138.43 24.13)
 		)
 		(stroke
 			(width 0)
@@ -5347,7 +5630,7 @@
 	)
 	(wire
 		(pts
-			(xy 196.85 30.48) (xy 138.43 30.48)
+			(xy 196.85 24.13) (xy 138.43 24.13)
 		)
 		(stroke
 			(width 0)
@@ -5447,16 +5730,6 @@
 	)
 	(wire
 		(pts
-			(xy 138.43 30.48) (xy 138.43 49.53)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f407a5d9-73d1-4ba7-9c61-62207328b522")
-	)
-	(wire
-		(pts
 			(xy 215.9 135.89) (xy 215.9 138.43)
 		)
 		(stroke
@@ -5504,6 +5777,16 @@
 			(type default)
 		)
 		(uuid "f81f4be4-210f-42c7-bf79-7667efb7787f")
+	)
+	(wire
+		(pts
+			(xy 163.83 31.75) (xy 166.37 31.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f8da3c99-d1b5-47e8-a2e8-84a14dbf3388")
 	)
 	(wire
 		(pts
@@ -8523,7 +8806,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "2d649186-aebc-446c-9cd8-0091fc6fbeea")
 		(property "Reference" "J7"
 			(at 118.11 128.27 0)
@@ -8742,7 +9025,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "36b37ed4-ccde-42f2-928e-14b907df98ec")
 		(property "Reference" "J3"
@@ -8993,6 +9276,70 @@
 		)
 	)
 	(symbol
+		(lib_id "Mechanical:Fiducial")
+		(at 180.34 140.97 0)
+		(unit 1)
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "3df48149-9acf-40d6-a80b-099e924289c6")
+		(property "Reference" "FID1"
+			(at 182.88 139.6999 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Fiducial"
+			(at 182.88 142.2399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Fiducial:Fiducial_0.75mm_Mask1.5mm"
+			(at 180.34 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 180.34 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Fiducial Marker"
+			(at 180.34 140.97 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project ""
+				(path "/30a0cbd7-f112-4de1-a085-e2f25254799f"
+					(reference "FID1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 223.52 128.27 270)
 		(unit 1)
@@ -9171,7 +9518,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "5fd59762-4cee-42e8-bb6c-d97ccd0b4dd5")
 		(property "Reference" "J8"
 			(at 146.05 128.27 0)
@@ -9389,7 +9736,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(fields_autoplaced yes)
 		(uuid "652d014e-2efe-4d0b-9390-d8378603aed3")
 		(property "Reference" "J1"
@@ -9597,6 +9944,73 @@
 	)
 	(symbol
 		(lib_id "power:GND")
+		(at 171.45 31.75 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "6bfb6dea-27fa-4c81-b382-82ae8fd9a797")
+		(property "Reference" "#PWR025"
+			(at 177.8 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 175.26 31.75 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 171.45 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 171.45 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 171.45 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "98d1243f-6ad7-4e74-9814-d6cf3bfe8aea")
+		)
+		(instances
+			(project "development_board"
+				(path "/30a0cbd7-f112-4de1-a085-e2f25254799f"
+					(reference "#PWR025")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
 		(at 267.97 41.91 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -9735,7 +10149,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "74278a26-a69e-4b89-98aa-2dd35db647dd")
 		(property "Reference" "J4"
 			(at 34.29 128.27 0)
@@ -10048,7 +10462,7 @@
 				(hide yes)
 			)
 		)
-		(property "Datasheet" "https://www.st.com/resource/en/datasheet/usblc6-2.pdf"
+		(property "Datasheet" ""
 			(at 162.56 105.41 0)
 			(effects
 				(font
@@ -10960,6 +11374,70 @@
 		)
 	)
 	(symbol
+		(lib_id "Mechanical:Fiducial")
+		(at 180.34 147.32 0)
+		(unit 1)
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b134a76d-03bc-48ba-8e1e-42923b7a0706")
+		(property "Reference" "FID2"
+			(at 182.88 146.0499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Fiducial"
+			(at 182.88 148.5899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Fiducial:Fiducial_0.75mm_Mask1.5mm"
+			(at 180.34 147.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 180.34 147.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Fiducial Marker"
+			(at 180.34 147.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project "development_board"
+				(path "/30a0cbd7-f112-4de1-a085-e2f25254799f"
+					(reference "FID2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "ESP32­S3­WROOM­1U:ESP32-S3-WROOM-1U-N16R8")
 		(at 36.83 31.75 0)
 		(unit 1)
@@ -11729,10 +12207,9 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "d2d43ddb-4319-42a2-bbec-295885f2b9a3")
 		(property "Reference" "J2"
-			(at 167.64 34.29 0)
+			(at 164.846 64.008 0)
 			(effects
 				(font
 					(size 1.524 1.524)
@@ -11740,14 +12217,14 @@
 			)
 		)
 		(property "Value" "TYPE-C-31-M-12"
-			(at 167.64 36.83 0)
+			(at 169.418 55.88 90)
 			(effects
 				(font
 					(size 1.524 1.524)
 				)
 			)
 		)
-		(property "Footprint" "Portapack_Mayhem:TYPE-C-31-M-12"
+		(property "Footprint" "TYPE-C-31-M-12"
 			(at 166.878 52.578 90)
 			(effects
 				(font
@@ -11850,6 +12327,18 @@
 		)
 		(pin "A7"
 			(uuid "c8369a8c-e5a7-4d5c-af99-3adebac0242b")
+		)
+		(pin "S3"
+			(uuid "1ff31fa3-ad4c-4fa4-a07d-9d9cf67cf796")
+		)
+		(pin "S4"
+			(uuid "a1adc597-264b-40b5-be99-9136e1e38eee")
+		)
+		(pin "S2"
+			(uuid "01dcfcd1-4cba-455a-a972-8252af8c43c3")
+		)
+		(pin "S1"
+			(uuid "b79a2774-7116-45fb-9562-7c3ccd048747")
 		)
 		(instances
 			(project "development_board"
@@ -12302,7 +12791,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "edcb2911-75bd-4bc7-a133-fa9fcb653750")
 		(property "Reference" "J5"
 			(at 62.23 128.27 0)
@@ -12405,6 +12894,70 @@
 			(project "development_board"
 				(path "/30a0cbd7-f112-4de1-a085-e2f25254799f"
 					(reference "J5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 180.34 134.62 0)
+		(unit 1)
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f0f17739-fae4-4f5d-a387-eae9972e2771")
+		(property "Reference" "H1"
+			(at 182.88 133.3499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole"
+			(at 182.88 135.8899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2mm"
+			(at 180.34 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 180.34 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Mounting Hole without connection"
+			(at 180.34 134.62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(instances
+			(project ""
+				(path "/30a0cbd7-f112-4de1-a085-e2f25254799f"
+					(reference "H1")
 					(unit 1)
 				)
 			)
@@ -12523,7 +13076,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp no)
+		(dnp yes)
 		(uuid "fc88b18f-89a1-4965-86bd-a44d2be97049")
 		(property "Reference" "J6"
 			(at 90.17 128.27 0)
