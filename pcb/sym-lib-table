@@ -1,0 +1,6 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "TPS63020")(type "KiCad")(uri "${KIPRJMOD}/TPS63020.kicad_sym")(options "")(descr ""))
+  (lib (name "ESP32­S3­WROOM­1U")(type "KiCad")(uri "${KIPRJMOD}/ESP32­S3­WROOM­1U.kicad_sym")(options "")(descr ""))
+  (lib (name "TYPE-C-31-M-12")(type "KiCad")(uri "${KIPRJMOD}/TYPE-C-31-M-12.kicad_sym")(options "")(descr ""))
+)

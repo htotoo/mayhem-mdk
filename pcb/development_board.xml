@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="E">
+  <design>
+    <source>C:\dev\hackrf\external_port\development_board\development_board.kicad_sch</source>
+    <date>06.02.2024 00:28:13</date>
+    <tool>Eeschema 7.0.10</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>development_board.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="A1">
+      <value>Arduino_Nano_ESP32_Tile</value>
+      <footprint>arduino-library:Arduino_Nano_ESP32_Tile</footprint>
+      <datasheet>https://docs.arduino.cc/hardware/nano-esp32</datasheet>
+      <libsource lib="arduino-library" part="Arduino_Nano_ESP32_Tile" description="Tile for Arduino Nano ESP32"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Tile for Arduino Nano ESP32"/>
+      <property name="ki_keywords" value="Arduino MPU Shield"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e716f44c-7316-4dda-a12e-d005268ed83e</tstamps>
+    </comp>
+    <comp ref="C2">
+      <value>10uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Desc">10V 10uF X5R ±10% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS</field>
+        <field name="JLC">0603</field>
+        <field name="LCSC">C19702</field>
+        <field name="Part">CL10A106KP8NNNC</field>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Desc" value="10V 10uF X5R ±10% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"/>
+      <property name="JLC" value="0603"/>
+      <property name="LCSC" value="C19702"/>
+      <property name="Part" value="CL10A106KP8NNNC"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3885c957-76dd-4ed0-86a0-e55cca79d6c8</tstamps>
+    </comp>
+    <comp ref="C3">
+      <value>100nF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <fields>
+        <field name="Desc">50V 100nF X7R ±10% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS</field>
+        <field name="JLC">0805</field>
+        <field name="LCSC">C49678</field>
+        <field name="Part">CC0805KRX7R9BB104</field>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="JLC" value="0805"/>
+      <property name="LCSC" value="C49678"/>
+      <property name="Part" value="CC0805KRX7R9BB104"/>
+      <property name="Desc" value="50V 100nF X7R ±10% 0805 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1c8db233-2b5c-4100-a9f7-25d250524c54</tstamps>
+    </comp>
+    <comp ref="C4">
+      <value>10uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Desc">10V 10uF X5R ±10% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS</field>
+        <field name="JLC">0603</field>
+        <field name="LCSC">C19702</field>
+        <field name="Part">CL10A106KP8NNNC</field>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Desc" value="10V 10uF X5R ±10% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"/>
+      <property name="JLC" value="0603"/>
+      <property name="LCSC" value="C19702"/>
+      <property name="Part" value="CL10A106KP8NNNC"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e7ef7472-b106-4f64-aa3b-05e86c6d2b29</tstamps>
+    </comp>
+    <comp ref="C5">
+      <value>22uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Desc">6.3V 22uF X5R ±20% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS</field>
+        <field name="JLC">0603</field>
+        <field name="LCSC">C59461</field>
+        <field name="Part">CL10A226MQ8NRNC</field>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Desc" value="6.3V 22uF X5R ±20% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"/>
+      <property name="JLC" value="0603"/>
+      <property name="LCSC" value="C59461"/>
+      <property name="Part" value="CL10A226MQ8NRNC"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b38418c3-192c-475f-b116-e9f257897745</tstamps>
+    </comp>
+    <comp ref="C6">
+      <value>22uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Desc">6.3V 22uF X5R ±20% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS</field>
+        <field name="JLC">0603</field>
+        <field name="LCSC">C59461</field>
+        <field name="Part">CL10A226MQ8NRNC</field>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Desc" value="6.3V 22uF X5R ±20% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"/>
+      <property name="JLC" value="0603"/>
+      <property name="LCSC" value="C59461"/>
+      <property name="Part" value="CL10A226MQ8NRNC"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>3c1d8df7-e84f-4058-8482-0208ffcbd6f4</tstamps>
+    </comp>
+    <comp ref="C7">
+      <value>22uF</value>
+      <footprint>Capacitor_SMD:C_0603_1608Metric</footprint>
+      <fields>
+        <field name="Desc">6.3V 22uF X5R ±20% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS</field>
+        <field name="JLC">0603</field>
+        <field name="LCSC">C59461</field>
+        <field name="Part">CL10A226MQ8NRNC</field>
+      </fields>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Desc" value="6.3V 22uF X5R ±20% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS"/>
+      <property name="JLC" value="0603"/>
+      <property name="LCSC" value="C59461"/>
+      <property name="Part" value="CL10A226MQ8NRNC"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>2a1b1204-03a4-4b10-93c6-4f82c63f6b47</tstamps>
+    </comp>
+    <comp ref="J1">
+      <value>Conn_01x06</value>
+      <footprint>Portapack_Mayhem:External Module</footprint>
+      <libsource lib="Connector_Generic" part="Conn_01x06" description="Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="ki_keywords" value="connector"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>652d014e-2efe-4d0b-9390-d8378603aed3</tstamps>
+    </comp>
+    <comp ref="J2">
+      <value>Conn_01x03</value>
+      <footprint>Connector_PinSocket_2.54mm:PinSocket_1x03_P2.54mm_Vertical</footprint>
+      <libsource lib="Connector_Generic" part="Conn_01x03" description="Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="ki_keywords" value="connector"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>5b67b678-52a7-4b8d-9b95-0494d2d09c23</tstamps>
+    </comp>
+    <comp ref="L1">
+      <value>1.5uH</value>
+      <footprint>Inductor_SMD:L_Taiyo-Yuden_NR-40xx</footprint>
+      <fields>
+        <field name="Desc">1.2A 2.2uH ±20% 1.2A SMD,4x4mm Power Inductors ROHS</field>
+        <field name="JLC">SMD,4x4mm</field>
+        <field name="LCSC">C515383</field>
+        <field name="Part">NRS4010T2R2MDGGV</field>
+      </fields>
+      <libsource lib="Device" part="L" description="Inductor"/>
+      <property name="Desc" value="1.2A 2.2uH ±20% 1.2A SMD,4x4mm Power Inductors ROHS"/>
+      <property name="JLC" value="SMD,4x4mm"/>
+      <property name="LCSC" value="C515383"/>
+      <property name="Part" value="NRS4010T2R2MDGGV"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Inductor"/>
+      <property name="ki_keywords" value="inductor choke coil reactor magnetic"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>edb5db18-7e97-4f5d-a4b4-1453b541fb96</tstamps>
+    </comp>
+    <comp ref="R1">
+      <value>1M</value>
+      <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
+      <datasheet>https://datasheet.lcsc.com/szlcsc/Uniroyal-Elec-0603WAF1004T5E_C22935.pdf</datasheet>
+      <fields>
+        <field name="Desc">100mW Thick Film Resistors ±100ppm/℃ ±1% 1MΩ 0603 Chip Resistor - Surface Mount ROHS</field>
+        <field name="JLC">0603</field>
+        <field name="LCSC">C22935</field>
+        <field name="Part">0603WAF1004T5E</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Desc" value="100mW Thick Film Resistors ±100ppm/℃ ±1% 1MΩ 0603 Chip Resistor - Surface Mount ROHS"/>
+      <property name="JLC" value="0603"/>
+      <property name="LCSC" value="C22935"/>
+      <property name="Part" value="0603WAF1004T5E"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>7590997b-0a4a-4465-830d-9f3611db87a9</tstamps>
+    </comp>
+    <comp ref="R2">
+      <value>180k</value>
+      <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
+      <datasheet>https://datasheet.lcsc.com/szlcsc/Uniroyal-Elec-0603WAF1803T5E_C22827.pdf</datasheet>
+      <fields>
+        <field name="Desc">100mW Thick Film Resistors ±100ppm/℃ ±1% 180kΩ 0603 Chip Resistor - Surface Mount ROHS</field>
+        <field name="JLC">0603</field>
+        <field name="LCSC">C22827</field>
+        <field name="Part">0603WAF1803T5E</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Desc" value="100mW Thick Film Resistors ±100ppm/℃ ±1% 180kΩ 0603 Chip Resistor - Surface Mount ROHS"/>
+      <property name="JLC" value="0603"/>
+      <property name="LCSC" value="C22827"/>
+      <property name="Part" value="0603WAF1803T5E"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>24fc3535-b9e5-440a-9aad-b2f4cd603182</tstamps>
+    </comp>
+    <comp ref="R3">
+      <value>1M</value>
+      <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
+      <datasheet>https://datasheet.lcsc.com/szlcsc/Uniroyal-Elec-0603WAF1004T5E_C22935.pdf</datasheet>
+      <fields>
+        <field name="Desc">100mW Thick Film Resistors ±100ppm/℃ ±1% 1MΩ 0603 Chip Resistor - Surface Mount ROHS</field>
+        <field name="JLC">0603</field>
+        <field name="LCSC">C22935</field>
+        <field name="Part">0603WAF1004T5E</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Desc" value="100mW Thick Film Resistors ±100ppm/℃ ±1% 1MΩ 0603 Chip Resistor - Surface Mount ROHS"/>
+      <property name="JLC" value="0603"/>
+      <property name="LCSC" value="C22935"/>
+      <property name="Part" value="0603WAF1004T5E"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>0821facf-348c-4a68-bff9-eb44e1400bbc</tstamps>
+    </comp>
+    <comp ref="R4">
+      <value>1M</value>
+      <footprint>Resistor_SMD:R_0603_1608Metric</footprint>
+      <datasheet>https://datasheet.lcsc.com/szlcsc/Uniroyal-Elec-0603WAF1004T5E_C22935.pdf</datasheet>
+      <fields>
+        <field name="Desc">100mW Thick Film Resistors ±100ppm/℃ ±1% 1MΩ 0603 Chip Resistor - Surface Mount ROHS</field>
+        <field name="JLC">0603</field>
+        <field name="LCSC">C22935</field>
+        <field name="Part">0603WAF1004T5E</field>
+      </fields>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Desc" value="100mW Thick Film Resistors ±100ppm/℃ ±1% 1MΩ 0603 Chip Resistor - Surface Mount ROHS"/>
+      <property name="JLC" value="0603"/>
+      <property name="LCSC" value="C22935"/>
+      <property name="Part" value="0603WAF1004T5E"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>2586012d-3049-4379-b178-d1daf422ae15</tstamps>
+    </comp>
+    <comp ref="U1">
+      <value>TPS63020DSJR</value>
+      <footprint>DSJ14_2P85X1P58</footprint>
+      <datasheet>TPS63020DSJR</datasheet>
+      <fields>
+        <field name="Desc">Buck-boost type Adjustable 1.2V~5.5V 1.8V~5.5V 3.5A DFN-14(3x4) DC-DC Converters ROHS</field>
+        <field name="JLC">VSON-14-EP(3x4)</field>
+        <field name="LCSC">C15483</field>
+        <field name="Part">TPS63020DSJR</field>
+      </fields>
+      <libsource lib="TPS63020" part="TPS63020DSJR" description=""/>
+      <property name="Desc" value="Buck-boost type Adjustable 1.2V~5.5V 1.8V~5.5V 3.5A DFN-14(3x4) DC-DC Converters ROHS"/>
+      <property name="JLC" value="VSON-14-EP(3x4)"/>
+      <property name="LCSC" value="C15483"/>
+      <property name="Part" value="TPS63020DSJR"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="development_board.kicad_sch"/>
+      <property name="ki_keywords" value="TPS63020DSJR"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>a45e1433-736d-42c5-8379-7a42bba224db</tstamps>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="Connector_Generic" part="Conn_01x03">
+      <description>Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x03</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector_Generic" part="Conn_01x06">
+      <description>Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x06</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="C">
+      <description>Unpolarized capacitor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="L">
+      <description>Inductor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Choke_*</fp>
+        <fp>*Coil*</fp>
+        <fp>Inductor_*</fp>
+        <fp>L_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">L</field>
+        <field name="Value">L</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="R">
+      <description>Resistor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="TPS63020" part="TPS63020DSJR">
+      <docs>TPS63020DSJR</docs>
+      <footprints>
+        <fp>DSJ14_2P85X1P58</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">TPS63020DSJR</field>
+        <field name="Footprint">DSJ14_2P85X1P58</field>
+        <field name="Datasheet">TPS63020DSJR</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VINA" type="input"/>
+        <pin num="2" name="GND" type="power_in"/>
+        <pin num="3" name="FB" type="input"/>
+        <pin num="4" name="VOUT" type="output"/>
+        <pin num="5" name="VOUT" type="output"/>
+        <pin num="6" name="L2" type="input"/>
+        <pin num="7" name="L2" type="input"/>
+        <pin num="8" name="L1" type="input"/>
+        <pin num="9" name="L1" type="input"/>
+        <pin num="10" name="VIN" type="input"/>
+        <pin num="11" name="VIN" type="input"/>
+        <pin num="12" name="EN" type="input"/>
+        <pin num="13" name="PS/SYNC" type="input"/>
+        <pin num="14" name="PG" type="output"/>
+        <pin num="15" name="EPAD" type="unspecified"/>
+      </pins>
+    </libpart>
+    <libpart lib="arduino-library" part="Arduino_Nano_ESP32_Tile">
+      <description>Tile for Arduino Nano ESP32</description>
+      <docs>https://docs.arduino.cc/hardware/nano-esp32</docs>
+      <footprints>
+        <fp>Arduino_Nano_ESP32_Tile</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">A</field>
+        <field name="Value">Arduino_Nano_ESP32_Tile</field>
+        <field name="Footprint">PCM_arduino-library:Arduino_Nano_ESP32_Tile</field>
+        <field name="Datasheet">https://docs.arduino.cc/hardware/nano-esp32</field>
+      </fields>
+      <pins>
+        <pin num="3V3" name="3.3V" type="power_out"/>
+        <pin num="5V" name="5V" type="power_in"/>
+        <pin num="A0" name="A0" type="bidirectional"/>
+        <pin num="A1" name="A1" type="bidirectional"/>
+        <pin num="A2" name="A2" type="bidirectional"/>
+        <pin num="A3" name="A3" type="bidirectional"/>
+        <pin num="A4" name="A4/SDA" type="bidirectional"/>
+        <pin num="A5" name="A5/SCL" type="bidirectional"/>
+        <pin num="A6" name="A6" type="input"/>
+        <pin num="A7" name="A7" type="input"/>
+        <pin num="B0" name="B0" type="bidirectional"/>
+        <pin num="B1" name="B1" type="bidirectional"/>
+        <pin num="D0" name="D0/RX" type="bidirectional"/>
+        <pin num="D1" name="D1/TX" type="bidirectional"/>
+        <pin num="D2" name="D2" type="bidirectional"/>
+        <pin num="D3" name="D3" type="bidirectional"/>
+        <pin num="D4" name="D4" type="bidirectional"/>
+        <pin num="D5" name="D5" type="bidirectional"/>
+        <pin num="D6" name="D6" type="bidirectional"/>
+        <pin num="D7" name="D7" type="bidirectional"/>
+        <pin num="D8" name="D8" type="bidirectional"/>
+        <pin num="D9" name="D9" type="bidirectional"/>
+        <pin num="D10" name="D10" type="bidirectional"/>
+        <pin num="D11" name="D11_MOSI" type="bidirectional"/>
+        <pin num="D12" name="D12_MISO" type="bidirectional"/>
+        <pin num="D13" name="D13_SCK" type="bidirectional"/>
+        <pin num="GND1" name="GND" type="power_in"/>
+        <pin num="GND2" name="GND" type="power_in"/>
+        <pin num="RST" name="~{RESET}" type="open_collector"/>
+        <pin num="VIN" name="VIN" type="power_in"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="Connector_Generic">
+      <uri>C:\Users\j39f3fs\AppData\Local\Programs\KiCad\7.0\share\kicad\symbols\/Connector_Generic.kicad_sym</uri>
+    </library>
+    <library logical="Device">
+      <uri>C:\Users\j39f3fs\AppData\Local\Programs\KiCad\7.0\share\kicad\symbols\/Device.kicad_sym</uri>
+    </library>
+    <library logical="TPS63020">
+      <uri>C:\dev\hackrf\external_port\development_board/TPS63020.kicad_sym</uri>
+    </library>
+    <library logical="arduino-library">
+      <uri>C:\dev\hackrf\external_port\development_board/arduino-library.kicad_sym</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="A_SCL">
+      <node ref="A1" pin="A7" pinfunction="A7" pintype="input"/>
+      <node ref="J2" pin="2" pinfunction="Pin_2" pintype="passive"/>
+    </net>
+    <net code="2" name="A_SDA">
+      <node ref="A1" pin="A6" pinfunction="A6" pintype="input"/>
+      <node ref="J2" pin="3" pinfunction="Pin_3" pintype="passive"/>
+    </net>
+    <net code="3" name="EN">
+      <node ref="J1" pin="5" pinfunction="Pin_5" pintype="passive"/>
+      <node ref="R3" pin="1" pintype="passive"/>
+      <node ref="U1" pin="12" pinfunction="EN" pintype="input"/>
+    </net>
+    <net code="4" name="GND">
+      <node ref="A1" pin="GND1" pinfunction="GND" pintype="power_in"/>
+      <node ref="A1" pin="GND2" pinfunction="GND" pintype="power_in"/>
+      <node ref="C2" pin="2" pintype="passive"/>
+      <node ref="C3" pin="2" pintype="passive"/>
+      <node ref="C4" pin="2" pintype="passive"/>
+      <node ref="C5" pin="2" pintype="passive"/>
+      <node ref="C6" pin="2" pintype="passive"/>
+      <node ref="C7" pin="2" pintype="passive"/>
+      <node ref="J1" pin="1" pinfunction="Pin_1" pintype="passive"/>
+      <node ref="J2" pin="1" pinfunction="Pin_1" pintype="passive"/>
+      <node ref="R2" pin="1" pintype="passive"/>
+      <node ref="R3" pin="2" pintype="passive"/>
+      <node ref="U1" pin="13" pinfunction="PS/SYNC" pintype="input"/>
+      <node ref="U1" pin="15" pinfunction="EPAD" pintype="unspecified"/>
+      <node ref="U1" pin="2" pinfunction="GND" pintype="power_in"/>
+    </net>
+    <net code="5" name="Net-(A1-3.3V)">
+      <node ref="A1" pin="3V3" pinfunction="3.3V" pintype="power_out"/>
+      <node ref="C5" pin="1" pintype="passive"/>
+      <node ref="C6" pin="1" pintype="passive"/>
+      <node ref="C7" pin="1" pintype="passive"/>
+      <node ref="R1" pin="1" pintype="passive"/>
+      <node ref="R4" pin="1" pintype="passive"/>
+      <node ref="U1" pin="4" pinfunction="VOUT" pintype="output"/>
+      <node ref="U1" pin="5" pinfunction="VOUT" pintype="output"/>
+    </net>
+    <net code="6" name="Net-(L1-Pad1)">
+      <node ref="L1" pin="1" pinfunction="1" pintype="passive"/>
+      <node ref="U1" pin="8" pinfunction="L1" pintype="input"/>
+      <node ref="U1" pin="9" pinfunction="L1" pintype="input"/>
+    </net>
+    <net code="7" name="Net-(L1-Pad2)">
+      <node ref="L1" pin="2" pinfunction="2" pintype="passive"/>
+      <node ref="U1" pin="6" pinfunction="L2" pintype="input"/>
+      <node ref="U1" pin="7" pinfunction="L2" pintype="input"/>
+    </net>
+    <net code="8" name="Net-(U1-FB)">
+      <node ref="R1" pin="2" pintype="passive"/>
+      <node ref="R2" pin="2" pintype="passive"/>
+      <node ref="U1" pin="3" pinfunction="FB" pintype="input"/>
+    </net>
+    <net code="9" name="Net-(U1-PG)">
+      <node ref="R4" pin="2" pintype="passive"/>
+      <node ref="U1" pin="14" pinfunction="PG" pintype="output"/>
+    </net>
+    <net code="10" name="Net-(U1-VINA)">
+      <node ref="C3" pin="1" pintype="passive"/>
+      <node ref="U1" pin="1" pinfunction="VINA" pintype="input"/>
+    </net>
+    <net code="11" name="SCL">
+      <node ref="A1" pin="A5" pinfunction="A5/SCL" pintype="bidirectional"/>
+      <node ref="J1" pin="3" pinfunction="Pin_3" pintype="passive"/>
+    </net>
+    <net code="12" name="SDA">
+      <node ref="A1" pin="A4" pinfunction="A4/SDA" pintype="bidirectional"/>
+      <node ref="J1" pin="4" pinfunction="Pin_4" pintype="passive"/>
+    </net>
+    <net code="13" name="Vbat">
+      <node ref="C2" pin="1" pintype="passive"/>
+      <node ref="C4" pin="1" pintype="passive"/>
+      <node ref="J1" pin="2" pinfunction="Pin_2" pintype="passive"/>
+      <node ref="U1" pin="10" pinfunction="VIN" pintype="input"/>
+      <node ref="U1" pin="11" pinfunction="VIN" pintype="input"/>
+    </net>
+    <net code="14" name="unconnected-(A1-D0{slash}RX-PadD0)">
+      <node ref="A1" pin="D0" pinfunction="D0/RX" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="15" name="unconnected-(A1-D1{slash}TX-PadD1)">
+      <node ref="A1" pin="D1" pinfunction="D1/TX" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="16" name="unconnected-(A1-D11_MOSI-PadD11)">
+      <node ref="A1" pin="D11" pinfunction="D11_MOSI" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="17" name="unconnected-(A1-D12_MISO-PadD12)">
+      <node ref="A1" pin="D12" pinfunction="D12_MISO" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="18" name="unconnected-(A1-D13_SCK-PadD13)">
+      <node ref="A1" pin="D13" pinfunction="D13_SCK" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="19" name="unconnected-(A1-Pad5V)">
+      <node ref="A1" pin="5V" pinfunction="5V" pintype="power_in+no_connect"/>
+    </net>
+    <net code="20" name="unconnected-(A1-PadA0)">
+      <node ref="A1" pin="A0" pinfunction="A0" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="21" name="unconnected-(A1-PadA1)">
+      <node ref="A1" pin="A1" pinfunction="A1" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="22" name="unconnected-(A1-PadA2)">
+      <node ref="A1" pin="A2" pinfunction="A2" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="23" name="unconnected-(A1-PadA3)">
+      <node ref="A1" pin="A3" pinfunction="A3" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="24" name="unconnected-(A1-PadB0)">
+      <node ref="A1" pin="B0" pinfunction="B0" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="25" name="unconnected-(A1-PadB1)">
+      <node ref="A1" pin="B1" pinfunction="B1" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="26" name="unconnected-(A1-PadD2)">
+      <node ref="A1" pin="D2" pinfunction="D2" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="27" name="unconnected-(A1-PadD3)">
+      <node ref="A1" pin="D3" pinfunction="D3" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="28" name="unconnected-(A1-PadD4)">
+      <node ref="A1" pin="D4" pinfunction="D4" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="29" name="unconnected-(A1-PadD5)">
+      <node ref="A1" pin="D5" pinfunction="D5" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="30" name="unconnected-(A1-PadD6)">
+      <node ref="A1" pin="D6" pinfunction="D6" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="31" name="unconnected-(A1-PadD7)">
+      <node ref="A1" pin="D7" pinfunction="D7" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="32" name="unconnected-(A1-PadD8)">
+      <node ref="A1" pin="D8" pinfunction="D8" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="33" name="unconnected-(A1-PadD9)">
+      <node ref="A1" pin="D9" pinfunction="D9" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="34" name="unconnected-(A1-PadD10)">
+      <node ref="A1" pin="D10" pinfunction="D10" pintype="bidirectional+no_connect"/>
+    </net>
+    <net code="35" name="unconnected-(A1-PadVIN)">
+      <node ref="A1" pin="VIN" pinfunction="VIN" pintype="power_in+no_connect"/>
+    </net>
+    <net code="36" name="unconnected-(A1-~{RESET}-PadRST)">
+      <node ref="A1" pin="RST" pinfunction="~{RESET}" pintype="open_collector+no_connect"/>
+    </net>
+    <net code="37" name="unconnected-(J1-Pin_6-Pad6)">
+      <node ref="J1" pin="6" pinfunction="Pin_6" pintype="passive+no_connect"/>
+    </net>
+  </nets>
+</export>
