@@ -234,14 +234,6 @@ class StandaloneViewMirror : public ui::View {
         {{" ", 0},
          {"-", 1}}};
 
-    /* ui::NumberField mlat3{
-        {40 + 1 * 8, 4},
-        1,
-        {0, 9},
-        1,
-        '0',
-        true};
-    */
     ui::NumberField mlat2{
         {40 + 2 * 8, 4},
         1,
