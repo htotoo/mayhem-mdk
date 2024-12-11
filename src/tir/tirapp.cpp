@@ -19,7 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "tir.hpp"
+#include "tirapp.hpp"
 
 #include <memory>
 #include <string>
@@ -37,16 +37,13 @@ extern "C" void initialize(const standalone_application_api_t& api) {
 // event 1 == frame sync. called each 1/60th of second, so 6 = 100ms
 
 extern "C" void on_event(const uint32_t& events) {
-    /* if (((events & 1) == 1) && (standaloneViewMirror->need_refresh())) {
-        Command cmd = Command::PPCMD_SATTRACK_DATA;
-        std::vector<uint8_t> data(sizeof(sattrackdata_t));
-
+    if (((events & 1) == 1) && (standaloneViewMirror->need_refresh())) {
+        Command cmd = Command::PPCMD_IRTX_GETLASTRCVIR;
+        std::vector<uint8_t> data(sizeof(ir_data_t));
         if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false) return;
-
-        sattrackdata_t sattrackdata = *(sattrackdata_t*)data.data();
-        standaloneViewMirror->got_data(sattrackdata);
+        ir_data_t irdata = *(ir_data_t*)data.data();
+        standaloneViewMirror->got_data(irdata);
     }
-    */
 }
 
 extern "C" void shutdown() {
