@@ -1,5 +1,8 @@
+extern "C"
+{
+    #include "i2c_slave_driver.h"
+}
 
-#include "i2c_slave_driver.h"
 #include "pp_structures.hpp"
 #include <iostream>
 #include <memory>
