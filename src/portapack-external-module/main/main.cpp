@@ -13,13 +13,9 @@
 
 static_assert(sizeof(uart_app) % 32 == 0, "app size must be multiple of 32 bytes. fill with 0s");
 
-// NANO:D2 is NORA:J8 is ESP32:9 is GPIO:4
-#define I2C_SLAVE_SDA_IO GPIO_NUM_5
+#define I2C_SLAVE_SDA_IO GPIO_NUM_6
+#define I2C_SLAVE_SCL_IO GPIO_NUM_5
 
-// NANO:D3 is NORA:J7 is ESP32:10 is GPIO:5
-#define I2C_SLAVE_SCL_IO GPIO_NUM_6
-
-// A7 is GPIO:14
 #define UART_RX GPIO_NUM_14
 
 #define ESP_SLAVE_ADDR 0x51
@@ -102,9 +98,6 @@ static void uart_task(void *arg)
             int len = uart_read_bytes(UART_NUM_1, data, (BUF_SIZE - 1), 20 / portTICK_PERIOD_MS);
             if (len != 0)
             {
-                // std::cout << "uart len: " << len << std::endl;
-                // std::cout << "uart data: " << std::string((char *)data, len) << std::endl;
-
                 for (int i = 0; i < len; i++)
                     uart_queue.push(data[i]);
             }
