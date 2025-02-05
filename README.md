@@ -11,7 +11,7 @@ All the design files are in the pcb folder. They are set up so you can let [JLCP
 
 
 ## How to compile
-The software consists of two seperate parts:
+The software consists of two separate parts:
 - The Standalone App that is uploaded and executed on the portapack.
   - This will be embedded in the the ESP32 firmware, so is required first.
   - The guide can be found [here](src/uart/Readme.md)
