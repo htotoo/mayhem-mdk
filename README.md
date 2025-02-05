@@ -19,6 +19,12 @@ The software consists of two seperate parts:
   - The guide can be found [here](src/portapack-external-module/README.md) 
   - Note: ESP-IDF version 5.4 introduced a breaking change in the I2C subsystem. So use the latest version of 5.3.
 
+## How to use the example UART app
+Once the Firmware is uploaded and the module is plugged into the Portapack, the UART app should appear in the Utilities menu.
+
+![uart app](./docs/uart.png)
+
+The UART app will display any UART signal on pin 14.
 
 ## Schematics
 ![dcdc](./docs/dcdc.png)
