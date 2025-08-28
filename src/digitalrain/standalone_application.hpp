@@ -28,27 +28,27 @@
 #include <stddef.h>
 
 #include "ui/ui.hpp"
+#include "ui/ff.h"
 
-#define CURRENT_STANDALONE_APPLICATION_API_VERSION 2
+#define CURRENT_STANDALONE_APPLICATION_API_VERSION 3
 
-struct standalone_application_api_t
-{
+struct standalone_application_api_t {
     // Version 1
-    void *(*malloc)(size_t size);
-    void *(*calloc)(size_t num, size_t size);
-    void *(*realloc)(void *p, size_t size);
-    void (*free)(void *p);
-    void (*create_thread)(int32_t (*fn)(void *), void *arg, size_t stack_size, int priority);
+    void* (*malloc)(size_t size);
+    void* (*calloc)(size_t num, size_t size);
+    void* (*realloc)(void* p, size_t size);
+    void (*free)(void* p);
+    void (*create_thread)(int32_t (*fn)(void*), void* arg, size_t stack_size, int priority);
     void (*fill_rectangle)(int x, int y, int width, int height, uint16_t color);
     uint8_t (*swizzled_switches)();
     uint64_t (*get_switches_state)();
 
     // Version 2
-    const uint8_t *fixed_5x8_glyph_data;
-    const uint8_t *fixed_8x16_glyph_data;
+    const uint8_t* fixed_5x8_glyph_data;
+    const uint8_t* fixed_8x16_glyph_data;
 
     void (*fill_rectangle_unrolled8)(int x, int y, int width, int height, uint16_t color);
-    void (*draw_bitmap)(int x, int y, int width, int height, const uint8_t *pixels, uint16_t foreground, uint16_t background);
+    void (*draw_bitmap)(int x, int y, int width, int height, const uint8_t* pixels, uint16_t foreground, uint16_t background);
 
     ui::Coord (*scroll_area_y)(const ui::Coord y);
     void (*scroll_set_area)(const ui::Coord top_y, const ui::Coord bottom_y);
@@ -56,24 +56,52 @@ struct standalone_application_api_t
     ui::Coord (*scroll_set_position)(const ui::Coord position);
     ui::Coord (*scroll)(const int32_t delta);
 
-    bool (*i2c_read)(uint8_t *cmd, size_t cmd_len, uint8_t *data, size_t data_len);
-    void (*panic)(const char *msg);
+    bool (*i2c_read)(uint8_t* cmd, size_t cmd_len, uint8_t* data, size_t data_len);
+    void (*panic)(const char* msg);
     void (*set_dirty)();
+
+    // Version 3
+    FRESULT (*f_open)(FIL* fp, const TCHAR* path, BYTE mode);
+    FRESULT (*f_close)(FIL* fp);
+    FRESULT (*f_read)(FIL* fp, void* buff, UINT btr, UINT* br);
+    FRESULT (*f_write)(FIL* fp, const void* buff, UINT btw, UINT* bw);
+    FRESULT (*f_lseek)(FIL* fp, FSIZE_t ofs);
+    FRESULT (*f_truncate)(FIL* fp);
+    FRESULT (*f_sync)(FIL* fp);
+    FRESULT (*f_opendir)(DIR* dp, const TCHAR* path);
+    FRESULT (*f_closedir)(DIR* dp);
+    FRESULT (*f_readdir)(DIR* dp, FILINFO* fno);
+    FRESULT (*f_findfirst)(DIR* dp, FILINFO* fno, const TCHAR* path, const TCHAR* pattern);
+    FRESULT (*f_findnext)(DIR* dp, FILINFO* fno);
+    FRESULT (*f_mkdir)(const TCHAR* path);
+    FRESULT (*f_unlink)(const TCHAR* path);
+    FRESULT (*f_rename)(const TCHAR* path_old, const TCHAR* path_new);
+    FRESULT (*f_stat)(const TCHAR* path, FILINFO* fno);
+    FRESULT (*f_utime)(const TCHAR* path, const FILINFO* fno);
+    FRESULT (*f_getfree)(const TCHAR* path, DWORD* nclst, FATFS** fatfs);
+    FRESULT (*f_mount)(FATFS* fs, const TCHAR* path, BYTE opt);
+    int (*f_putc)(TCHAR c, FIL* fp);
+    int (*f_puts)(const TCHAR* str, FIL* cp);
+    int (*f_printf)(FIL* fp, const TCHAR* str, ...);
+    TCHAR* (*f_gets)(TCHAR* buff, int len, FIL* fp);
+    void (*draw_pixels)(const ui::Rect r, const ui::Color* const colors, const size_t count);
+    void (*draw_pixel)(const ui::Point p, const ui::Color color);
 };
 
-extern const standalone_application_api_t *_api;
+extern const standalone_application_api_t* _api;
 
-enum app_location_t : uint32_t
-{
+enum app_location_t : uint32_t {
     UTILITIES = 0,
     RX,
     TX,
     DEBUG,
-    HOME
+    HOME,
+    SETTINGS,
+    GAMES,
+    TRX
 };
 
-struct standalone_application_information_t
-{
+struct standalone_application_information_t {
     uint32_t header_version;
 
     uint8_t app_name[16];
@@ -82,12 +110,12 @@ struct standalone_application_information_t
     app_location_t menu_location;
 
     /// @brief gets called once at application start
-    void (*initialize)(const standalone_application_api_t &api);
+    void (*initialize)(const standalone_application_api_t& api);
 
     /// @brief gets called when an event occurs
     /// @param events bitfield of events
     /// @note events are defined in firmware/application/event_m0.hpp
-    void (*on_event)(const uint32_t &events);
+    void (*on_event)(const uint32_t& events);
 
     /// @brief gets called once at application shutdown
     void (*shutdown)();
@@ -100,8 +128,8 @@ struct standalone_application_information_t
     bool (*OnKeyboad)(uint8_t key);
 };
 
-extern "C" void initialize(const standalone_application_api_t &api);
-extern "C" void on_event(const uint32_t &events);
+extern "C" void initialize(const standalone_application_api_t& api);
+extern "C" void on_event(const uint32_t& events);
 extern "C" void shutdown();
 extern "C" void PaintViewMirror();
 extern "C" void OnTouchEvent(int x, int y, uint32_t type);
