@@ -86,6 +86,7 @@ struct standalone_application_api_t {
     TCHAR* (*f_gets)(TCHAR* buff, int len, FIL* fp);
     void (*draw_pixels)(const ui::Rect r, const ui::Color* const colors, const size_t count);
     void (*draw_pixel)(const ui::Point p, const ui::Color color);
+    void (*exit_app)();
 };
 
 extern const standalone_application_api_t* _api;

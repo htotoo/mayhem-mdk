@@ -176,3 +176,7 @@ extern "C" int f_printf(FIL* fp, const TCHAR* str, ...) {
 extern "C" TCHAR* f_gets(TCHAR* buff, int len, FIL* fp) {
     return _api->f_gets(buff, len, fp);
 }
+
+void exit_app() {
+    _api->exit_app();
+}
