@@ -307,4 +307,6 @@ TCHAR* f_gets(TCHAR* buff, int len, FIL* fp);                                   
 }
 #endif
 
+#include "fileext.hpp"
+
 #endif /* _FATFS */
