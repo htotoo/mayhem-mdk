@@ -27,6 +27,7 @@
 #include "ui/theme.hpp"
 #include "ui/string_format.hpp"
 #include <string.h>
+#include "ui/ui_geomap.hpp"
 
 class StandaloneViewMirror : public ui::View {
    public:
@@ -34,14 +35,9 @@ class StandaloneViewMirror : public ui::View {
         : View{parent_rect}, context_(context) {
         set_style(ui::Theme::getInstance()->bg_dark);
 
-        add_children({
-            &labels,
-            &button_recv,
-            &button_send,
-            &text_filename,
-            &text_irproto,
-            &text_irdata,
-        });
+        add_children({&labels,
+                      &button_recv,
+                      &button_send, &geo_map});
 
         button_send.on_select = [this](ui::Button&) {
             /*Command cmd = Command::PPCMD_IRTX_SENDIR;
@@ -61,6 +57,7 @@ class StandaloneViewMirror : public ui::View {
             text_irproto.set("-");
             text_irdata.set("-");*/
         };
+        geo_map.move(48, 19);
     }
 
     ui::Context& context() const override {
@@ -85,7 +82,7 @@ class StandaloneViewMirror : public ui::View {
    private:
     ui::Button button_send{{1, 20, 7 * 16 + 1, 20}, "Send ir"};
     ui::Button button_recv{{1, 60, 7 * 16 + 1, 20}, "Read ir"};
-
+    ui::GeoMap geo_map{{0, 0, 7 * 16, 240}};
     ui::Labels labels{
         {{1, 1}, "File:", ui::Theme::getInstance()->fg_light->foreground},
         {{1, 40}, "------------------------------", ui::Theme::getInstance()->fg_light->foreground},

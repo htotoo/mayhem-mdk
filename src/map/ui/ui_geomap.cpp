@@ -255,7 +255,7 @@ void GeoMap::map_read_line_bin(ui::Color* buffer, uint16_t pixels) {
         for (int i = 0; i < geomap_rect_width; i++) {
             buffer[i] = zoom_out_buffer[i * (-map_zoom)];
         }
-        delete zoom_out_buffer;
+        delete[] zoom_out_buffer;
     }
 }
 
@@ -712,7 +712,9 @@ void GeoMap::draw_scale(Painter& painter) {
     painter.fill_rectangle({{r.right() - 5 - (uint16_t)scale_width, r.bottom() - 4}, {(uint16_t)scale_width, 2}}, scale_color);
     painter.fill_rectangle({{r.right() - 5, r.bottom() - 8}, {2, 6}}, scale_color);
     painter.fill_rectangle({{r.right() - 5 - (uint16_t)scale_width, r.bottom() - 8}, {2, 6}}, scale_color);
-    painter.draw_string({(uint16_t)(r.right() - 25 - scale_width - km_string.length() * 5 / 2), r.bottom() - 10}, ui::font::fixed_5x8, Color::black(), Color::white(), km_string);
+    std::string_view sw = km_string;
+    ui::Point pos = {(uint16_t)(r.right() - 25 - scale_width - sw.length() * 5 / 2), r.bottom() - 10};
+    painter.draw_string(pos, *Theme::getInstance()->fg_light, sw);
 }
 
 void GeoMap::draw_bearing(const Point origin, const uint16_t angle, uint32_t size, const Color color, Painter& painter) {

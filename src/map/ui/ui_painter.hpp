@@ -26,6 +26,8 @@
 #include "ui_text.hpp"
 
 #include <string_view>
+#include <array>
+#include <vector>
 
 namespace ui {
 
