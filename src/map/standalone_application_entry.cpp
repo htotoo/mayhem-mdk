@@ -155,44 +155,14 @@ extern "C" FRESULT f_rename(const TCHAR* path_old, const TCHAR* path_new) {
 extern "C" FRESULT f_stat(const TCHAR* path, FILINFO* fno) {
     return _api->f_stat(path, fno);
 }
-extern "C" FRESULT f_chmod(const TCHAR* path, BYTE attr, BYTE mask) {
-    return _api->f_chmod(path, attr, mask);
-}
 extern "C" FRESULT f_utime(const TCHAR* path, const FILINFO* fno) {
     return _api->f_utime(path, fno);
-}
-extern "C" FRESULT f_chdir(const TCHAR* path) {
-    return _api->f_chdir(path);
-}
-extern "C" FRESULT f_chdrive(const TCHAR* path) {
-    return _api->f_chdrive(path);
-}
-extern "C" FRESULT f_getcwd(TCHAR* buff, UINT len) {
-    return _api->f_getcwd(buff, len);
 }
 extern "C" FRESULT f_getfree(const TCHAR* path, DWORD* nclst, FATFS** fatfs) {
     return _api->f_getfree(path, nclst, fatfs);
 }
-extern "C" FRESULT f_getlabel(const TCHAR* path, TCHAR* label, DWORD* vsn) {
-    return _api->f_getlabel(path, label, vsn);
-}
-extern "C" FRESULT f_setlabel(const TCHAR* label) {
-    return _api->f_setlabel(label);
-}
-extern "C" FRESULT f_forward(FIL* fp, UINT (*func)(const BYTE*, UINT), UINT btf, UINT* bf) {
-    return _api->f_forward(fp, func, btf, bf);
-}
-extern "C" FRESULT f_expand(FIL* fp, FSIZE_t szf, BYTE opt) {
-    return _api->f_expand(fp, szf, opt);
-}
 extern "C" FRESULT f_mount(FATFS* fs, const TCHAR* path, BYTE opt) {
     return _api->f_mount(fs, path, opt);
-}
-extern "C" FRESULT f_mkfs(const TCHAR* path, BYTE opt, DWORD au, void* work, UINT len) {
-    return _api->f_mkfs(path, opt, au, work, len);
-}
-extern "C" FRESULT f_fdisk(BYTE pdrv, const DWORD* szt, void* work) {
-    return _api->f_fdisk(pdrv, szt, work);
 }
 extern "C" int f_putc(TCHAR c, FIL* fp) {
     return _api->f_putc(c, fp);
