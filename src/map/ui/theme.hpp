@@ -113,6 +113,7 @@ class Theme {
 
     static void SetTheme(ThemeId theme);
     static ThemeTemplate* current;
+    static void destroy();
 
    private:
 };

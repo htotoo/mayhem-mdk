@@ -28,6 +28,7 @@
 #include "ui/string_format.hpp"
 #include <string.h>
 #include "ui/ui_geomap.hpp"
+#include "ui/file_path.hpp"
 
 class StandaloneViewMirror : public ui::View {
    public:
@@ -35,29 +36,20 @@ class StandaloneViewMirror : public ui::View {
         : View{parent_rect}, context_(context) {
         set_style(ui::Theme::getInstance()->bg_dark);
 
-        add_children({&labels,
-                      &button_recv,
-                      &button_send /*, &geo_map*/});
+        add_children({&button_send, &geo_map});
 
+        geo_map.init();
+        geo_map.set_focusable(true);
+        geo_map.set_mode(ui::GeoMapMode::DISPLAY);
+
+        geo_map.move(19.0, 48.0);
         button_send.on_select = [this](ui::Button&) {
-            /*Command cmd = Command::PPCMD_IRTX_SENDIR;
-            ir_data_t ir;
-            ir.protocol = irproto::NECEXT;
-            ir.data = 0x20DF10EF;
-            ir.repeat = 1;
-            std::vector<uint8_t> data(sizeof(ir_data_t));
-            memcpy(data.data(), &ir, sizeof(ir_data_t));
-            data.insert(data.begin(), reinterpret_cast<uint8_t*>(&cmd), reinterpret_cast<uint8_t*>(&cmd) + sizeof(cmd));
-            if (_api->i2c_read(data.data(), data.size(), nullptr, 0) == false) return;*/
+            geo_map.move(21.1, 48.1);
         };
+    }
 
-        button_recv.on_select = [this](ui::Button&) {
-            /*recv_mode_on = true;
-            button_recv.set_text("Waiting...");
-            text_irproto.set("-");
-            text_irdata.set("-");*/
-        };
-        // geo_map.move(48, 19);
+    ~StandaloneViewMirror() {
+        ui::Theme::destroy();
     }
 
     ui::Context& context() const override {
@@ -65,7 +57,7 @@ class StandaloneViewMirror : public ui::View {
     }
 
     void focus() override {
-        button_recv.focus();
+        button_send.focus();
     }
 
     bool need_refresh() {
@@ -76,19 +68,13 @@ class StandaloneViewMirror : public ui::View {
             return true;
         }
         return false;*/
-        return true;
+        return false;
     }
 
    private:
-    ui::Button button_send{{1, 20, 7 * 16 + 1, 20}, "Send ir"};
-    ui::Button button_recv{{1, 60, 7 * 16 + 1, 20}, "Read ir"};
-    // ui::GeoMap geo_map{{0, 0, 7 * 16, 240}};
-    ui::Labels labels{
-        {{1, 1}, "File:", ui::Theme::getInstance()->fg_light->foreground},
-        {{1, 40}, "------------------------------", ui::Theme::getInstance()->fg_light->foreground},
-        {{1, 80}, "IR received:", ui::Theme::getInstance()->fg_light->foreground}};
-
+    ui::Button button_send{{1, 20, 7 * 16 + 1, 20}, "Send ir", true};
+    // ui::Button button_recv{{1, 60, 7 * 16 + 1, 20}, "Read ir"};
+    ui::GeoMap geo_map{{0, 40, 240, 240}};
     ui::Context& context_;
     uint8_t rfcnt = 0;
-    bool recv_mode_on = false;
 };
