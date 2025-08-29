@@ -183,7 +183,6 @@ int32_t GeoPos::speed() {
 GeoMap::GeoMap(
     Rect parent_rect)
     : Widget{parent_rect}, markerListLen(0) {
-    has_osm = use_osm = find_osm_file_tile();
 }
 
 bool GeoMap::on_encoder(const EncoderEvent delta) {
@@ -403,7 +402,7 @@ double GeoMap::lat_to_pixel_y_tile(double lat, int zoom) {
 }
 
 bool GeoMap::draw_osm_file(int zoom, int tile_x, int tile_y, int relative_x, int relative_y, Painter& painter) {
-    const auto r = screen_rect();
+    const ui::Rect r = screen_rect();
     // Early exit if the tile is completely outside the viewport
     if (relative_x >= r.width() || relative_y >= r.height() ||
         relative_x + TILE_SIZE <= 0 || relative_y + TILE_SIZE <= 0) {
@@ -447,7 +446,7 @@ bool GeoMap::draw_osm_file(int zoom, int tile_x, int tile_y, int relative_x, int
     if (!bmp.is_loaded()) {
         // Draw an error rectangle using the calculated clipped dimensions
         ui::Rect error_rect{{dest_x + r.left(), dest_y + r.top()}, {clip_w, clip_h}};
-        painter.fill_rectangle(error_rect, Theme::getInstance()->bg_darkest->background);
+        painter.fill_rectangle(error_rect, Theme::getInstance()->bg_lightest->background);
         return false;
     }
     std::vector<ui::Color> line(clip_w);
@@ -648,6 +647,7 @@ void GeoMap::move(const float lon, const float lat) {
 }
 
 bool GeoMap::init() {
+    has_osm = use_osm = find_osm_file_tile();
     auto result = map_file.open(adsb_dir / u"world_map.bin");
     map_opened = !result.is_valid();
 

@@ -29,7 +29,6 @@ ui::Context* context = nullptr;
 
 extern "C" void initialize(const standalone_application_api_t& api) {
     _api = &api;
-
     context = new ui::Context();
     standaloneViewMirror = new StandaloneViewMirror(*context, {0, 16, 240, 304});
 }
@@ -38,11 +37,6 @@ extern "C" void initialize(const standalone_application_api_t& api) {
 
 extern "C" void on_event(const uint32_t& events) {
     if (((events & 1) == 1) && (standaloneViewMirror->need_refresh())) {
-        /*Command cmd = Command::PPCMD_IRTX_GETLASTRCVIR;
-        std::vector<uint8_t> data(sizeof(ir_data_t));
-        if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false) return;
-        ir_data_t irdata = *(ir_data_t*)data.data();
-        standaloneViewMirror->got_data(irdata);*/
     }
 }
 

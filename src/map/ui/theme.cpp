@@ -9,6 +9,13 @@ ThemeTemplate* Theme::getInstance() {
     return Theme::current;
 }
 
+void Theme::destroy() {
+    if (current != nullptr) {
+        delete current;
+        current = nullptr;
+    }
+}
+
 void Theme::SetTheme(ThemeId theme) {
     if (current != nullptr) delete current;
     switch (theme) {
