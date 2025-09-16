@@ -87,6 +87,7 @@ struct standalone_application_api_t {
     void (*draw_pixels)(const ui::Rect r, const ui::Color* const colors, const size_t count);
     void (*draw_pixel)(const ui::Point p, const ui::Color color);
     void (*exit_app)();
+
     // version 4
     uint16_t* screen_height;
     uint16_t* screen_width;
