@@ -28,7 +28,7 @@ extern "C" {
 __attribute__((section(".standalone_application_information"), used)) standalone_application_information_t _standalone_application_information = {
     /*.header_version = */ CURRENT_STANDALONE_APPLICATION_API_VERSION,
 
-    /*.app_name = */ "UART",
+    /*.app_name = */ "SatTrack",
     /*.bitmap_data = */ {
         0x00,
         0x00,

@@ -26,6 +26,8 @@
 #include "ui_text.hpp"
 
 #include <string_view>
+#include <array>
+#include <vector>
 
 namespace ui {
 
@@ -64,7 +66,7 @@ class Widget;
 
 class Painter {
    public:
-    Painter(){};
+    Painter() {};
 
     Painter(const Painter&) = delete;
     Painter(Painter&&) = delete;
@@ -84,6 +86,23 @@ class Painter {
 
     void draw_hline(Point p, int width, Color c);
     void draw_vline(Point p, int height, Color c);
+
+    template <size_t N>
+    void draw_pixels(
+        const ui::Rect r,
+        const std::array<ui::Color, N>& colors) {
+        draw_pixels(r, colors.data(), colors.size());
+    }
+
+    void draw_pixels(
+        const ui::Rect r,
+        const std::vector<ui::Color>& colors) {
+        draw_pixels(r, colors.data(), colors.size());
+    }
+
+    void draw_pixels(const ui::Rect r, const ui::Color* const colors, const size_t count);
+    void draw_line(const ui::Point start, const ui::Point end, const ui::Color color);
+    void draw_pixel(const ui::Point p, const ui::Color color);
 
    private:
     void paint_widget(Widget* w);

@@ -25,11 +25,11 @@
 
 #include "ui/ui_widget.hpp"
 #include "ui/theme.hpp"
+#include "ui/ui_helper.hpp"
 
 #define USER_COMMANDS_START 0x7F01
 
-enum class Command : uint16_t
-{
+enum class Command : uint16_t {
     // UART specific commands
     COMMAND_UART_REQUESTDATA_SHORT = USER_COMMANDS_START,
     COMMAND_UART_REQUESTDATA_LONG,
@@ -38,11 +38,9 @@ enum class Command : uint16_t
     COMMAND_UART_BAUDRATE_GET
 };
 
-class StandaloneViewMirror : public ui::View
-{
-public:
-    StandaloneViewMirror(ui::Context &context, const ui::Rect parent_rect) : View{parent_rect}, context_(context)
-    {
+class StandaloneViewMirror : public ui::View {
+   public:
+    StandaloneViewMirror(ui::Context& context, const ui::Rect parent_rect) : View{parent_rect}, context_(context) {
         set_style(ui::Theme::getInstance()->bg_dark);
 
         add_children({&text,
@@ -54,40 +52,34 @@ public:
 
         text.set("BR: " + std::to_string(baudrate_));
 
-        button_n.on_select = [this](ui::Button &)
-        {
+        button_n.on_select = [this](ui::Button&) {
             Command cmd_dec = Command::COMMAND_UART_BAUDRATE_DEC;
-            _api->i2c_read((uint8_t *)&cmd_dec, 2, nullptr, 0);
+            _api->i2c_read((uint8_t*)&cmd_dec, 2, nullptr, 0);
 
             baudrate_dirty_ = true;
         };
 
-        button_p.on_select = [this](ui::Button &)
-        {
+        button_p.on_select = [this](ui::Button&) {
             Command cmd_inc = Command::COMMAND_UART_BAUDRATE_INC;
-            _api->i2c_read((uint8_t *)&cmd_inc, 2, nullptr, 0);
+            _api->i2c_read((uint8_t*)&cmd_inc, 2, nullptr, 0);
 
             baudrate_dirty_ = true;
         };
     }
 
-    ui::Console &get_console()
-    {
+    ui::Console& get_console() {
         return console;
     }
 
-    ui::Context &context() const override
-    {
+    ui::Context& context() const override {
         return context_;
     }
 
-    void focus() override
-    {
+    void focus() override {
         button_n.focus();
     }
 
-    void set_baudrate(uint32_t baudrate)
-    {
+    void set_baudrate(uint32_t baudrate) {
         baudrate_ = baudrate;
         baudrate_dirty_ = false;
 
@@ -96,12 +88,11 @@ public:
         set_dirty();
     }
 
-    bool isBaudrateChanged()
-    {
+    bool isBaudrateChanged() {
         return baudrate_dirty_;
     }
 
-private:
+   private:
     ui::Text text{{4, 4, 96, 16}};
 
     ui::Button button_n{{100, 4, 16, 24}, "-"};
@@ -109,7 +100,7 @@ private:
 
     ui::Console console{{0, 2 * 16, 240, 272}};
 
-    ui::Context &context_;
+    ui::Context& context_;
 
     uint32_t baudrate_{115200};
     bool baudrate_dirty_{true};

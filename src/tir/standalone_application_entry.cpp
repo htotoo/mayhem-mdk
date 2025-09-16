@@ -28,7 +28,7 @@ extern "C" {
 __attribute__((section(".standalone_application_information"), used)) standalone_application_information_t _standalone_application_information = {
     /*.header_version = */ CURRENT_STANDALONE_APPLICATION_API_VERSION,
 
-    /*.app_name = */ "UART",
+    /*.app_name = */ "TIR",
     /*.bitmap_data = */ {
         0x00,
         0x00,
@@ -64,7 +64,7 @@ __attribute__((section(".standalone_application_information"), used)) standalone
         0x00,
     },
     /*.icon_color = 16 bit: 5R 6G 5B*/ 0x0000FFE0,
-    /*.menu_location = */ app_location_t::UTILITIES,
+    /*.menu_location = */ app_location_t::TX,
 
     /*.initialize_app = */ initialize,
     /*.on_event = */ on_event,

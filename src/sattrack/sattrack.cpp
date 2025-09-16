@@ -19,7 +19,7 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "uart.hpp"
+#include "sattrack.hpp"
 
 #include <memory>
 #include <string>
@@ -31,53 +31,20 @@ extern "C" void initialize(const standalone_application_api_t& api) {
     _api = &api;
     context = new ui::Context();
     standaloneViewMirror = new StandaloneViewMirror(*context, {0, 16, UI_POS_MAXWIDTH, UI_POS_MAXHEIGHT - 16});
-
-    Command cmd = Command::COMMAND_UART_BAUDRATE_GET;
-    std::vector<uint8_t> data(4);
-
-    if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false)
-        return;
-
-    uint32_t baudrate = *(uint32_t*)data.data();
-    standaloneViewMirror->set_baudrate(baudrate);
 }
 
+// event 1 == frame sync. called each 1/60th of second, so 6 = 100ms
+
 extern "C" void on_event(const uint32_t& events) {
-    (void)events;
+    if (((events & 1) == 1) && (standaloneViewMirror->need_refresh())) {
+        Command cmd = Command::PPCMD_SATTRACK_DATA;
+        std::vector<uint8_t> data(sizeof(sattrackdata_t));
 
-    if (standaloneViewMirror->isBaudrateChanged()) {
-        Command cmd = Command::COMMAND_UART_BAUDRATE_GET;
-        std::vector<uint8_t> data(4);
+        if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false) return;
 
-        if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false)
-            return;
-
-        uint32_t baudrate = *(uint32_t*)data.data();
-        standaloneViewMirror->set_baudrate(baudrate);
-        return;
+        sattrackdata_t sattrackdata = *(sattrackdata_t*)data.data();
+        standaloneViewMirror->got_data(sattrackdata);
     }
-
-    Command cmd = Command::COMMAND_UART_REQUESTDATA_SHORT;
-    std::vector<uint8_t> data(5);
-
-    uint8_t more_data_available;
-    do {
-        if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false)
-            return;
-
-        uint8_t data_len = data[0] & 0x7f;
-        more_data_available = data[0] >> 7;
-        uint8_t* data_ptr = data.data() + 1;
-
-        if (data_len > 0) {
-            standaloneViewMirror->get_console().write(std::string((char*)data_ptr, data_len));
-        }
-
-        if (more_data_available) {
-            cmd = Command::COMMAND_UART_REQUESTDATA_LONG;
-            data = std::vector<uint8_t>(128);
-        }
-    } while (more_data_available == 1);
 }
 
 extern "C" void shutdown() {

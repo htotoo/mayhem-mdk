@@ -32,7 +32,7 @@ MESSAGE(STATUS "Using toolchain file: ${CMAKE_SOURCE_DIR}/${CMAKE_TOOLCHAIN_FILE
 
 include(CheckCXXCompilerFlag)
 
-project(uart_app CXX ASM)
+project(mapapp CXX ASM)
 
 # Compiler options here.
 set(USE_OPT "-Os -g --specs=nano.specs --specs=nosys.specs")
