@@ -84,21 +84,25 @@ set(USE_FPU no)
 #
 
 # Define linker script file here
-set(LDSCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/config/standalone_application_linker_script.ld)
+set(LDSCRIPT ${CMAKE_CURRENT_SOURCE_DIR}/common/config/standalone_application_linker_script.ld)
 
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 FILE(GLOB_RECURSE Sources_C ${CMAKE_CURRENT_LIST_DIR}/*.c)
+FILE(GLOB_RECURSE Sources_C_COMMON ${CMAKE_CURRENT_LIST_DIR}common/*.c)
 set(CSRC
 	${Sources_C}
+	${Sources_C_COMMON}
 )
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 FILE(GLOB_RECURSE Sources_CPP ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
+FILE(GLOB_RECURSE Sources_CPP_COMMON ${CMAKE_CURRENT_LIST_DIR}common/*.cpp)
 set(CPPSRC
 	${Sources_CPP}
+	${Sources_CPP_COMMON}
 )
 
 # C sources to be compiled in ARM mode regardless of the global setting.
@@ -126,6 +130,8 @@ set(ASMSRC)
 
 set(INCDIR
 	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/common
+	${CMAKE_CURRENT_SOURCE_DIR}/common/ui
 )
 
 #
@@ -205,7 +211,7 @@ set(ULIBS)
 # End of user defines
 ##############################################################################
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/config/rules.cmake)
+include(${CMAKE_CURRENT_SOURCE_DIR}/common/config/rules.cmake)
 
 ##############################################################################
 
@@ -235,7 +241,7 @@ add_custom_command(
 	OUTPUT ${PROJECT_NAME}.ppmp
 	COMMAND ${CMAKE_OBJCOPY} -v -O binary ${PROJECT_NAME}.ppsi.elf ${PROJECT_NAME}.ppmp
 	COMMAND ${CMAKE_OBJDUMP} --source ${PROJECT_NAME}.ppsi.elf > ${PROJECT_NAME}.objdump.txt
-	COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/config/create_header.py ${PROJECT_NAME}.ppmp ${PROJECT_NAME}.h
+	COMMAND python3 ${CMAKE_CURRENT_SOURCE_DIR}/common/config/create_header.py ${PROJECT_NAME}.ppmp ${PROJECT_NAME}.h
 	DEPENDS ${PROJECT_NAME}.ppsi
 )
 
