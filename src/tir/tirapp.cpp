@@ -29,9 +29,10 @@ ui::Context* context = nullptr;
 
 extern "C" void initialize(const standalone_application_api_t& api) {
     _api = &api;
-
+    screen_width = *_api->screen_width;
+    screen_height = *_api->screen_height;
     context = new ui::Context();
-    standaloneViewMirror = new StandaloneViewMirror(*context, {0, 16, 240, 304});
+    standaloneViewMirror = new StandaloneViewMirror(*context, {0, 16, screen_width, screen_height - 16});
 }
 
 // event 1 == frame sync. called each 1/60th of second, so 6 = 100ms

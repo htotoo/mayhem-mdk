@@ -30,6 +30,9 @@
 #include "ui/ui_geomap.hpp"
 #include "ui/file_path.hpp"
 
+extern uint16_t screen_width;
+extern uint16_t screen_height;
+
 class StandaloneViewMirror : public ui::View {
    public:
     StandaloneViewMirror(ui::Context& context, const ui::Rect parent_rect)
@@ -61,20 +64,13 @@ class StandaloneViewMirror : public ui::View {
     }
 
     bool need_refresh() {
-        /*rfcnt++;
-        if (!recv_mode_on) return false;
-        if (rfcnt > 60) {  // 1 sec
-            rfcnt = 0;
-            return true;
-        }
-        return false;*/
         return false;
     }
 
    private:
-    ui::Button button_send{{1, 20, 7 * 16 + 1, 20}, "Send ir", true};
+    ui::Button button_send{{1, 20, 7 * 16 + 1, 20}, "Move", true};
     // ui::Button button_recv{{1, 60, 7 * 16 + 1, 20}, "Read ir"};
-    ui::GeoMap geo_map{{0, 40, 240, 240}};
+    ui::GeoMap geo_map{{0, 40, screen_width, 240}};
     ui::Context& context_;
     uint8_t rfcnt = 0;
 };

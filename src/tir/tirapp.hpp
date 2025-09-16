@@ -49,6 +49,9 @@ typedef struct ir_data {
     uint8_t repeat;
 } ir_data_t;
 
+extern uint16_t screen_width;
+extern uint16_t screen_height;
+
 class StandaloneViewMirror : public ui::View {
    public:
     StandaloneViewMirror(ui::Context& context, const ui::Rect parent_rect)

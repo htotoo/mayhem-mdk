@@ -1,5 +1,5 @@
 # A test app to check if map ui is working in the standalone apps. 
-
+Not used anywhere, just a test app
 
 # Requirements
 Like the mayhem-firmware a version of gcc-arm-none-eabi is required. See [Compile Firmware](https://github.com/portapack-mayhem/mayhem-firmware/wiki/Compile-firmware) on how to get started.

@@ -34,20 +34,23 @@
 #include <cstdlib>  // for std::rand() and std::srand()
 #include <ctime>    // for std::time()
 
-class DigitalRain {
+extern uint16_t screen_width;
+extern uint16_t screen_height;
+
+class AboutRain {
    private:
     const std::vector<std::string> authors = {
         "jboone", "eried", "furrtek", "NotherNgineer", "gullradriel", "jLynx", "kallanreed", "Brumi-2021", "htotoo", "bernd-herzog", "zxkmm", "ArjanOnwezen", "euquiq", "u-foka", "iNetro"};
     //"heurist1", "dqs105", "teixeluis", "jwetzell", "jimilinuxguy", "gregoryfenton", "notpike", "strijar", "BehleZebub", "arneluehrs", "rascafr", "joyel24", "ImDroided", "zigad", "johnelder", "klockee", "nnesetto", "LupusE", "argilo", "dc2dc", "formtapez", "RocketGod-git", "mrmookie", "ITAxReal", "F33RNI", "F4GEV", "rusty-labs", "mjwaxios", "andrej-mk", "RedFox-Fr", "nemanjan00", "MichalLeonBorsuk", "MatiasFernandez", "Giorgiofox", "ckuethe"};
 
     ui::Painter painter{};
-    static const int WIDTH = 240;
-    static const int HEIGHT = 325;
-    static const int MARGIN_TOP = 20;
-    static const int CHAR_WIDTH = 5;
-    static const int CHAR_HEIGHT = 8;
-    static const int COLS = WIDTH / CHAR_WIDTH;
-    static const int ROWS = (HEIGHT - MARGIN_TOP) / CHAR_HEIGHT;
+    int WIDTH = 240;
+    int HEIGHT = 325;
+    int MARGIN_TOP = 20;
+    int CHAR_WIDTH = 5;
+    int CHAR_HEIGHT = 8;
+    int COLS = 0;
+    int ROWS = 0;
     static const int MAX_DROPS = 36;
 
     const ui::Font& font = ui::font::fixed_5x8();
@@ -125,8 +128,12 @@ class DigitalRain {
     }
 
    public:
-    DigitalRain() {
+    AboutRain() {
         std::srand(0);
+        WIDTH = screen_width;
+        HEIGHT = screen_height + 5;
+        COLS = WIDTH / CHAR_WIDTH;
+        ROWS = (HEIGHT - MARGIN_TOP) / CHAR_HEIGHT;
 
         for (uint8_t i = 0; i < MAX_DROPS; ++i) {
             init_drop(i, true);
@@ -215,6 +222,6 @@ class StandaloneViewMirror : public ui::View {
    private:
     ui::Context& context_;
     ui::Console console{{0, 0, 240, 320}};
-    DigitalRain digitalRain{};
+    AboutRain digitalRain{};
     uint8_t update = 0;
 };
