@@ -180,6 +180,3 @@ extern "C" TCHAR* f_gets(TCHAR* buff, int len, FIL* fp) {
 void exit_app() {
     _api->exit_app();
 }
-
-uint16_t screen_width = 240;
-uint16_t screen_height = 320;

@@ -29,10 +29,8 @@ ui::Context* context = nullptr;
 
 extern "C" void initialize(const standalone_application_api_t& api) {
     _api = &api;
-    screen_width = *_api->screen_width;
-    screen_height = *_api->screen_height;
     context = new ui::Context();
-    standaloneViewMirror = new StandaloneViewMirror(*context, {0, 16, screen_width, screen_height - 16});
+    standaloneViewMirror = new StandaloneViewMirror(*context, {0, 16, UI_POS_MAXWIDTH, UI_POS_MAXHEIGHT - 16});
 
     Command cmd = Command::COMMAND_UART_BAUDRATE_GET;
     std::vector<uint8_t> data(4);

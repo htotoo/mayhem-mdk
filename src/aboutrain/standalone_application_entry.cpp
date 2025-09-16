@@ -104,6 +104,3 @@ extern "C" void* __wrap__malloc_r(size_t size) {
 extern "C" void __wrap__free_r(void* p) {
     _api->free(p);
 }
-
-uint16_t screen_width = 240;
-uint16_t screen_height = 320;

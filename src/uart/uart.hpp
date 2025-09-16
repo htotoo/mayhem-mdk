@@ -25,6 +25,7 @@
 
 #include "ui/ui_widget.hpp"
 #include "ui/theme.hpp"
+#include "ui/ui_helper.hpp"
 
 #define USER_COMMANDS_START 0x7F01
 
@@ -36,9 +37,6 @@ enum class Command : uint16_t {
     COMMAND_UART_BAUDRATE_DEC,
     COMMAND_UART_BAUDRATE_GET
 };
-
-extern uint16_t screen_width;
-extern uint16_t screen_height;
 
 class StandaloneViewMirror : public ui::View {
    public:

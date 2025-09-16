@@ -26,6 +26,7 @@
 #include "ui/ui_widget.hpp"
 #include "ui/theme.hpp"
 #include "ui/string_format.hpp"
+#include "ui/ui_helper.hpp"
 #include <string.h>
 
 enum class Command : uint16_t {
@@ -48,9 +49,6 @@ typedef struct ir_data {
     uint64_t data;
     uint8_t repeat;
 } ir_data_t;
-
-extern uint16_t screen_width;
-extern uint16_t screen_height;
 
 class StandaloneViewMirror : public ui::View {
    public:

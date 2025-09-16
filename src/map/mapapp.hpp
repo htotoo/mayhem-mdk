@@ -29,9 +29,7 @@
 #include <string.h>
 #include "ui/ui_geomap.hpp"
 #include "ui/file_path.hpp"
-
-extern uint16_t screen_width;
-extern uint16_t screen_height;
+#include "ui/ui_helper.hpp"
 
 class StandaloneViewMirror : public ui::View {
    public:
@@ -68,9 +66,9 @@ class StandaloneViewMirror : public ui::View {
     }
 
    private:
-    ui::Button button_send{{1, 20, 7 * 16 + 1, 20}, "Move", true};
+    ui::Button button_send{{0, UI_POS_Y(0), UI_POS_WIDTH(5), UI_POS_HEIGHT(2)}, "Move", true};
     // ui::Button button_recv{{1, 60, 7 * 16 + 1, 20}, "Read ir"};
-    ui::GeoMap geo_map{{0, 40, screen_width, 240}};
+    ui::GeoMap geo_map{{0, UI_POS_Y(2), UI_POS_MAXWIDTH, UI_POS_MAXHEIGHT - 60}};
     ui::Context& context_;
     uint8_t rfcnt = 0;
 };

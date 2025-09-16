@@ -33,9 +33,7 @@
 #include <random>
 #include <cstdlib>  // for std::rand() and std::srand()
 #include <ctime>    // for std::time()
-
-extern uint16_t screen_width;
-extern uint16_t screen_height;
+#include "ui/ui_helper.hpp"
 
 class AboutRain {
    private:
@@ -130,8 +128,8 @@ class AboutRain {
    public:
     AboutRain() {
         std::srand(0);
-        WIDTH = screen_width;
-        HEIGHT = screen_height + 5;
+        WIDTH = UI_POS_MAXWIDTH;
+        HEIGHT = UI_POS_MAXHEIGHT;
         COLS = WIDTH / CHAR_WIDTH;
         ROWS = (HEIGHT - MARGIN_TOP) / CHAR_HEIGHT;
 
@@ -221,7 +219,7 @@ class StandaloneViewMirror : public ui::View {
 
    private:
     ui::Context& context_;
-    ui::Console console{{0, 0, 240, 320}};
+    ui::Console console{{0, 0, UI_POS_MAXWIDTH, UI_POS_MAXHEIGHT - 16}};
     AboutRain digitalRain{};
     uint8_t update = 0;
 };
