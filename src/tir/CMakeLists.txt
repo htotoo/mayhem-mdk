@@ -246,6 +246,6 @@ add_custom_command(
 )
 
 add_custom_target(
-	${PROJECT_NAME}
+	${PROJECT_NAME} ALL
 	DEPENDS ${PROJECT_NAME}.ppmp
 )
