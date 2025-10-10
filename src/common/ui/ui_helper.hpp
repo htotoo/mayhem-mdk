@@ -1,5 +1,7 @@
 #pragma once
 
+#include "standalone_application.hpp"
+
 // Positioning helpers PER CHARACTERS (8*16)
 // EACH parameters must be used az CHAR position, not PX coordinates. So If you wanna use the 8,16 coordinates (that is the second character in X and second character in Y you must use UI_POS_X(1) UI_POS_Y(1) (since we count from 0)
 
