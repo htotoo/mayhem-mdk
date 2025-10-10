@@ -44,16 +44,6 @@ WifiSettingsView::WifiSettingsView(NavigationView& nav) : nav_(nav) {
             text_ssid.set_dirty();
         });
     };
-    btn_set.on_touch_press = [this](Button& b) {
-        btn_set.set_text("Pressed");
-        text_ssid.set("pressed");
-        btn_set.set_dirty();
-    };
-    btn_set.on_touch_release = [this](Button& b) {
-        btn_set.set_text("Depressed");
-        text_ssid.set("depressed");
-        btn_set.set_dirty();
-    };
 }
 
 void WifiSettingsView::focus() {
