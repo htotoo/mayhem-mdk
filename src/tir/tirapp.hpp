@@ -29,10 +29,7 @@
 #include "ui/ui_helper.hpp"
 #include <string.h>
 
-enum class Command : uint16_t {
-    PPCMD_IRTX_SENDIR = 0xa003,
-    PPCMD_IRTX_GETLASTRCVIR = 0xa004
-};
+#include "pp_commands.hpp"
 
 enum irproto : uint8_t {
     UNK,
