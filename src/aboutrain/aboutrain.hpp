@@ -204,6 +204,10 @@ class AboutRainView : public ui::View {
         set_style(ui::Theme::getInstance()->bg_darkest);
     }
 
+    ~AboutRainView() {
+        ui::Theme::destroy();
+    }
+
     void focus() override {
     }
 
