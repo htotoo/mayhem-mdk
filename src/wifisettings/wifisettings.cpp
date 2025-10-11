@@ -34,20 +34,30 @@ extern "C" void initialize(const standalone_application_api_t& api) {
 namespace ui {
 
 WifiSettingsView::WifiSettingsView(NavigationView& nav) : nav_(nav) {
-    add_children({&btn_set,
-                  &text_ssid});
+    add_children({&btn_ssid, &btn_password, &btn_send,
+                  &text_ssid, &text_password, &labels});
 
-    btn_set.on_select = [this](Button&) {
+    btn_ssid.on_select = [this](Button&) {
         text_prompt(nav_, ssid_, 32, ENTER_KEYBOARD_MODE_ALPHA, [this](std::string& value) {
             ssid_ = value;
             text_ssid.set("SSID: " + ssid_);
             text_ssid.set_dirty();
         });
     };
+    btn_password.on_select = [this](Button&) {
+        text_prompt(nav_, password_, 32, ENTER_KEYBOARD_MODE_ALPHA, [this](std::string& value) {
+            password_ = value;
+            text_password.set("PWD: " + password_);
+            text_password.set_dirty();
+        });
+    };
+    btn_send.on_select = [this](Button&) {
+        // pp_send_command_set_wifi(ssid_.c_str(), password_.c_str());
+    };
 }
 
 void WifiSettingsView::focus() {
-    btn_set.focus();
+    btn_ssid.focus();
 }
 
 }  // namespace ui
