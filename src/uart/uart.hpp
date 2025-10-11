@@ -26,8 +26,12 @@
 #include "ui/ui_widget.hpp"
 #include "ui/theme.hpp"
 #include "ui/ui_helper.hpp"
+#include "ui/ui_navigation.hpp"
+#include "standaloneviewmirror.hpp"
 
 #define USER_COMMANDS_START 0x7F01
+
+namespace ui {
 
 enum class Command : uint16_t {
     // UART specific commands
@@ -38,9 +42,10 @@ enum class Command : uint16_t {
     COMMAND_UART_BAUDRATE_GET
 };
 
-class StandaloneViewMirror : public ui::View {
+class UartAPPView : public ui::View {
    public:
-    StandaloneViewMirror(ui::Context& context, const ui::Rect parent_rect) : View{parent_rect}, context_(context) {
+    UartAPPView(ui::NavigationView& nav) {
+        (void)nav;
         set_style(ui::Theme::getInstance()->bg_dark);
 
         add_children({&text,
@@ -65,14 +70,59 @@ class StandaloneViewMirror : public ui::View {
 
             baudrate_dirty_ = true;
         };
+
+        Command cmd = Command::COMMAND_UART_BAUDRATE_GET;
+        std::vector<uint8_t> data(4);
+
+        if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false)
+            return;
+
+        uint32_t baudrate = *(uint32_t*)data.data();
+        set_baudrate(baudrate);
+    }
+
+    ~UartAPPView() {
+        ui::Theme::destroy();
+    }
+
+    void on_framesync() override {
+        if (isBaudrateChanged()) {
+            Command cmd = Command::COMMAND_UART_BAUDRATE_GET;
+            std::vector<uint8_t> data(4);
+
+            if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false)
+                return;
+
+            uint32_t baudrate = *(uint32_t*)data.data();
+            set_baudrate(baudrate);
+            return;
+        }
+
+        Command cmd = Command::COMMAND_UART_REQUESTDATA_SHORT;
+        std::vector<uint8_t> data(5);
+
+        uint8_t more_data_available;
+        do {
+            if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false)
+                return;
+
+            uint8_t data_len = data[0] & 0x7f;
+            more_data_available = data[0] >> 7;
+            uint8_t* data_ptr = data.data() + 1;
+
+            if (data_len > 0) {
+                get_console().write(std::string((char*)data_ptr, data_len));
+            }
+
+            if (more_data_available) {
+                cmd = Command::COMMAND_UART_REQUESTDATA_LONG;
+                data = std::vector<uint8_t>(128);
+            }
+        } while (more_data_available == 1);
     }
 
     ui::Console& get_console() {
         return console;
-    }
-
-    ui::Context& context() const override {
-        return context_;
     }
 
     void focus() override {
@@ -98,10 +148,10 @@ class StandaloneViewMirror : public ui::View {
     ui::Button button_n{{100, 4, 16, 24}, "-"};
     ui::Button button_p{{120, 4, 16, 24}, "+"};
 
-    ui::Console console{{0, 2 * 16, 240, 272}};
-
-    ui::Context& context_;
+    ui::Console console{{0, 2 * 16, UI_POS_MAXWIDTH, UI_POS_HEIGHT_REMAINING(4)}};
 
     uint32_t baudrate_{115200};
     bool baudrate_dirty_{true};
 };
+
+}  // namespace ui
