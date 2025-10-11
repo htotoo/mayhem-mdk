@@ -1,5 +1,5 @@
 /*
-This file contains the userd command addresses. You should not reuse them.
+This file contains the used command addresses. You should not reuse them.
 You can define your own here, or in another file too. This is just a common container, to help them find in one place.
 */
 
