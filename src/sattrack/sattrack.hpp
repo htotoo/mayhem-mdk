@@ -28,12 +28,11 @@
 #include "ui/string_format.hpp"
 #include "ui/ui_helper.hpp"
 #include <string.h>
-enum class Command : uint16_t {
-    // UART specific commands
-    PPCMD_SATTRACK_DATA = 0xa000,
-    PPCMD_SATTRACK_SETSAT = 0xa001,
-    PPCMD_SATTRACK_SETMGPS = 0xa002
-};
+#include "pp_commands.hpp"
+#include "ui/ui_navigation.hpp"
+#include "standaloneviewmirror.hpp"
+
+namespace ui {
 
 typedef struct
 {
@@ -60,10 +59,10 @@ typedef struct
     float lon;
 } sat_mgps_t;
 
-class StandaloneViewMirror : public ui::View {
+class SatTrackView : public ui::View {
    public:
-    StandaloneViewMirror(ui::Context& context, const ui::Rect parent_rect)
-        : View{parent_rect}, context_(context) {
+    SatTrackView(ui::NavigationView& nav) {
+        (void)nav;
         set_style(ui::Theme::getInstance()->bg_dark);
 
         add_children({&labels,
@@ -112,12 +111,24 @@ class StandaloneViewMirror : public ui::View {
         };
     }
 
-    ui::Context& context() const override {
-        return context_;
+    ~SatTrackView() {
+        ui::Theme::destroy();
     }
 
     void focus() override {
         option_sat.focus();
+    }
+
+    void on_framesync() override {
+        if (need_refresh()) {
+            Command cmd = Command::PPCMD_SATTRACK_DATA;
+            std::vector<uint8_t> data(sizeof(sattrackdata_t));
+
+            if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false) return;
+
+            sattrackdata_t sattrackdata = *(sattrackdata_t*)data.data();
+            got_data(sattrackdata);
+        }
     }
 
     bool need_refresh() {
@@ -334,8 +345,6 @@ class StandaloneViewMirror : public ui::View {
         {{0 * 8, 4 + 5 * 16}, "Elevation:", ui::Theme::getInstance()->fg_light->foreground},
         {{0 * 8, 4 + 6 * 16}, "Azimuth  :", ui::Theme::getInstance()->fg_light->foreground}};
 
-    ui::Context& context_;
-
     std::string to_string_decimal_my(float decimal, int8_t precision) {
         if (precision < 0) precision = 0;
         if (precision > 7) precision = 7;  // Limit precision to avoid overflow
@@ -386,3 +395,5 @@ class StandaloneViewMirror : public ui::View {
         return std::string(buffer);
     }
 };
+
+}  // namespace ui
