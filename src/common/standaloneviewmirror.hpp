@@ -9,7 +9,7 @@ class StandaloneViewMirror : public NavigationView {
    public:
     StandaloneViewMirror(ui::Context& context, const ui::Rect parent_rect)
         : ui::NavigationView(context, parent_rect) {
-        set_style(ui::Theme::getInstance()->bg_dark);
+        set_style(ui::Theme::getInstance()->bg_darker);
     }
 };
 

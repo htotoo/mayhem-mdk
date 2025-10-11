@@ -2,6 +2,7 @@
 
 ui::StandaloneViewMirror* standaloneViewMirror = nullptr;
 ui::Context* context = nullptr;
+const standalone_application_api_t* _api;
 
 // event 1 == frame sync. called each 1/60th of second, so 6 = 100ms
 extern "C" void on_event(const uint32_t& events) {
