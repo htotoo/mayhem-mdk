@@ -22,7 +22,6 @@
 #include "standalone_application.hpp"
 #include <memory>
 #include "ui/ff.h"
-const standalone_application_api_t* _api;
 
 extern "C" {
 __attribute__((section(".standalone_application_information"), used)) standalone_application_information_t _standalone_application_information = {
