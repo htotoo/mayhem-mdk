@@ -77,30 +77,3 @@ __attribute__((section(".standalone_application_information"), used)) standalone
     /*.OnKeyboad = */ OnKeyboad,
 };
 }
-
-/* Implementing abort() eliminates requirement for _getpid(), _kill(), _exit(). */
-extern "C" void abort() {
-    while (true);
-}
-
-// replace memory allocations to use heap from chibios
-extern "C" void* malloc(size_t size) {
-    return _api->malloc(size);
-}
-extern "C" void* calloc(size_t num, size_t size) {
-    return _api->calloc(num, size);
-}
-extern "C" void* realloc(void* p, size_t size) {
-    return _api->realloc(p, size);
-}
-extern "C" void free(void* p) {
-    _api->free(p);
-}
-
-// redirect std lib memory allocations (sprintf, etc.)
-extern "C" void* __wrap__malloc_r(size_t size) {
-    return _api->malloc(size);
-}
-extern "C" void __wrap__free_r(void* p) {
-    _api->free(p);
-}
