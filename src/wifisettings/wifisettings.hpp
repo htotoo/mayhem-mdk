@@ -36,7 +36,9 @@ namespace ui {
 class WifiSettingsView : public View {
    public:
     WifiSettingsView(NavigationView& nav);
-    ~WifiSettingsView() {};
+    ~WifiSettingsView() {
+        Theme::destroy();
+    };
 
     void focus() override;
     std::string title() const override { return "WiFi Settings"; };
