@@ -48,7 +48,7 @@ class WifiSettingsView : public View {
     std::string password_ = "mypass";
     NavigationView& nav_;
     Button btn_ssid{{UI_POS_X(0), UI_POS_Y(0), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit SSID"};
-    Button btn_password{{UI_POS_X(20), UI_POS_Y(0), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit PWD"};
+    Button btn_password{{UI_POS_X(15), UI_POS_Y(0), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit PWD"};
     Text text_ssid{{UI_POS_X(0), UI_POS_Y(3), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "SSID: myssid"};
     Text text_password{{UI_POS_X(0), UI_POS_Y(4), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "PWD: mypass"};
     Button btn_send{{UI_POS_X_CENTER(12), UI_POS_Y_BOTTOM(3), UI_POS_WIDTH(12), UI_POS_HEIGHT(2)}, "Set to ESP"};
