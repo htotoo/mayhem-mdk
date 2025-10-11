@@ -14,6 +14,10 @@ enum class Command : uint16_t {
     PPCMD_SATTRACK_SETMGPS = 0xa002,
     // IR send / receive app
     PPCMD_IRTX_SENDIR = 0xa003,
-    PPCMD_IRTX_GETLASTRCVIR = 0xa004
+    PPCMD_IRTX_GETLASTRCVIR = 0xa004,
     // Wifi settings app
+    PPCMD_WIFI_SET = 0xa005,
+    PPCMD_WIFI_STARTSCAN = 0xa006,
+    PPCMD_WIFI_STOPSCAN = 0xa007,
+    PPCMD_WIFI_GETSCANRESULT = 0xa008
 };
