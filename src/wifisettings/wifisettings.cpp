@@ -91,42 +91,31 @@ WifiSettingsView::WifiSettingsView(NavigationView& nav) : nav_(nav) {
 }
 
 void WifiSettingsView::on_framesync() {
-    if (config_loaded <= 10) config_loaded++;
-    if (config_loaded == 10) {
+    if (config_loaded <= 20) config_loaded++;
+    if (config_loaded == 20) {
         get_current_config();
     }
 }
 
 void WifiSettingsView::get_current_config() {
     Command cmd = Command::PPCMD_WIFI_GET_CONFIG;
-    std::vector<uint8_t> data(sizeof(wifi_current_data_t));
     wifi_current_data_t current{};
-    if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false) return;
-    memcpy(&current, data.data(), sizeof(wifi_current_data_t));
+    if (_api->i2c_read((uint8_t*)&cmd, 2, (uint8_t*)&current, sizeof(wifi_current_data_t)) == false) return;
     current.sta_ssid[29] = 0;
     current.sta_password[29] = 0;
     current.ap_ssid[29] = 0;
     current.ap_password[29] = 0;
-    ssid_ = std::string(current.sta_ssid, 30);
-    password_ = std::string(current.sta_password, 30);
-    ssid_ap_ = std::string(current.ap_ssid, 30);
-    password_ap_ = std::string(current.ap_password, 30);
+    ssid_ = std::string(current.sta_ssid);
+    password_ = std::string(current.sta_password);
+    ssid_ap_ = std::string(current.ap_ssid);
+    password_ap_ = std::string(current.ap_password);
     text_ssid.set("SSID: " + ssid_);
-    text_ssid.set_dirty();
     text_password.set("PWD: " + password_);
-    text_password.set_dirty();
     text_ssid_ap.set("SSID: " + ssid_ap_);
-    text_ssid_ap.set_dirty();
     text_password_ap.set("PWD: " + password_ap_);
-    text_password_ap.set_dirty();
     std::string ipstr = "IP: " + to_string_dec_uint(current.ip[0]) + "." + to_string_dec_uint(current.ip[1]) + "." +
                         to_string_dec_uint(current.ip[2]) + "." + to_string_dec_uint(current.ip[3]);
     text_ip.set(ipstr);
-    text_ip.set_dirty();
-}
-
-void WifiSettingsView::focus() {
-    btn_ssid.focus();
 }
 
 }  // namespace ui

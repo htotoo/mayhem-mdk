@@ -54,7 +54,6 @@ class WifiSettingsView : public View {
         Theme::destroy();
     };
 
-    void focus() override;
     std::string title() const override { return "WiFi Settings"; };
     void on_framesync() override;
 
@@ -62,10 +61,10 @@ class WifiSettingsView : public View {
     void get_current_config();
     uint8_t config_loaded = 0;
 
-    std::string ssid_ = "myssid";
-    std::string password_ = "mypass";
-    std::string ssid_ap_ = "myapssid";
-    std::string password_ap_ = "myappass";
+    std::string ssid_ = "-";
+    std::string password_ = "-";
+    std::string ssid_ap_ = "-";
+    std::string password_ap_ = "-";
     NavigationView& nav_;
     // sta
     Button btn_ssid{{UI_POS_X(0), UI_POS_Y(1), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit SSID"};
