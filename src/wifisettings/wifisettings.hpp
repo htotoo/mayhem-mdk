@@ -33,6 +33,20 @@
 #include "ui_textentry.hpp"
 namespace ui {
 
+// wifi config from companion app
+typedef struct wifi_config_comp_t {
+    char ssid[30];
+    char password[30];
+} wifi_config_comp_t;
+
+typedef struct wifi_current_data_t {
+    uint8_t ip[4];
+    char sta_ssid[30];
+    char sta_password[30];
+    char ap_ssid[30];
+    char ap_password[30];
+} wifi_current_data_t;
+
 class WifiSettingsView : public View {
    public:
     WifiSettingsView(NavigationView& nav);
@@ -42,18 +56,34 @@ class WifiSettingsView : public View {
 
     void focus() override;
     std::string title() const override { return "WiFi Settings"; };
+    void on_framesync() override;
 
    private:
+    void get_current_config();
+    uint8_t config_loaded = 0;
+
     std::string ssid_ = "myssid";
     std::string password_ = "mypass";
+    std::string ssid_ap_ = "myapssid";
+    std::string password_ap_ = "myappass";
     NavigationView& nav_;
-    Button btn_ssid{{UI_POS_X(0), UI_POS_Y(0), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit SSID"};
-    Button btn_password{{UI_POS_X(15), UI_POS_Y(0), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit PWD"};
+    // sta
+    Button btn_ssid{{UI_POS_X(0), UI_POS_Y(1), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit SSID"};
+    Button btn_password{{UI_POS_X(15), UI_POS_Y(1), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit PWD"};
     Text text_ssid{{UI_POS_X(0), UI_POS_Y(3), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "SSID: myssid"};
     Text text_password{{UI_POS_X(0), UI_POS_Y(4), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "PWD: mypass"};
-    Button btn_send{{UI_POS_X_CENTER(12), UI_POS_Y_BOTTOM(3), UI_POS_WIDTH(12), UI_POS_HEIGHT(2)}, "Set to ESP"};
-    Labels labels{
-        {{UI_POS_X(0), UI_POS_Y(6)}, "Note: 32 chars only", ui::Theme::getInstance()->fg_yellow->foreground}};
-};
+    Button btn_send{{UI_POS_X_CENTER(12), UI_POS_Y(5), UI_POS_WIDTH(12), UI_POS_HEIGHT(2)}, "Set to ESP"};
+    // ap
+    Button btn_ssid_ap{{UI_POS_X(0), UI_POS_Y(9), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit SSID"};
+    Button btn_password_ap{{UI_POS_X(15), UI_POS_Y(9), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit PWD"};
+    Text text_ssid_ap{{UI_POS_X(0), UI_POS_Y(11), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "SSID: myssid"};
+    Text text_password_ap{{UI_POS_X(0), UI_POS_Y(12), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "PWD: mypass"};
+    Button btn_send_ap{{UI_POS_X_CENTER(12), UI_POS_Y(13), UI_POS_WIDTH(12), UI_POS_HEIGHT(2)}, "Set to ESP"};
 
+    Text text_ip{{UI_POS_X(0), UI_POS_Y_BOTTOM(3), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "IP: 192.168.4.1"};
+    Labels labels{
+        {{UI_POS_X(0), UI_POS_Y(0)}, "STA (Wifi client)", ui::Theme::getInstance()->fg_light->foreground},
+        {{UI_POS_X(0), UI_POS_Y(8)}, "AP (Wifi AP)", ui::Theme::getInstance()->fg_light->foreground},
+        {{UI_POS_X(0), UI_POS_Y_BOTTOM(2)}, "Note: max 30 chars", ui::Theme::getInstance()->fg_yellow->foreground}};
+};
 }  // namespace ui
