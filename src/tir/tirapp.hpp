@@ -54,7 +54,7 @@ class TIRAppView : public ui::View {
    public:
     TIRAppView(ui::NavigationView& nav) {
         (void)nav;
-        set_style(ui::Theme::getInstance()->bg_dark);
+        set_style(ui::Theme::getInstance()->bg_darker);
 
         add_children({
             &labels,
