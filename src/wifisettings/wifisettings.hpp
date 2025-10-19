@@ -68,21 +68,21 @@ class WifiSettingsView : public View {
     NavigationView& nav_;
     // sta
     Button btn_ssid{{UI_POS_X(0), UI_POS_Y(1), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit SSID"};
-    Button btn_password{{UI_POS_X(15), UI_POS_Y(1), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit PWD"};
+    Button btn_password{{UI_POS_X(13), UI_POS_Y(1), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit PWD"};
     Text text_ssid{{UI_POS_X(0), UI_POS_Y(3), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "SSID: myssid"};
     Text text_password{{UI_POS_X(0), UI_POS_Y(4), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "PWD: mypass"};
     Button btn_send{{UI_POS_X_CENTER(12), UI_POS_Y(5), UI_POS_WIDTH(12), UI_POS_HEIGHT(2)}, "Set to ESP"};
     // ap
-    Button btn_ssid_ap{{UI_POS_X(0), UI_POS_Y(9), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit SSID"};
-    Button btn_password_ap{{UI_POS_X(15), UI_POS_Y(9), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit PWD"};
-    Text text_ssid_ap{{UI_POS_X(0), UI_POS_Y(11), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "SSID: myssid"};
-    Text text_password_ap{{UI_POS_X(0), UI_POS_Y(12), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "PWD: mypass"};
-    Button btn_send_ap{{UI_POS_X_CENTER(12), UI_POS_Y(13), UI_POS_WIDTH(12), UI_POS_HEIGHT(2)}, "Set to ESP"};
-
-    Text text_ip{{UI_POS_X(0), UI_POS_Y_BOTTOM(3), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "IP: 192.168.4.1"};
+    Button btn_ssid_ap{{UI_POS_X(0), UI_POS_Y(8), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit SSID"};
+    Button btn_password_ap{{UI_POS_X(13), UI_POS_Y(8), UI_POS_WIDTH(10), UI_POS_HEIGHT(2)}, "Edit PWD"};
+    Text text_ssid_ap{{UI_POS_X(0), UI_POS_Y(10), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "SSID: myssid"};
+    Text text_password_ap{{UI_POS_X(0), UI_POS_Y(11), UI_POS_MAXWIDTH, UI_POS_HEIGHT(1)}, "PWD: mypass"};
+    Button btn_send_ap{{UI_POS_X_CENTER(12), UI_POS_Y(12), UI_POS_WIDTH(12), UI_POS_HEIGHT(2)}, "Set to ESP"};
+    Button btn_refresh{{UI_POS_X_RIGHT(7), UI_POS_Y_BOTTOM(3), UI_POS_WIDTH(7), UI_POS_HEIGHT(2)}, "Refresh"};
+    Text text_ip{{UI_POS_X(0), UI_POS_Y_BOTTOM(3), UI_POS_WIDTH(20), UI_POS_HEIGHT(1)}, "IP: 192.168.4.1"};
     Labels labels{
         {{UI_POS_X(0), UI_POS_Y(0)}, "STA (Wifi client)", ui::Theme::getInstance()->fg_light->foreground},
-        {{UI_POS_X(0), UI_POS_Y(8)}, "AP (Wifi AP)", ui::Theme::getInstance()->fg_light->foreground},
+        {{UI_POS_X(0), UI_POS_Y(7)}, "AP (Wifi AP)", ui::Theme::getInstance()->fg_light->foreground},
         {{UI_POS_X(0), UI_POS_Y_BOTTOM(2)}, "Note: max 30 chars", ui::Theme::getInstance()->fg_yellow->foreground}};
 };
 }  // namespace ui

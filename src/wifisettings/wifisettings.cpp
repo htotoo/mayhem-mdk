@@ -36,7 +36,7 @@ namespace ui {
 WifiSettingsView::WifiSettingsView(NavigationView& nav) : nav_(nav) {
     add_children({&btn_ssid, &btn_password, &btn_send, &text_ssid, &text_password,
                   &text_ssid_ap, &text_password_ap, &btn_ssid_ap, &btn_password_ap, &btn_send_ap,
-                  &text_ip, &labels});
+                  &text_ip, &labels, &btn_refresh});
 
     btn_ssid.on_select = [this](Button&) {
         text_prompt(nav_, ssid_, 30, ENTER_KEYBOARD_MODE_ALPHA, [this](std::string& value) {
@@ -87,6 +87,10 @@ WifiSettingsView::WifiSettingsView(NavigationView& nav) : nav_(nav) {
         memcpy(data.data(), &config, sizeof(wifi_config_comp_t));
         data.insert(data.begin(), reinterpret_cast<uint8_t*>(&cmd), reinterpret_cast<uint8_t*>(&cmd) + sizeof(cmd));
         if (_api->i2c_read(data.data(), data.size(), nullptr, 0) == false) return;
+    };
+
+    btn_refresh.on_select = [this](Button&) {
+        config_loaded = 0;
     };
 }
 
