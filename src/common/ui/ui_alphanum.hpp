@@ -59,9 +59,9 @@ class AlphanumView : public TextEntryView {
         ShiftLock,
     };
 
-    const char* const keys_lower = "abcdefghijklmnopqrstuvwxyz, .";
-    const char* const keys_upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ, .";
-    const char* const keys_digit = "1234567890()'`\"+-*/=<>_\\!?, .";
+    const char* const keys_lower = "abcdefghijklmnopqrstuvwxyz, ";
+    const char* const keys_upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ, ";
+    const char* const keys_digit = "1234567890()'`\"+-*/=<>_\\!?,.";
     const char* const keys_symbl = "!@#$%^&*()[]'`\"{}|:;<>-_~?, .";
     const char* const keys_hex = "1234567890ABCDEF ";
 
