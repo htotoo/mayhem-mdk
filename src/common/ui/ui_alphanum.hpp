@@ -89,7 +89,7 @@ class AlphanumView : public TextEntryView {
     std::array<Button, 29> buttons{};
 
     NewButton button_shift{
-        {192, 214, UI_POS_MAXWIDTH / 5, 38},
+        {UI_POS_MAXWIDTH - UI_POS_MAXWIDTH / 5, 214, UI_POS_MAXWIDTH / 5, 38},
         "Shift",
         nullptr,
         Theme::getInstance()->bg_dark->background,
