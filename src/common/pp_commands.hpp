@@ -24,4 +24,7 @@ enum class Command : uint16_t {
     PPCMD_WIFI_GETSCANRESULT = 0xa00a,
     // ESP manager app
     PPCMD_AIRPLANE_MODE = 0xa00b,
+    // esp apps app
+    PPCMD_APPMGR_APPMGR = 0xa00c,
+    PPCMD_APPMGR_APPCMD = 0xa00d
 };

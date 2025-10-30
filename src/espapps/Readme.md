@@ -1,9 +1,9 @@
-# Wifi settings app for ESP32PP
+# App manager for ESP32PP
 
 # to build
 
 cmake -DCMAKE_TOOLCHAIN_FILE=arm-none-eabi-toolchain.cmake -B build -S.
-make -C build wifisettings
+make -C build espapps
 
 
 # build with docker

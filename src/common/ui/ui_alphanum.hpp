@@ -90,8 +90,8 @@ class AlphanumView : public TextEntryView {
 
     NewButton button_shift{
         {192, 214, UI_POS_MAXWIDTH / 5, 38},
-        {},
-        &bitmap_icon_shift,
+        "Shift",
+        nullptr,
         Theme::getInstance()->bg_dark->background,
         /*vcenter*/ true};
 
