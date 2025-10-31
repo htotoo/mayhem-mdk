@@ -28,11 +28,11 @@
 #include "ui/string_format.hpp"
 #include "ui/ui_helper.hpp"
 #include <string.h>
+#include "ui/ui_navigation.hpp"
+#include "standaloneviewmirror.hpp"
 
-enum class Command : uint16_t {
-    PPCMD_IRTX_SENDIR = 0xa003,
-    PPCMD_IRTX_GETLASTRCVIR = 0xa004
-};
+#include "pp_commands.hpp"
+namespace ui {
 
 enum irproto : uint8_t {
     UNK,
@@ -50,11 +50,11 @@ typedef struct ir_data {
     uint8_t repeat;
 } ir_data_t;
 
-class StandaloneViewMirror : public ui::View {
+class TIRAppView : public ui::View {
    public:
-    StandaloneViewMirror(ui::Context& context, const ui::Rect parent_rect)
-        : View{parent_rect}, context_(context) {
-        set_style(ui::Theme::getInstance()->bg_dark);
+    TIRAppView(ui::NavigationView& nav) {
+        (void)nav;
+        set_style(ui::Theme::getInstance()->bg_darker);
 
         add_children({
             &labels,
@@ -85,8 +85,18 @@ class StandaloneViewMirror : public ui::View {
         };
     }
 
-    ui::Context& context() const override {
-        return context_;
+    ~TIRAppView() {
+        ui::Theme::destroy();
+    }
+
+    void on_framesync() override {
+        if (need_refresh()) {
+            Command cmd = Command::PPCMD_IRTX_GETLASTRCVIR;
+            std::vector<uint8_t> data(sizeof(ir_data_t));
+            if (_api->i2c_read((uint8_t*)&cmd, 2, data.data(), data.size()) == false) return;
+            ir_data_t irdata = *(ir_data_t*)data.data();
+            got_data(irdata);
+        }
     }
 
     void focus() override {
@@ -144,7 +154,8 @@ class StandaloneViewMirror : public ui::View {
     ui::Text text_irproto{{1, 100, 22 * 8, 16}, "-"};
     ui::Text text_irdata{{1, 120, 22 * 8, 16}, "-"};
 
-    ui::Context& context_;
     uint8_t rfcnt = 0;
     bool recv_mode_on = false;
 };
+
+}  // namespace ui

@@ -33,6 +33,12 @@ while IFS= read -r -d '' build_script; do
     # Run the main build.sh script.
     ./build.sh
 
+    if [ $? -ne 0 ]; then
+        echo "Error: build.sh failed with a non-zero exit code in '$DIR'. Aborting." >&2
+        cd "$START_DIR"
+        exit 1
+    fi
+
     # Return to the starting directory.
     cd "$START_DIR"
 

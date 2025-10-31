@@ -30,11 +30,14 @@
 #include "ui/ui_geomap.hpp"
 #include "ui/file_path.hpp"
 #include "ui/ui_helper.hpp"
+#include "ui/ui_navigation.hpp"
+#include "standaloneviewmirror.hpp"
+namespace ui {
 
-class StandaloneViewMirror : public ui::View {
+class MapAppView : public ui::View {
    public:
-    StandaloneViewMirror(ui::Context& context, const ui::Rect parent_rect)
-        : View{parent_rect}, context_(context) {
+    MapAppView(ui::NavigationView& nav) {
+        (void)nav;
         set_style(ui::Theme::getInstance()->bg_dark);
 
         add_children({&button_send, &geo_map});
@@ -49,26 +52,19 @@ class StandaloneViewMirror : public ui::View {
         };
     }
 
-    ~StandaloneViewMirror() {
+    ~MapAppView() {
         ui::Theme::destroy();
-    }
-
-    ui::Context& context() const override {
-        return context_;
     }
 
     void focus() override {
         button_send.focus();
     }
 
-    bool need_refresh() {
-        return false;
-    }
-
    private:
     ui::Button button_send{{0, UI_POS_Y(0), UI_POS_WIDTH(5), UI_POS_HEIGHT(2)}, "Move", true};
     // ui::Button button_recv{{1, 60, 7 * 16 + 1, 20}, "Read ir"};
     ui::GeoMap geo_map{{0, UI_POS_Y(2), UI_POS_MAXWIDTH, UI_POS_MAXHEIGHT - 60}};
-    ui::Context& context_;
     uint8_t rfcnt = 0;
 };
+
+}  // namespace ui

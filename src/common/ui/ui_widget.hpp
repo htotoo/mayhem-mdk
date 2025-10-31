@@ -183,6 +183,7 @@ class View : public Widget {
     const std::vector<Widget*>& children() const override;
 
     virtual std::string title() const;
+    virtual void on_framesync() {};
 
    protected:
     std::vector<Widget*> children_{};

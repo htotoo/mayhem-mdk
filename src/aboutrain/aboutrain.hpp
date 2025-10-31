@@ -33,7 +33,11 @@
 #include <random>
 #include <cstdlib>  // for std::rand() and std::srand()
 #include <ctime>    // for std::time()
+#include "ui/ui_navigation.hpp"
+#include "standaloneviewmirror.hpp"
 #include "ui/ui_helper.hpp"
+
+namespace ui {
 
 class AboutRain {
    private:
@@ -193,18 +197,22 @@ class AboutRain {
     }
 };
 
-class StandaloneViewMirror : public ui::View {
+class AboutRainView : public ui::View {
    public:
-    StandaloneViewMirror(ui::Context& context, const ui::Rect parent_rect)
-        : View{parent_rect}, context_(context) {
+    AboutRainView(NavigationView& nav) {
+        (void)nav;
         set_style(ui::Theme::getInstance()->bg_darkest);
     }
 
-    ui::Context& context() const override {
-        return context_;
+    ~AboutRainView() {
+        ui::Theme::destroy();
     }
 
     void focus() override {
+    }
+
+    void on_framesync() override {
+        need_refresh();
     }
 
     bool need_refresh() {
@@ -218,8 +226,9 @@ class StandaloneViewMirror : public ui::View {
     }
 
    private:
-    ui::Context& context_;
     ui::Console console{{0, 0, UI_POS_MAXWIDTH, UI_POS_MAXHEIGHT - 16}};
     AboutRain digitalRain{};
     uint8_t update = 0;
 };
+
+}  // namespace ui
