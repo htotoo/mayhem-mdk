@@ -54,19 +54,24 @@ class TIRAppView : public ui::View {
                 // stop
                 send_mode_on = false;
                 file.close();
-                button_send.set_text("Send ir");
+                button_send.set_text("Send ir3");
                 return;
             }
             recv_mode_on = false;
-            if (current_file_path == "") {
+            if (current_file_path.empty()) {
                 if (ir_to_send.protocol != irproto::UNK) {
                     send_ir_data();  // only repeat last i got
+                    button_send.set_text("Send ir4");
+                } else {
+                    button_send.set_text("Send ir5");
                 }
             } else {
-                auto res = file.open(current_file_path, true, false);
+                auto res = file.open("/IR/unioff.ir", true, false);
                 if (!res.is_valid()) {
                     send_mode_on = true;
                     button_send.set_text("Stop");
+                } else {
+                    button_send.set_text("Send ir6");
                 }
             }
         };
@@ -86,7 +91,6 @@ class TIRAppView : public ui::View {
             open_view->on_changed = [this](std::filesystem::path new_file_path) {
                 text_filename.set(new_file_path.filename().string());
                 current_file_path = new_file_path;
-                button_send.focus();
             };
         };
     }
@@ -115,10 +119,11 @@ class TIRAppView : public ui::View {
             // done or error
             send_mode_on = false;
             file.close();
-            button_send.set_text("Send ir");
+            button_send.set_text("Send ir2");
             return;
         } else {
             ir_to_send = irdata;
+            update_ir_display();
             send_ir_data();
         }
     }
@@ -133,7 +138,7 @@ class TIRAppView : public ui::View {
         }
         if (send_mode_on) {
             send_timer++;
-            if (send_timer > 10) {  // around 150ms
+            if (send_timer > 20) {  // around 150ms
                 send_timer = 0;
                 send_next_ir();
             }
@@ -154,16 +159,9 @@ class TIRAppView : public ui::View {
         return false;
     }
 
-    void got_data(ir_data_t ir) {
-        if (ir.protocol == irproto::UNK) return;
-        if (!send_mode_on) ir_to_send = ir;
-        ir_to_send.repeat = 2;
-        text_filename.set("-");
-        current_file_path = "";
-        recv_mode_on = false;  // no more, got a valid
-        button_recv.set_text("Read ir");
+    void update_ir_display() {
         std::string proto = "UNK";
-        switch (ir.protocol) {
+        switch (ir_to_send.protocol) {
             case irproto::NEC:
                 proto = "NEC";
                 break;
@@ -183,7 +181,18 @@ class TIRAppView : public ui::View {
                 break;
         }
         text_irproto.set(proto);
-        text_irdata.set(to_string_hex(ir.data, 16));
+        text_irdata.set(to_string_hex(ir_to_send.data, 16));
+    }
+
+    void got_data(ir_data_t ir) {
+        if (ir.protocol == irproto::UNK) return;
+        if (!send_mode_on) ir_to_send = ir;
+        ir_to_send.repeat = 2;
+        text_filename.set("-");
+        current_file_path = "";
+        recv_mode_on = false;  // no more, got a valid
+        button_recv.set_text("Read ir");
+        update_ir_display();
     }
 
    private:

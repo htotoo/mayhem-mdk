@@ -67,6 +67,7 @@ ir_data_t read_flipper_ir_file(File& f) {
     ir_data_t ir_data;
     ir_data.repeat = 2;
     ir_data.protocol = irproto::UNK;
+    line.resize(130);
     bool is_type_ok = false;  // if type is ok
     while (!fr.is_error() && fr.value() > 0) {
         if (line.length() < 130 && ch != '\n') line += ch;
@@ -80,6 +81,9 @@ ir_data_t read_flipper_ir_file(File& f) {
                 // We have valid data parsed. return it
                 return ir_data;
             }
+            line = "";
+            fr = f.read(&ch, 1);
+            continue;
         }
         auto it = line.find(':', 0);
         if (it == std::string::npos) {
