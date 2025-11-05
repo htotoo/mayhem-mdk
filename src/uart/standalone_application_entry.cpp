@@ -22,8 +22,6 @@
 #include "standalone_application.hpp"
 #include <memory>
 
-const standalone_application_api_t* _api;
-
 extern "C" {
 __attribute__((section(".standalone_application_information"), used)) standalone_application_information_t _standalone_application_information = {
     /*.header_version = */ CURRENT_STANDALONE_APPLICATION_API_VERSION,
@@ -76,31 +74,4 @@ __attribute__((section(".standalone_application_information"), used)) standalone
     /*.OnEncoder = */ OnEncoder,
     /*.OnKeyboad = */ OnKeyboad,
 };
-}
-
-/* Implementing abort() eliminates requirement for _getpid(), _kill(), _exit(). */
-extern "C" void abort() {
-    while (true);
-}
-
-// replace memory allocations to use heap from chibios
-extern "C" void* malloc(size_t size) {
-    return _api->malloc(size);
-}
-extern "C" void* calloc(size_t num, size_t size) {
-    return _api->calloc(num, size);
-}
-extern "C" void* realloc(void* p, size_t size) {
-    return _api->realloc(p, size);
-}
-extern "C" void free(void* p) {
-    _api->free(p);
-}
-
-// redirect std lib memory allocations (sprintf, etc.)
-extern "C" void* __wrap__malloc_r(size_t size) {
-    return _api->malloc(size);
-}
-extern "C" void __wrap__free_r(void* p) {
-    _api->free(p);
 }

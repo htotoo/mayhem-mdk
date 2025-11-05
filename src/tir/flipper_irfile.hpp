@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Bernd Herzog
+ * Copyright (C) 2025 HTotoo
  *
  * This file is part of PortaPack.
  *
@@ -19,14 +19,11 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include "sattrack.hpp"
+#ifndef __FLIPPER_IRFILE_HPP__
+#define __FLIPPER_IRFILE_HPP__
+#include "ir_data.hpp"
+#include "file.hpp"
 
-#include <memory>
-#include <string>
+ir_data_t read_flipper_ir_file(File& f);
 
-extern "C" void initialize(const standalone_application_api_t& api) {
-    _api = &api;
-    context = new ui::Context();
-    standaloneViewMirror = new ui::StandaloneViewMirror(*context, {0, 16, UI_POS_MAXWIDTH, UI_POS_MAXHEIGHT - 16});
-    standaloneViewMirror->push<ui::SatTrackView>();
-}
+#endif  // __FLIPPER_IRFILE_HPP__

@@ -11,7 +11,7 @@ set(CPPOPT ${USE_CPPOPT})
 
 # Garbage collection
 if(USE_LINK_GC STREQUAL "yes")
-  set(OPT "${OPT} -ffunction-sections -fdata-sections -fno-common")
+  set(OPT "${OPT} -ffunction-sections -fdata-sections -fno-common -fdiagnostics-color=always")
   set(LDOPT ",--gc-sections")
 else()
   set(LDOPT)
