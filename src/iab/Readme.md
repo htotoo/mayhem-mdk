@@ -1,5 +1,3 @@
-# jstarlink
+# iab
 
-This is a joke app that simulates "hacking" Starlink satellites and sharing free Wi-Fi from them.
-
-It is only for fun and parody.
+Idle miner app, when you drill down, while each level is harder, so you'll need to buy upgrades.
