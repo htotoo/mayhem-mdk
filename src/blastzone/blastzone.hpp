@@ -24,11 +24,17 @@ class BlastZoneView : public ui::View {
         HiddenController& operator=(const HiddenController&) = delete;
 
         bool on_key(const ui::KeyEvent event) override {
-            if (parent_view && parent_view->handle_game_key(event)) return true;
+            if (parent_view && parent_view->game_status == 1) {
+                parent_view->handle_game_key(event);
+                return true;
+            }
             return Button::on_key(event);
         }
         bool on_encoder(const ui::EncoderEvent event) override {
-            if (parent_view && parent_view->handle_game_encoder(event)) return true;
+            if (parent_view && parent_view->game_status == 1) {
+                parent_view->handle_game_encoder(event);
+                return true;
+            }
             return Button::on_encoder(event);
         }
     };
@@ -42,6 +48,7 @@ class BlastZoneView : public ui::View {
         int r = 0;
         int c = 0;
         int timer = 0;
+        int owner = 0;  // 0 = Játékos, 1..5 = Ellenfelek
         bool active = false;
     };
 
@@ -49,6 +56,7 @@ class BlastZoneView : public ui::View {
         int r = 0;
         int c = 0;
         int timer = 0;
+        int owner_idx = 0;  // Megjegyzi ki robbantott
         bool active = false;
     };
 
@@ -79,8 +87,9 @@ class BlastZoneView : public ui::View {
     int tick_counter = 0;
 
     ui::Text text_score{{8, 0, 14 * 8, 16}};
-    ui::Text text_status{{UI_POS_X_CENTER(10), 120, 10 * 8, 16}};
-    ui::Button button_start{{UI_POS_X_CENTER(10), 150, 10 * 8, 32}, "START"};
+    ui::Text text_status{{UI_POS_X_CENTER(10), 60, 10 * 8, 16}};
+    ui::Text text_instructions{{UI_POS_X_CENTER(28), 90, 28 * 8, 64}};
+    ui::Button button_start{{UI_POS_X_CENTER(10), 170, 10 * 8, 32}, "START"};
 
    public:
     BlastZoneView(ui::NavigationView& nav) : hidden_pad{}, grid{}, dirty{}, fires{}, bombs{}, enemies{} {
@@ -92,18 +101,28 @@ class BlastZoneView : public ui::View {
 
         add_children({&text_score,
                       &text_status,
+                      &text_instructions,
                       &button_start,
                       &hidden_pad});
 
         button_start.on_select = [this](ui::Button&) {
             button_start.hidden(true);
             text_status.hidden(true);
+            text_instructions.hidden(true);
             start_game();
             hidden_pad.focus();
         };
 
         game_status = 0;
         text_status.set("READY");
+
+        // Javított, pontosabb leírás angolul
+        text_instructions.set(
+            "Dodge and blast enemies.\n"
+            "Use bombs to clear boxes.\n"
+            "Walls block your path.\n"
+            "Avoid all explosions!");
+
         text_score.set("SCORE: 0");
     }
 
@@ -160,7 +179,10 @@ class BlastZoneView : public ui::View {
                                 if (enemies[e].active && enemies[e].r == fires[i].r && enemies[e].c == fires[i].c) {
                                     enemies[e].active = false;
                                     dirty[enemies[e].r][enemies[e].c] = true;
-                                    score += 100;
+                                    // CSAK akkor kapsz pontot, ha a tüzet te (0-s index) okoztad!
+                                    if (fires[i].owner_idx == 0) {
+                                        score += 100;
+                                    }
                                 }
                             }
                         }
@@ -186,7 +208,6 @@ class BlastZoneView : public ui::View {
                 for (int e = 0; e < 5; e++) {
                     if (enemies[e].active) {
                         any_enemy_alive = true;
-                        dirty[enemies[e].r][enemies[e].c] = true;
 
                         bool curr_danger = is_dangerous(enemies[e].r, enemies[e].c);
 
@@ -211,6 +232,8 @@ class BlastZoneView : public ui::View {
                         int nc = enemies[e].c + enemies[e].dir_c;
                         bool forward_valid = is_valid_move(nr, nc);
                         bool forward_safe = forward_valid && !is_dangerous(nr, nc);
+
+                        dirty[enemies[e].r][enemies[e].c] = true;
 
                         if (curr_danger || !forward_safe) {
                             if (safe_count > 0) {
@@ -238,6 +261,13 @@ class BlastZoneView : public ui::View {
                             enemies[e].c += enemies[e].dir_c;
                         }
 
+                        dirty[enemies[e].r][enemies[e].c] = true;
+
+                        if (player_r == enemies[e].r && player_c == enemies[e].c) {
+                            trigger_game_over();
+                            return;
+                        }
+
                         if (!curr_danger && !bombs[e + 1].active && (rand() % 100 < 15)) {
                             bool near_box = false;
                             for (int d = 0; d < 4; d++) {
@@ -252,16 +282,10 @@ class BlastZoneView : public ui::View {
                                 bombs[e + 1].r = enemies[e].r;
                                 bombs[e + 1].c = enemies[e].c;
                                 bombs[e + 1].timer = 15;
+                                bombs[e + 1].owner = e + 1;  // Beállítjuk az AI tulajdonost
                                 bombs[e + 1].active = true;
                                 dirty[enemies[e].r][enemies[e].c] = true;
                             }
-                        }
-
-                        dirty[enemies[e].r][enemies[e].c] = true;
-
-                        if (player_r == enemies[e].r && player_c == enemies[e].c) {
-                            trigger_game_over();
-                            return;
                         }
                     }
                 }
@@ -273,6 +297,13 @@ class BlastZoneView : public ui::View {
             }
 
             if (game_status == 1) {
+                for (int e = 0; e < 5; e++) {
+                    if (enemies[e].active && player_r == enemies[e].r && player_c == enemies[e].c) {
+                        trigger_game_over();
+                        return;
+                    }
+                }
+
                 draw_dirty_cells();
                 if (score != last_score) {
                     text_score.set("SCORE: " + to_string_dec_uint(score));
@@ -282,33 +313,41 @@ class BlastZoneView : public ui::View {
         }
     }
 
-    bool handle_game_key(const ui::KeyEvent event) {
-        if (game_status == 1) {
-            int dr = 0;
-            int dc = 0;
+    void handle_game_key(const ui::KeyEvent event) {
+        int dr = 0;
+        int dc = 0;
 
-            if (event == ui::KeyEvent::Up)
-                dr = -1;
-            else if (event == ui::KeyEvent::Down)
-                dr = 1;
-            else if (event == ui::KeyEvent::Left)
-                dc = -1;
-            else if (event == ui::KeyEvent::Right)
-                dc = 1;
-            else if (event == ui::KeyEvent::Select) {
-                if (!bombs[0].active) {
+        if (event == ui::KeyEvent::Up)
+            dr = -1;
+        else if (event == ui::KeyEvent::Down)
+            dr = 1;
+        else if (event == ui::KeyEvent::Left)
+            dc = -1;
+        else if (event == ui::KeyEvent::Right)
+            dc = 1;
+        else if (event == ui::KeyEvent::Select) {
+            if (!bombs[0].active) {
+                if (!is_enemy_at(player_r, player_c)) {
                     bombs[0].r = player_r;
                     bombs[0].c = player_c;
                     bombs[0].timer = 15;
+                    bombs[0].owner = 0;  // Játékosé a bomba
                     bombs[0].active = true;
                     dirty[player_r][player_c] = true;
                 }
-                return true;
             }
+            return;
+        }
 
-            if ((dr != 0 || dc != 0) && player_cooldown == 0) {
-                int nr = player_r + dr;
-                int nc = player_c + dc;
+        if ((dr != 0 || dc != 0) && player_cooldown == 0) {
+            int nr = player_r + dr;
+            int nc = player_c + dc;
+
+            if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+                if (is_enemy_at(nr, nc)) {
+                    trigger_game_over();
+                    return;
+                }
 
                 if (is_valid_move(nr, nc)) {
                     dirty[player_r][player_c] = true;
@@ -317,18 +356,24 @@ class BlastZoneView : public ui::View {
                     dirty[player_r][player_c] = true;
                     player_cooldown = 10;
                 }
+            }
+        }
+    }
+
+    void handle_game_encoder(const ui::EncoderEvent event) {
+        (void)event;
+    }
+
+   private:
+    bool is_enemy_at(int r, int c) {
+        for (int e = 0; e < 5; e++) {
+            if (enemies[e].active && enemies[e].r == r && enemies[e].c == c) {
                 return true;
             }
         }
         return false;
     }
 
-    bool handle_game_encoder(const ui::EncoderEvent event) {
-        (void)event;
-        return false;
-    }
-
-   private:
     bool is_dangerous(int r, int c) {
         for (int f = 0; f < MAX_FIRES; f++) {
             if (fires[f].active && fires[f].r == r && fires[f].c == c) return true;
@@ -395,13 +440,14 @@ class BlastZoneView : public ui::View {
         }
     }
 
-    void spawn_fire(int r, int c) {
+    void spawn_fire(int r, int c, int owner_idx) {
         dirty[r][c] = true;
         for (int i = 0; i < MAX_FIRES; i++) {
             if (!fires[i].active) {
                 fires[i].r = r;
                 fires[i].c = c;
                 fires[i].timer = 6;
+                fires[i].owner_idx = owner_idx;  // Átadjuk kié a tűz
                 fires[i].active = true;
                 break;
             }
@@ -410,7 +456,8 @@ class BlastZoneView : public ui::View {
 
     void explode_bomb(int b_idx) {
         bombs[b_idx].active = false;
-        spawn_fire(bombs[b_idx].r, bombs[b_idx].c);
+        int attacker = bombs[b_idx].owner;  // Ki robbantott?
+        spawn_fire(bombs[b_idx].r, bombs[b_idx].c, attacker);
 
         int dirs[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
@@ -423,11 +470,14 @@ class BlastZoneView : public ui::View {
                 if (grid[nr][nc] == 1) break;
                 if (grid[nr][nc] == 2) {
                     grid[nr][nc] = 0;
-                    score += 10;
-                    spawn_fire(nr, nc);
+                    // Csak akkor kapsz pontot a dobozért, ha Te lőtted ki!
+                    if (attacker == 0) {
+                        score += 10;
+                    }
+                    spawn_fire(nr, nc, attacker);
                     break;
                 }
-                spawn_fire(nr, nc);
+                spawn_fire(nr, nc, attacker);
             }
         }
     }
@@ -496,6 +546,7 @@ class BlastZoneView : public ui::View {
         button_start.hidden(false);
         text_status.set("GAME OVER");
         text_status.hidden(false);
+        text_instructions.hidden(true);
         button_start.focus();
     }
 
@@ -511,6 +562,7 @@ class BlastZoneView : public ui::View {
         button_start.hidden(false);
         text_status.set("VICTORY!");
         text_status.hidden(false);
+        text_instructions.hidden(true);
         button_start.focus();
     }
 
