@@ -282,9 +282,7 @@ class InfiniteJumperView : public ui::View {
         text_score.set("SCORE: 0");
         game_status = 1;
 
-        // Delegáljuk a rajzolást a keretrendszer paint() metódusának,
-        // így minden gomb esemény után garantáltan tiszta lesz a kép!
-        set_dirty();
+        safe_fill(0, 16, *_api->screen_width, *_api->screen_height - 16, ui::Color::black());
     }
 };
 
