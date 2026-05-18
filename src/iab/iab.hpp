@@ -44,6 +44,7 @@ class JAbyssDrillerView : public ui::View {
                       &text_upg3, &btn_buy3,
                       &text_upg4, &btn_buy4});
 
+        reset_to_defaults();
         load_state();
 
         button_overdrive.on_select = [this](ui::Button&) {
@@ -63,6 +64,7 @@ class JAbyssDrillerView : public ui::View {
 
         int hp_percent = (int)((state.current_rock_hp / state.max_rock_hp) * 100.0);
         if (hp_percent < 0) hp_percent = 0;
+        if (hp_percent > 100) hp_percent = 100;
         progress_bar.set_value(hp_percent);
         last_drawn_hp_percent = hp_percent;
     }
@@ -92,7 +94,7 @@ class JAbyssDrillerView : public ui::View {
         if (frame_tick % hit_interval == 0) {
             double dmg = state.lvl_power * rpm_multi;
 
-            if ((uint32_t)((rand() % 100)) < state.lvl_crit_chance) {
+            if (state.lvl_crit_chance > 0 && (uint32_t)((rand() % 100)) < state.lvl_crit_chance) {
                 dmg *= (state.lvl_crit_multi * 2.0);
                 text_animation.set("* CRITICAL STRIKE *");
                 anim_timer = 15;
@@ -119,6 +121,7 @@ class JAbyssDrillerView : public ui::View {
 
             int hp_percent = (int)((state.current_rock_hp / state.max_rock_hp) * 100.0);
             if (hp_percent < 0) hp_percent = 0;
+            if (hp_percent > 100) hp_percent = 100;
 
             if (hp_percent != last_drawn_hp_percent) {
                 progress_bar.set_value(hp_percent);
@@ -135,6 +138,18 @@ class JAbyssDrillerView : public ui::View {
     uint32_t last_drawn_depth = 0;
     int last_drawn_hp_percent = -1;
 
+    void reset_to_defaults() {
+        state.money = 0.0;
+        state.max_rock_hp = 10.0;
+        state.current_rock_hp = 10.0;
+        state.depth = 1;
+        state.lvl_power = 1;
+        state.lvl_rpm = 1;
+        state.lvl_crit_chance = 0;
+        state.lvl_crit_multi = 1;
+        state.lvl_acid = 0;
+    }
+
     void save_state() {
         File f;
         auto error = f.create(u"SETTINGS/iab.stat");
@@ -147,11 +162,30 @@ class JAbyssDrillerView : public ui::View {
         File f;
         auto error = f.open(u"SETTINGS/iab.stat");
         if (!error) {
-            f.read(&state, sizeof(state));
+            MinerState temp_state{};
+            auto bytes_read = f.read(&temp_state, sizeof(MinerState));
+
+            if (bytes_read == sizeof(MinerState)) {
+                state = temp_state;
+
+                if (state.lvl_power < 1) state.lvl_power = 1;
+                if (state.lvl_rpm < 1) state.lvl_rpm = 1;
+                if (state.lvl_crit_multi < 1) state.lvl_crit_multi = 1;
+                if (state.max_rock_hp <= 0) state.max_rock_hp = 10.0;
+                if (state.current_rock_hp <= 0 || state.current_rock_hp > state.max_rock_hp) {
+                    state.current_rock_hp = state.max_rock_hp;
+                }
+                if (state.depth < 1) state.depth = 1;
+            } else {
+                reset_to_defaults();
+            }
+        } else {
+            reset_to_defaults();
         }
     }
 
     void deal_damage(double amount) {
+        if (amount < 0.0) return;
         state.current_rock_hp -= amount;
 
         if (state.current_rock_hp <= 0.0) {
@@ -232,6 +266,7 @@ class JAbyssDrillerView : public ui::View {
     }
 
     std::string format_large_money(double val) {
+        if (val < 0.0) val = 0.0;
         if (val < 1000.0) return "$" + to_string_dec_uint((uint32_t)val);
 
         uint32_t whole = 0;
