@@ -1,3 +1,3 @@
 # SpaceInvaders
 
-A Hibryd of Space Invaders and Centipede.
+A Hybrid of Space Invaders and Centipede.
