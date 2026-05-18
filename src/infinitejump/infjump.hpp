@@ -79,6 +79,7 @@ class InfiniteJumperView : public ui::View {
 
         button_start.on_select = [this](ui::Button&) {
             button_start.hidden(true);
+            text_status.hidden(true);
             text_status.set("");
             start_game();
             hidden_pad.focus();
@@ -175,6 +176,7 @@ class InfiniteJumperView : public ui::View {
                 button_start.hidden(false);
                 button_start.focus();
                 text_status.set("GAME OVER");
+                text_status.hidden(false);
             }
 
             if (game_status == 1) {
