@@ -48,7 +48,7 @@ class BlastZoneView : public ui::View {
         int r = 0;
         int c = 0;
         int timer = 0;
-        int owner = 0;  // 0 = Játékos, 1..5 = Ellenfelek
+        int owner = 0;
         bool active = false;
     };
 
@@ -56,7 +56,7 @@ class BlastZoneView : public ui::View {
         int r = 0;
         int c = 0;
         int timer = 0;
-        int owner_idx = 0;  // Megjegyzi ki robbantott
+        int owner_idx = 0;
         bool active = false;
     };
 
@@ -116,7 +116,6 @@ class BlastZoneView : public ui::View {
         game_status = 0;
         text_status.set("READY");
 
-        // Javított, pontosabb leírás angolul
         text_instructions.set(
             "Dodge and blast enemies.\n"
             "Use bombs to clear boxes.\n"
@@ -179,7 +178,6 @@ class BlastZoneView : public ui::View {
                                 if (enemies[e].active && enemies[e].r == fires[i].r && enemies[e].c == fires[i].c) {
                                     enemies[e].active = false;
                                     dirty[enemies[e].r][enemies[e].c] = true;
-                                    // CSAK akkor kapsz pontot, ha a tüzet te (0-s index) okoztad!
                                     if (fires[i].owner_idx == 0) {
                                         score += 100;
                                     }
@@ -282,7 +280,7 @@ class BlastZoneView : public ui::View {
                                 bombs[e + 1].r = enemies[e].r;
                                 bombs[e + 1].c = enemies[e].c;
                                 bombs[e + 1].timer = 15;
-                                bombs[e + 1].owner = e + 1;  // Beállítjuk az AI tulajdonost
+                                bombs[e + 1].owner = e + 1;
                                 bombs[e + 1].active = true;
                                 dirty[enemies[e].r][enemies[e].c] = true;
                             }
@@ -331,7 +329,7 @@ class BlastZoneView : public ui::View {
                     bombs[0].r = player_r;
                     bombs[0].c = player_c;
                     bombs[0].timer = 15;
-                    bombs[0].owner = 0;  // Játékosé a bomba
+                    bombs[0].owner = 0;
                     bombs[0].active = true;
                     dirty[player_r][player_c] = true;
                 }
@@ -447,7 +445,7 @@ class BlastZoneView : public ui::View {
                 fires[i].r = r;
                 fires[i].c = c;
                 fires[i].timer = 6;
-                fires[i].owner_idx = owner_idx;  // Átadjuk kié a tűz
+                fires[i].owner_idx = owner_idx;
                 fires[i].active = true;
                 break;
             }
@@ -456,7 +454,7 @@ class BlastZoneView : public ui::View {
 
     void explode_bomb(int b_idx) {
         bombs[b_idx].active = false;
-        int attacker = bombs[b_idx].owner;  // Ki robbantott?
+        int attacker = bombs[b_idx].owner;
         spawn_fire(bombs[b_idx].r, bombs[b_idx].c, attacker);
 
         int dirs[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
@@ -470,7 +468,6 @@ class BlastZoneView : public ui::View {
                 if (grid[nr][nc] == 1) break;
                 if (grid[nr][nc] == 2) {
                     grid[nr][nc] = 0;
-                    // Csak akkor kapsz pontot a dobozért, ha Te lőtted ki!
                     if (attacker == 0) {
                         score += 10;
                     }
@@ -499,35 +496,57 @@ class BlastZoneView : public ui::View {
                     int py = offset_y + r * cell_h;
 
                     safe_fill(px, py, cell_w, cell_h, ui::Color::black());
+                    safe_fill(px + 1, py + 1, cell_w - 2, cell_h - 2, ui::Color::dark_grey());
 
                     if (grid[r][c] == 1) {
                         safe_fill(px + 1, py + 1, cell_w - 2, cell_h - 2, ui::Color::grey());
+                        safe_fill(px + 2, py + 2, cell_w - 4, 1, ui::Color::white());
+                        safe_fill(px + 2, py + cell_h - 3, cell_w - 4, 1, ui::Color::dark_grey());
+                        safe_fill(px + 4, py + 4, cell_w - 8, cell_h - 8, ui::Color::dark_grey());
                     } else if (grid[r][c] == 2) {
                         safe_fill(px + 1, py + 1, cell_w - 2, cell_h - 2, ui::Color::orange());
+                        safe_fill(px + 1, py + (cell_h / 3), cell_w - 2, 1, ui::Color::dark_grey());
+                        safe_fill(px + 1, py + (2 * cell_h / 3), cell_w - 2, 1, ui::Color::dark_grey());
+                        safe_fill(px + 1, py + 1, 3, 3, ui::Color::grey());
+                        safe_fill(px + cell_w - 4, py + 1, 3, 3, ui::Color::grey());
+                        safe_fill(px + 1, py + cell_h - 4, 3, 3, ui::Color::grey());
+                        safe_fill(px + cell_w - 4, py + cell_h - 4, 3, 3, ui::Color::grey());
                     }
 
                     for (int b = 0; b < MAX_BOMBS; b++) {
                         if (bombs[b].active && bombs[b].r == r && bombs[b].c == c) {
                             ui::Color bc = (bombs[b].timer % 2 == 0) ? ui::Color::red() : ui::Color::white();
-                            safe_fill(px + 2, py + 2, cell_w - 4, cell_h - 4, bc);
+                            safe_fill(px + (cell_w / 2) - 1, py + 2, 2, 3, ui::Color::yellow());
+                            safe_fill(px + 4, py + 5, cell_w - 8, cell_h - 8, bc);
+                            safe_fill(px + 5, py + 4, cell_w - 10, cell_h - 6, bc);
+                            safe_fill(px + 6, py + 6, 2, 2, ui::Color::white());
                         }
                     }
 
                     for (int i = 0; i < MAX_FIRES; i++) {
                         if (fires[i].active && fires[i].r == r && fires[i].c == c) {
-                            safe_fill(px + 1, py + 1, cell_w - 2, cell_h - 2, ui::Color::yellow());
-                            safe_fill(px + 3, py + 3, cell_w - 6, cell_h - 6, ui::Color::red());
+                            safe_fill(px + 1, py + 3, cell_w - 2, cell_h - 6, ui::Color::red());
+                            safe_fill(px + 3, py + 1, cell_w - 6, cell_h - 2, ui::Color::red());
+                            safe_fill(px + 3, py + 4, cell_w - 6, cell_h - 8, ui::Color::yellow());
+                            safe_fill(px + 4, py + 3, cell_w - 8, cell_h - 6, ui::Color::yellow());
                         }
                     }
 
                     for (int e = 0; e < 5; e++) {
                         if (enemies[e].active && enemies[e].r == r && enemies[e].c == c) {
-                            safe_fill(px + 4, py + 4, cell_w - 8, cell_h - 8, ui::Color::green());
+                            safe_fill(px + 4, py + 3, cell_w - 8, cell_h - 7, ui::Color::green());
+                            safe_fill(px + (cell_w / 2) - 2, py + 5, 4, 3, ui::Color::red());
+                            safe_fill(px + (cell_w / 2) - 1, py + 6, 2, 1, ui::Color::white());
+                            safe_fill(px + (cell_w / 2) - 2, py + cell_h - 4, 4, 2, ui::Color::grey());
                         }
                     }
 
                     if (player_r == r && player_c == c) {
-                        safe_fill(px + 5, py + 5, cell_w - 10, cell_h - 10, ui::Color::cyan());
+                        safe_fill(px + 4, py + 3, cell_w - 8, cell_h - 6, ui::Color::blue());
+                        safe_fill(px + 5, py + 5, cell_w - 10, 4, ui::Color::yellow());
+                        safe_fill(px + 5, py + 3, 3, 1, ui::Color::white());
+                        safe_fill(px + 3, py + 7, 1, 3, ui::Color::cyan());
+                        safe_fill(px + cell_w - 4, py + 7, 1, 3, ui::Color::cyan());
                     }
                 }
             }
