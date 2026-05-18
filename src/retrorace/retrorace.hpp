@@ -23,11 +23,17 @@ class RetroRacerView : public ui::View {
         HiddenController& operator=(const HiddenController&) = delete;
 
         bool on_key(const ui::KeyEvent event) override {
-            if (parent_view && parent_view->handle_game_key(event)) return true;
+            if (parent_view && parent_view->game_status == 1) {
+                parent_view->handle_game_key(event);
+                return true;
+            }
             return Button::on_key(event);
         }
         bool on_encoder(const ui::EncoderEvent event) override {
-            if (parent_view && parent_view->handle_game_encoder(event)) return true;
+            if (parent_view && parent_view->game_status == 1) {
+                parent_view->handle_game_encoder(event);
+                return true;
+            }
             return Button::on_encoder(event);
         }
     };
@@ -43,6 +49,10 @@ class RetroRacerView : public ui::View {
     Obst obstacles[8];
     int player_lane = 1;
     int player_y = 260;
+    int lane_w = 80;
+    int lane_centers[3] = {40, 120, 200};
+    int line_x1 = 78;
+    int line_x2 = 158;
     int road_offset = 0;
     uint32_t score = 0;
     int speed_level = 1;
@@ -85,6 +95,8 @@ class RetroRacerView : public ui::View {
         text_status.set("READY?");
         text_score.set("SCORE: 0");
         text_speed.set("SPEED: 1");
+
+        recalculate_dimensions();
     }
 
     ~RetroRacerView() {
@@ -100,7 +112,10 @@ class RetroRacerView : public ui::View {
     }
 
     void paint(ui::Painter& painter) override {
-        painter.fill_rectangle({0, 40, 240, 280}, ui::Color::dark_grey());
+        (void)painter;
+        int sw = *_api->screen_width;
+        int sh = *_api->screen_height;
+        _api->fill_rectangle(0, 40, sw, sh - 40, ui::Color::dark_grey().v);
         if (game_status == 1 || game_status == 2) {
             draw_entities();
         }
@@ -108,6 +123,7 @@ class RetroRacerView : public ui::View {
 
     void on_framesync() override {
         if (game_status == 1) {
+            int sh = *_api->screen_height;
             score += speed_level;
 
             if (score > 1000) {
@@ -137,10 +153,15 @@ class RetroRacerView : public ui::View {
                 int lane = rand() % 3;
                 bool clear = true;
                 for (int i = 0; i < 8; i++) {
-                    if (obstacles[i].active && obstacles[i].lane == lane && obstacles[i].y < 120) {
+                    if (obstacles[i].active && obstacles[i].lane == lane && obstacles[i].y < 140) {
                         clear = false;
                     }
                 }
+
+                int next_rate = 40 - (speed_level * 5);
+                if (next_rate < 12) next_rate = 12;
+                spawn_timer = next_rate;
+
                 if (clear) {
                     for (int i = 0; i < 8; i++) {
                         if (!obstacles[i].active) {
@@ -148,8 +169,6 @@ class RetroRacerView : public ui::View {
                             obstacles[i].lane = lane;
                             obstacles[i].y = 40;
                             obstacles[i].type = rand() % 2;
-                            spawn_timer = 40 - (speed_level * 5);
-                            if (spawn_timer < 8) spawn_timer = 8;
                             break;
                         }
                     }
@@ -163,8 +182,10 @@ class RetroRacerView : public ui::View {
             for (int i = 0; i < 8; i++) {
                 if (obstacles[i].active) {
                     obstacles[i].y += speed_pixels;
-                    if (obstacles[i].y > 320) {
+
+                    if (obstacles[i].y - speed_pixels > sh) {
                         obstacles[i].active = false;
+                        obstacles[i].y = 0;
                     } else {
                         if (obstacles[i].lane == player_lane && obstacles[i].y + 20 > player_y && obstacles[i].y < player_y + 30) {
                             draw_entities();
@@ -184,26 +205,23 @@ class RetroRacerView : public ui::View {
         }
     }
 
-    bool handle_game_key(const ui::KeyEvent event) {
+    void handle_game_key(const ui::KeyEvent event) {
         if (event == ui::KeyEvent::Left) {
             if (game_status == 1 && player_lane > 0) {
                 erase_entities();
                 player_lane--;
                 draw_entities();
             }
-            return true;
         } else if (event == ui::KeyEvent::Right) {
             if (game_status == 1 && player_lane < 2) {
                 erase_entities();
                 player_lane++;
                 draw_entities();
             }
-            return true;
         }
-        return false;
     }
 
-    bool handle_game_encoder(const ui::EncoderEvent event) {
+    void handle_game_encoder(const ui::EncoderEvent event) {
         if (game_status == 1) {
             if (event < 0 && player_lane > 0) {
                 erase_entities();
@@ -214,14 +232,29 @@ class RetroRacerView : public ui::View {
                 player_lane++;
                 draw_entities();
             }
-            return true;
         }
-        return false;
     }
 
    private:
+    void recalculate_dimensions() {
+        int sw = *_api->screen_width;
+        int sh = *_api->screen_height;
+
+        lane_w = sw / 3;
+        for (int i = 0; i < 3; i++) {
+            lane_centers[i] = (i * lane_w) + (lane_w / 2);
+        }
+
+        line_x1 = lane_w - 2;
+        line_x2 = (lane_w * 2) - 2;
+        player_y = sh - 60;
+    }
+
     void safe_fill(int x, int y, int w, int h, ui::Color c) {
-        if (x >= 240 || y >= 320 || x + w <= 0 || y + h <= 40) return;
+        int sw = *_api->screen_width;
+        int sh = *_api->screen_height;
+
+        if (x >= sw || y >= sh || x + w <= 0 || y + h <= 40) return;
         if (x < 0) {
             w += x;
             x = 0;
@@ -230,8 +263,8 @@ class RetroRacerView : public ui::View {
             h -= (40 - y);
             y = 40;
         }
-        if (x + w > 240) w = 240 - x;
-        if (y + h > 320) h = 320 - y;
+        if (x + w > sw) w = sw - x;
+        if (y + h > sh) h = sh - y;
         if (w > 0 && h > 0) _api->fill_rectangle((ui::Coord)x, (ui::Coord)y, (ui::Dim)w, (ui::Dim)h, c.v);
     }
 
@@ -263,31 +296,38 @@ class RetroRacerView : public ui::View {
     }
 
     void erase_entities() {
-        int px = 40 + player_lane * 80;
-        safe_fill(px - 12, player_y, 24, 32, ui::Color::dark_grey());
+        int sh = *_api->screen_height;
+
+        int last_offset = (road_offset - speed_pixels + 40) % 40;
+        for (int y = 40; y < sh; y += 40) {
+            safe_fill(line_x1, y + last_offset, 4, 20, ui::Color::dark_grey());
+            safe_fill(line_x2, y + last_offset, 4, 20, ui::Color::dark_grey());
+        }
+
+        int px = lane_centers[player_lane];
+        safe_fill(px - 15, player_y, 30, 32, ui::Color::dark_grey());
 
         for (int i = 0; i < 8; i++) {
             if (obstacles[i].active) {
-                int ox = 40 + obstacles[i].lane * 80;
-                safe_fill(ox - 12, obstacles[i].y, 24, 32, ui::Color::dark_grey());
+                int ox = lane_centers[obstacles[i].lane];
+                int old_y = obstacles[i].y - speed_pixels;
+                safe_fill(ox - 15, old_y, 30, 32, ui::Color::dark_grey());
             }
-        }
-
-        for (int y = 40 + road_offset; y < 320; y += 40) {
-            safe_fill(78, y, 4, 20, ui::Color::dark_grey());
-            safe_fill(158, y, 4, 20, ui::Color::dark_grey());
         }
     }
 
     void draw_entities() {
-        for (int y = 40 + road_offset; y < 320; y += 40) {
-            safe_fill(78, y, 4, 20, ui::Color::white());
-            safe_fill(158, y, 4, 20, ui::Color::white());
+        int sh = *_api->screen_height;
+
+        for (int y = 40; y < sh; y += 40) {
+            int calculated_y = y + road_offset;
+            safe_fill(line_x1, calculated_y, 4, 20, ui::Color::white());
+            safe_fill(line_x2, calculated_y, 4, 20, ui::Color::white());
         }
 
         for (int i = 0; i < 8; i++) {
-            if (obstacles[i].active) {
-                int ox = 40 + obstacles[i].lane * 80;
+            if (obstacles[i].active && obstacles[i].y >= 40) {
+                int ox = lane_centers[obstacles[i].lane];
                 if (obstacles[i].type == 0)
                     draw_barrel(ox - 8, obstacles[i].y);
                 else
@@ -295,7 +335,7 @@ class RetroRacerView : public ui::View {
             }
         }
 
-        int px = 40 + player_lane * 80;
+        int px = lane_centers[player_lane];
         draw_car(px - 10, player_y, ui::Color::light_grey());
     }
 
@@ -315,10 +355,17 @@ class RetroRacerView : public ui::View {
         speed_pixels = 4;
         spawn_timer = 0;
 
-        for (int i = 0; i < 8; i++) obstacles[i].active = false;
+        recalculate_dimensions();
+
+        for (int i = 0; i < 8; i++) {
+            obstacles[i].active = false;
+            obstacles[i].y = 0;
+        }
 
         game_status = 1;
-        _api->fill_rectangle(0, 40, *_api->screen_width, *_api->screen_height - 40, ui::Color::dark_grey().v);
+        int sw = *_api->screen_width;
+        int sh = *_api->screen_height;
+        _api->fill_rectangle(0, 40, sw, sh - 40, ui::Color::dark_grey().v);
         draw_entities();
         text_score.set("SCORE: 0");
         text_speed.set("SPEED: 1");
