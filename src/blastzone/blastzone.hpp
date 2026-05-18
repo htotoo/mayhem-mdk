@@ -88,8 +88,13 @@ class BlastZoneView : public ui::View {
 
     ui::Text text_score{{8, 0, 14 * 8, 16}};
     ui::Text text_status{{UI_POS_X_CENTER(10), 60, 10 * 8, 16}};
-    ui::Text text_instructions{{UI_POS_X_CENTER(28), 90, 28 * 8, 64}};
-    ui::Button button_start{{UI_POS_X_CENTER(10), 170, 10 * 8, 32}, "START"};
+
+    ui::Text text_inst1{{UI_POS_X_CENTER(26), 90, 26 * 8, 16}};
+    ui::Text text_inst2{{UI_POS_X_CENTER(26), 110, 26 * 8, 16}};
+    ui::Text text_inst3{{UI_POS_X_CENTER(26), 130, 26 * 8, 16}};
+    ui::Text text_inst4{{UI_POS_X_CENTER(26), 150, 26 * 8, 16}};
+
+    ui::Button button_start{{UI_POS_X_CENTER(10), 180, 10 * 8, 32}, "START"};
 
    public:
     BlastZoneView(ui::NavigationView& nav) : hidden_pad{}, grid{}, dirty{}, fires{}, bombs{}, enemies{} {
@@ -101,14 +106,17 @@ class BlastZoneView : public ui::View {
 
         add_children({&text_score,
                       &text_status,
-                      &text_instructions,
+                      &text_inst1,
+                      &text_inst2,
+                      &text_inst3,
+                      &text_inst4,
                       &button_start,
                       &hidden_pad});
 
         button_start.on_select = [this](ui::Button&) {
             button_start.hidden(true);
             text_status.hidden(true);
-            text_instructions.hidden(true);
+            hide_instructions();
             start_game();
             hidden_pad.focus();
         };
@@ -116,11 +124,10 @@ class BlastZoneView : public ui::View {
         game_status = 0;
         text_status.set("READY");
 
-        text_instructions.set(
-            "Dodge and blast enemies.\n"
-            "Use bombs to clear boxes.\n"
-            "Walls block your path.\n"
-            "Avoid all explosions!");
+        text_inst1.set("Dodge and blast enemies.");
+        text_inst2.set("Use bombs to clear boxes.");
+        text_inst3.set("Walls block your path.");
+        text_inst4.set("Avoid all explosions!");
 
         text_score.set("SCORE: 0");
     }
@@ -363,6 +370,13 @@ class BlastZoneView : public ui::View {
     }
 
    private:
+    void hide_instructions() {
+        text_inst1.hidden(true);
+        text_inst2.hidden(true);
+        text_inst3.hidden(true);
+        text_inst4.hidden(true);
+    }
+
     bool is_enemy_at(int r, int c) {
         for (int e = 0; e < 5; e++) {
             if (enemies[e].active && enemies[e].r == r && enemies[e].c == c) {
@@ -565,7 +579,6 @@ class BlastZoneView : public ui::View {
         button_start.hidden(false);
         text_status.set("GAME OVER");
         text_status.hidden(false);
-        text_instructions.hidden(true);
         button_start.focus();
     }
 
@@ -581,7 +594,6 @@ class BlastZoneView : public ui::View {
         button_start.hidden(false);
         text_status.set("VICTORY!");
         text_status.hidden(false);
-        text_instructions.hidden(true);
         button_start.focus();
     }
 
