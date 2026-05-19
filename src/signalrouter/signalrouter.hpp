@@ -26,11 +26,13 @@ class SignalRouterView : public ui::View {
 
         bool on_key(const ui::KeyEvent event) override {
             if (parent_view && parent_view->handle_game_key(event)) return true;
-            return Button::on_key(event);
+            Button::on_key(event);
+            return true;
         }
         bool on_encoder(const ui::EncoderEvent event) override {
             if (parent_view && parent_view->handle_game_encoder(event)) return true;
-            return Button::on_encoder(event);
+            Button::on_encoder(event);
+            return true;
         }
     };
 
