@@ -50,7 +50,7 @@ void NavigationView::update_view() {
     add_child(top_view);
     auto newSize = (is_top()) ? Size{size().width(), size().height() - 16} : size();  // if top(), then there is the info bar at the bottom, so leave space for it
     top_view->set_parent_rect({{0, 0}, newSize});
-    focus();
+    top_view->focus();
     set_dirty();
 
     // if (on_view_changed) on_view_changed(*top_view);
