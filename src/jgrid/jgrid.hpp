@@ -119,11 +119,11 @@ class JGridHackView : public ui::View {
 
         text_title.set_parent_rect({(ui::Coord)((sw - 26 * 8) / 2), 20, (ui::Dim)(26 * 8), 16});
 
-        text_line1.set_parent_rect({8, 20, (ui::Dim)(sw - 16), 16});
-        text_line2.set_parent_rect({8, 40, (ui::Dim)(sw - 16), 16});
-        text_line3.set_parent_rect({8, 60, (ui::Dim)(sw - 16), 16});
-        text_line4.set_parent_rect({8, 80, (ui::Dim)(sw - 16), 16});
-        text_line5.set_parent_rect({8, 100, (ui::Dim)(sw - 16), 16});
+        text_line1.set_parent_rect({0, 20, (ui::Dim)(sw - 8), 16});
+        text_line2.set_parent_rect({0, 40, (ui::Dim)(sw - 8), 16});
+        text_line3.set_parent_rect({0, 60, (ui::Dim)(sw - 8), 16});
+        text_line4.set_parent_rect({0, 80, (ui::Dim)(sw - 8), 16});
+        text_line5.set_parent_rect({0, 100, (ui::Dim)(sw - 8), 16});
 
         text_warning.set_parent_rect({(ui::Coord)((sw - 20 * 8) / 2), 160, (ui::Dim)(20 * 8), 16});
         button_action.set_parent_rect({(ui::Coord)((sw - 18 * 8) / 2), 200, (ui::Dim)(18 * 8), 32});
