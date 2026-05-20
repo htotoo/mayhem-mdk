@@ -14,7 +14,9 @@ extern "C" void on_event(const uint32_t& events) {
 
 extern "C" void shutdown() {
     delete standaloneViewMirror;
+    standaloneViewMirror = nullptr;
     delete context;
+    context = nullptr;
 }
 
 extern "C" void PaintViewMirror() {
@@ -24,7 +26,7 @@ extern "C" void PaintViewMirror() {
 }
 
 ui::Widget* touch_widget(ui::Widget* const w, ui::TouchEvent event) {
-    if (!w->hidden()) {
+    if (w && !w->hidden()) {
         // To achieve reverse depth ordering (last object drawn is
         // considered "top"), descend first.
         for (const auto child : w->children()) {
