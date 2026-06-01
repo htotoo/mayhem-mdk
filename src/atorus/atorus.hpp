@@ -14,7 +14,7 @@
 
 namespace ui {
 
-class ACubeView : public ui::View {
+class ATorusView : public ui::View {
    private:
     struct Point3D {
         float x, y, z;
@@ -24,49 +24,44 @@ class ACubeView : public ui::View {
         ui::Color c;
     };
 
-    static const int NUM_POINTS = 216;
+    static const int NUM_POINTS = 450;
     Point3D base_pts[NUM_POINTS];
     Point2D prev_pts[NUM_POINTS];
 
     float angle_x;
     float angle_y;
-    float time_val;
-    float speed_mult;
+    float angle_z;
 
    public:
-    ACubeView(const ACubeView&) = delete;
-    ACubeView& operator=(const ACubeView&) = delete;
+    ATorusView(const ATorusView&) = delete;
+    ATorusView& operator=(const ATorusView&) = delete;
 
-    ACubeView(ui::NavigationView& nav) : base_pts{},
-                                         prev_pts{},
-                                         angle_x{0.3f},
-                                         angle_y{0.0f},
-                                         time_val{0.0f},
-                                         speed_mult{5.0f} {
+    ATorusView(ui::NavigationView& nav) : prev_pts{},
+                                          angle_x{0.0f},
+                                          angle_y{0.0f},
+                                          angle_z{0.0f} {
         (void)nav;
-        set_focusable(true);
         set_style(ui::Theme::getInstance()->bg_dark);
+        set_focusable(true);
 
         int idx = 0;
-        for (int x = 0; x < 6; x++) {
-            for (int y = 0; y < 6; y++) {
-                for (int z = 0; z < 6; z++) {
-                    base_pts[idx++] = {(x - 2.5f) * 0.9f, (y - 2.5f) * 0.9f, (z - 2.5f) * 0.9f};
-                }
+        float R = 2.2f;
+        float r = 0.9f;
+        for (int i = 0; i < 30; i++) {
+            float phi = (i * 2.0f * 3.14159f) / 30.0f;
+            for (int j = 0; j < 15; j++) {
+                float theta = (j * 2.0f * 3.14159f) / 15.0f;
+                base_pts[idx].x = (R + r * cosf(theta)) * cosf(phi);
+                base_pts[idx].y = (R + r * cosf(theta)) * sinf(phi);
+                base_pts[idx].z = r * sinf(theta);
+                prev_pts[idx] = {0, 0, 0, ui::Color::black()};
+                idx++;
             }
         }
-
-        for (int i = 0; i < NUM_POINTS; i++) {
-            prev_pts[i] = {0, 0, 0, ui::Color::black()};
-        }
     }
 
-    ~ACubeView() {
+    ~ATorusView() {
         ui::Theme::destroy();
-    }
-
-    void focus() override {
-        View::focus();
     }
 
     bool on_key(const ui::KeyEvent) override {
@@ -96,12 +91,13 @@ class ACubeView : public ui::View {
             }
         }
 
-        time_val += 0.05f * speed_mult;
-        angle_y += 0.015f * speed_mult;
-        angle_x += 0.005f * speed_mult;
+        angle_x += 0.025f;
+        angle_y += 0.035f;
+        angle_z += 0.015f;
 
-        float sy = sin(angle_y), cy = cos(angle_y);
-        float sx = sin(angle_x), cx = cos(angle_x);
+        float sx = sinf(angle_x), cx = cosf(angle_x);
+        float sy = sinf(angle_y), cy = cosf(angle_y);
+        float sz = sinf(angle_z), cz = cosf(angle_z);
 
         int sw = *_api->screen_width;
         int sh = *_api->screen_height;
@@ -112,41 +108,37 @@ class ACubeView : public ui::View {
             float by = base_pts[i].y;
             float bz = base_pts[i].z;
 
-            float wave = sin(bx * 2.0f + time_val) * cos(bz * 2.0f + time_val) * 0.4f;
-            by += wave;
+            float xy = cx * by - sx * bz;
+            float xz = sx * by + cx * bz;
 
-            float x1 = bx * cy + bz * sy;
-            float z1 = -bx * sy + bz * cy;
+            float yx = cy * bx + sy * xz;
+            float yz = -sy * bx + cy * xz;
 
-            float y2 = by * cx - z1 * sx;
-            float z2 = by * sx + z1 * cx;
+            float zx = cz * yx - sz * xy;
+            float zy = sz * yx + cz * xy;
 
-            float z_trans = z2 + 6.0f;
+            float z_trans = yz + 6.5f;
 
-            int px = (int)((x1 * fov) / z_trans) + (sw / 2);
-            int py = (int)((y2 * fov) / z_trans) + (sh / 2);
+            int px = (int)((zx * fov) / z_trans) + (sw / 2);
+            int py = (int)((zy * fov) / z_trans) + (sh / 2);
 
-            int size = (int)(25.0f / z_trans);
+            int size = (int)(22.0f / z_trans);
             if (size < 1) size = 1;
-            if (size > 8) size = 8;
-
-            prev_pts[i].x = px;
-            prev_pts[i].y = py;
-            prev_pts[i].size = size;
+            if (size > 6) size = 6;
 
             ui::Color c;
-            if (wave > 0.15f)
-                c = ui::Color::magenta();
-            else if (wave < -0.15f)
+            if (z_trans < 5.0f)
+                c = ui::Color::white();
+            else if (z_trans < 6.2f)
                 c = ui::Color::cyan();
-            else
+            else if (z_trans < 7.5f)
                 c = ui::Color::blue();
+            else
+                c = ui::Color::dark_grey();
 
-            prev_pts[i].c = c;
-        }
+            prev_pts[i] = {px, py, size, c};
 
-        for (int i = 0; i < NUM_POINTS; i++) {
-            safe_fill(prev_pts[i].x, prev_pts[i].y, prev_pts[i].size, prev_pts[i].size, prev_pts[i].c);
+            safe_fill(px, py, size, size, c);
         }
     }
 

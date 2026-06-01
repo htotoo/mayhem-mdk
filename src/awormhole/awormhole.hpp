@@ -21,7 +21,6 @@ class AWormholeView : public ui::View {
         ui::Color c;
     };
 
-    // Pontfelhő sűrűsége: több gyűrű, több pont, de NINCSENEK vonalak!
     static const int NUM_RINGS = 24;
     static const int SIDES = 12;
     static constexpr float Z_SPACING = 30.0f;
@@ -39,8 +38,7 @@ class AWormholeView : public ui::View {
     AWormholeView(ui::NavigationView& nav) : prev_pts{},
                                              tunnel_offset{Z_SPACING},
                                              global_time{0.0f},
-                                             speed{4.0f}  // Haladási sebesség a Z-tengelyen
-    {
+                                             speed{4.0f} {
         (void)nav;
         set_style(ui::Theme::getInstance()->bg_dark);
         set_focusable(true);
@@ -77,7 +75,6 @@ class AWormholeView : public ui::View {
     }
 
     void on_framesync() override {
-        // 1. Előző képkocka PONTJAINAK letörlése (Nagyságrendekkel gyorsabb, mint a vonalak!)
         for (int i = 0; i < NUM_RINGS; i++) {
             for (int j = 0; j < SIDES; j++) {
                 if (prev_pts[i][j].size > 0) {
@@ -87,14 +84,12 @@ class AWormholeView : public ui::View {
             }
         }
 
-        // 2. Idő és pozíció frissítése
         tunnel_offset -= speed;
         if (tunnel_offset < 0.0f) {
             tunnel_offset += Z_SPACING;
         }
         global_time += 0.05f;
 
-        // 3. Új pontok kiszámítása
         int sw = *_api->screen_width;
         int sh = *_api->screen_height;
         float fov = 180.0f;
@@ -103,11 +98,9 @@ class AWormholeView : public ui::View {
         for (int i = 0; i < NUM_RINGS; i++) {
             float z = (i * Z_SPACING) + tunnel_offset + 5.0f;
 
-            // Kígyózás
             float cx = sin(z * 0.015f + global_time * 1.5f) * 60.0f;
             float cy = cos(z * 0.01f + global_time * 1.2f) * 60.0f;
 
-            // Csavarodás
             float rot = z * 0.01f + global_time * 1.0f;
 
             ui::Color c = get_ring_color(i);
@@ -117,18 +110,15 @@ class AWormholeView : public ui::View {
                 float x = cx + cos(angle) * radius;
                 float y = cy + sin(angle) * radius;
 
-                // Projekció
                 int px = (int)((x * fov) / z) + (sw / 2);
                 int py = (int)((y * fov) / z) + (sh / 2);
 
-                // Méret számítása távolság alapján (közel = nagy, távol = kicsi)
                 int size = (int)(50.0f / z);
                 if (size < 1) size = 1;
                 if (size > 12) size = 12;
 
                 prev_pts[i][j] = {px, py, size, c};
 
-                // 4. Új pont kirajzolása
                 safe_fill(px, py, size, size, c);
             }
         }
