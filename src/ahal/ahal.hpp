@@ -66,7 +66,7 @@ class AHalView : public ui::View {
         int py = 16 + (sh - 16 - panel_h) / 2;
         if (py < 16) py = 16;
 
-        safe_fill(px, py, panel_w, panel_h, ui::Color::dark_grey());
+        safe_fill(px, py, panel_w, panel_h, ui::Color::grey());
         safe_fill(px + 10, py + 10, panel_w - 20, 140, ui::Color::black());
 
         for (int i = 0; i < 15; i++) {
