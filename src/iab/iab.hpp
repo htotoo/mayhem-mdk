@@ -163,9 +163,9 @@ class JAbyssDrillerView : public ui::View {
         auto error = f.open(u"SETTINGS/iab.stat");
         if (!error) {
             MinerState temp_state{};
-            auto bytes_read = f.read(&temp_state, sizeof(MinerState));
+            auto read_result = f.read(&temp_state, sizeof(MinerState));
 
-            if (bytes_read == sizeof(MinerState)) {
+            if (read_result.is_ok() && read_result.value() == sizeof(MinerState)) {
                 state = temp_state;
 
                 if (state.lvl_power < 1) state.lvl_power = 1;

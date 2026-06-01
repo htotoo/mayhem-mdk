@@ -24,7 +24,7 @@ class ATorusView : public ui::View {
         ui::Color c;
     };
 
-    static const int NUM_POINTS = 450;
+    static const int NUM_POINTS = 200;
     Point3D base_pts[NUM_POINTS];
     Point2D prev_pts[NUM_POINTS];
 
@@ -47,10 +47,10 @@ class ATorusView : public ui::View {
         int idx = 0;
         float R = 2.2f;
         float r = 0.9f;
-        for (int i = 0; i < 30; i++) {
-            float phi = (i * 2.0f * 3.14159f) / 30.0f;
-            for (int j = 0; j < 15; j++) {
-                float theta = (j * 2.0f * 3.14159f) / 15.0f;
+        for (int i = 0; i < 20; i++) {
+            float phi = (i * 2.0f * 3.14159f) / 20.0f;
+            for (int j = 0; j < 10; j++) {
+                float theta = (j * 2.0f * 3.14159f) / 10.0f;
                 base_pts[idx].x = (R + r * cosf(theta)) * cosf(phi);
                 base_pts[idx].y = (R + r * cosf(theta)) * sinf(phi);
                 base_pts[idx].z = r * sinf(theta);
