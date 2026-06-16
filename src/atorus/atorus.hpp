@@ -76,7 +76,7 @@ class ATorusView : public ui::View {
 
     bool on_touch(const ui::TouchEvent) override {
         _api->exit_app();
-        return true;
+        return false;
     }
 
     void paint(ui::Painter& painter) override {
