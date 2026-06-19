@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "utility": "cpp",
-        "string_view": "cpp",
-        "array": "cpp",
-        "new": "cpp"
-    }
-}

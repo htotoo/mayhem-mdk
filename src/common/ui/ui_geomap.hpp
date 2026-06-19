@@ -24,6 +24,8 @@
 #ifndef __GEOMAP_H__
 #define __GEOMAP_H__
 
+// #define _USE_GEOMAP_BMP_CACHE 1
+
 #include "ui.hpp"
 #include "ui_widget.hpp"
 #include "ui_helper.hpp"
@@ -77,6 +79,8 @@ struct GeoMarker {
         return *this;
     }
 };
+
+#ifdef _USE_GEOMAP_BMP_CACHE
 
 class BMPFileCache {
    public:
@@ -172,6 +176,27 @@ class BMPFileCache {
     std::array<Slot, SlotsCount> slots_{};
     uint16_t stamp_{0};
 };
+
+#else
+
+class BMPFileCache {
+   public:
+    BMPFile* get(const int32_t z, const int32_t x, const int32_t y) {
+        // OSM tile path convention: <base>/<z>/<x>/<y>.bmp
+        char path_buffer[64];
+        snprintf(path_buffer, sizeof(path_buffer), "/OSM/%" PRId32 "/%" PRId32 "/%" PRId32 ".bmp", z, x, y);
+
+        BMPFile* bmp = new BMPFile();
+        if (!bmp->open(path_buffer, true)) {
+            bmp->close();
+            delete bmp;
+            return nullptr;
+        }
+        return bmp;
+    }
+};
+
+#endif  // _USE_GEOMAP_BMP_CACHE
 
 class GeoPos : public View {
    public:
@@ -375,6 +400,7 @@ class GeoMap : public Widget {
     bool hide_center_marker_{false};
     GeoMapMode mode_{};
     File map_file{};
+
     BMPFileCache bmp_cache{};
     bool map_opened{};
     bool map_visible{};
@@ -469,10 +495,10 @@ class GeoMapView : public View {
         speed_unit_};
 
     GeoMap geomap{
-        {0, GEOMAP_BANNER_HEIGHT, screen_width, screen_height - 16 - GEOMAP_BANNER_HEIGHT}};
+        {0, GEOMAP_BANNER_HEIGHT, UI_POS_MAXWIDTH, UI_POS_MAXHEIGHT - 16 - GEOMAP_BANNER_HEIGHT}};
 
     Button button_ok{
-        {screen_width - 15 * 8, 0, 15 * 8, 1 * 16},
+        {UI_POS_MAXWIDTH - 15 * 8, 0, 15 * 8, 1 * 16},
         "OK"};
 };
 
