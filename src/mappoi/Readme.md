@@ -1,0 +1,1 @@
+# Map POI editor app

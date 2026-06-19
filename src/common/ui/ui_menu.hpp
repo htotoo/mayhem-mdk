@@ -100,6 +100,7 @@ class MenuView : public View {
     bool on_encoder(const EncoderEvent event) override;
     bool on_keyboard(const KeyboardEvent event) override;
     bool on_touch(const TouchEvent event) override;
+    std::vector<MenuItem>& get_menu_items() { return menu_items; }
 
    private:
     void update_items();

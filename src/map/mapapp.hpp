@@ -12,28 +12,29 @@
 
 namespace ui {
 
-// Memóriakímélő string -> float konverter (atof helyett, hogy férjünk a RAM-ba)
+// Ultra-lightweight float parser a RAM kímélése érdekében
 static float parse_float_mini(const char* s) {
-    float res = 0.0f;
-    float sign = 1.0f;
+    int val = 0, sign = 1;
     if (*s == '-') {
-        sign = -1.0f;
+        sign = -1;
         s++;
     }
     while (*s >= '0' && *s <= '9') {
-        res = res * 10.0f + (*s - '0');
+        val = val * 10 + (*s - '0');
         s++;
     }
+    int div = 1;
     if (*s == '.') {
         s++;
-        float frac = 1.0f;
-        while (*s >= '0' && *s <= '9') {
-            frac *= 0.1f;
-            res += (*s - '0') * frac;
+        int frac_len = 0;
+        while (*s >= '0' && *s <= '9' && frac_len < 5) {
+            val = val * 10 + (*s - '0');
+            div *= 10;
             s++;
+            frac_len++;
         }
     }
-    return res * sign;
+    return (float)(val * sign) / (float)div;
 }
 
 class MapAppView : public ui::GeoMapView {
@@ -41,101 +42,93 @@ class MapAppView : public ui::GeoMapView {
     MapAppView(ui::NavigationView& nav)
         : ui::GeoMapView(
               nav,
-              "",                            // tag
-              0,                             // altitude
-              ui::GeoPos::alt_unit::METERS,  // alt_unit
-              ui::GeoPos::spd_unit::NONE,    // spd_unit
-              48.0f,                         // kezdő lat (Magyarország)
-              19.0f,                         // kezdő lon
-              0,                             // angle
-              nullptr)                       // on_close callback
-    {
-        // Hozzáadjuk a számláló szöveget a GeoMapView beépített elemei mellé
-        add_children({&text_poi_count});
+              "",
+              0,
+              ui::GeoPos::alt_unit::METERS,
+              ui::GeoPos::spd_unit::NONE,
+              48.0f,
+              19.0f,
+              0,
+              nullptr) {
+        add_child(&text_poi_count);
         load_poi_markers();
     }
 
    private:
-    // A képernyő aljára tesszük (320 - 16 = 304)
-    ui::Text text_poi_count{{0, 304, 240, 16}};
+    // A UI_POS_Y_BOTTOM(2) garantálja, hogy egy sorral feljebb kerül, és biztosan a látható képernyőn marad
+    ui::Text text_poi_count{{0,
+                             UI_POS_Y_BOTTOM(2),
+                             UI_POS_MAXWIDTH,
+                             UI_POS_HEIGHT(1)}};
 
     void load_poi_markers() {
         clear_markers();
         File f;
+        if (f.open(u"SETTINGS/poi.txt")) {
+            text_poi_count.set("NO POI FILE");
+            return;
+        }
+
+        char buf[512];
+        auto res = f.read(buf, sizeof(buf) - 1);
+        if (!res.is_ok()) {
+            text_poi_count.set("READ ERROR");
+            return;
+        }
+
+        int len = res.value();
+        buf[len] = '\0';
+
         int loaded_count = 0;
-        auto error = f.open(u"SETTINGS/poi.txt");
+        char* p = buf;
 
-        if (!error) {
-            char line[64];
-            int line_len = 0;
-            char c;
-            auto res = f.read(&c, 1);
+        while (*p && loaded_count < 30) {
+            char* line_end = strchr(p, '\n');
+            if (line_end)
+                *line_end = '\0';
+            else if (strchr(p, '\r'))
+                *strchr(p, '\r') = '\0';
 
-            while (res.is_ok() && res.value() == 1) {
-                if (c == '\n') {
-                    line[line_len] = 0;
-                    if (add_marker_from_line(line)) {
-                        loaded_count++;
-                    }
-                    line_len = 0;
-                } else if (c != '\r' && line_len < 63) {
-                    line[line_len++] = c;
-                }
-                res = f.read(&c, 1);
-            }
-            if (line_len > 0) {
-                line[line_len] = 0;
-                if (add_marker_from_line(line)) {
+            char* p1 = strchr(p, ':');
+            if (p1) {
+                *p1 = '\0';
+                char* p2 = strchr(p1 + 1, ':');
+                if (p2) {
+                    *p2 = '\0';
+                    GeoMarker m;
+                    m.tag = std::string(p);
+                    m.lat = parse_float_mini(p1 + 1);
+                    m.lon = parse_float_mini(p2 + 1);
+                    m.angle = 361;
+                    m.color = ui::Color::red();
+                    store_marker(m);
                     loaded_count++;
                 }
             }
+            if (!line_end) break;
+            p = line_end + 1;
         }
 
-        // Memóriakímélő "szám -> szöveg" összerakás snprintf() és std::string nélkül
-        char buf[32] = "LOADED POIs: ";
-        int num = loaded_count;
+        // Szám konvertálása stringgé a snprintf mellőzésével (RAM spórolás)
+        char cnt_str[32] = "LOADED POIS: ";
         int i = 13;
-        if (num == 0) {
-            buf[i++] = '0';
+        if (loaded_count == 0) {
+            cnt_str[i++] = '0';
         } else {
             char tmp[10];
             int ti = 0;
+            int num = loaded_count;
             while (num > 0) {
                 tmp[ti++] = (num % 10) + '0';
                 num /= 10;
             }
             while (ti > 0) {
-                buf[i++] = tmp[--ti];
+                cnt_str[i++] = tmp[--ti];
             }
         }
-        buf[i] = 0;
+        cnt_str[i] = '\0';
 
-        text_poi_count.set(buf);
-    }
-
-    bool add_marker_from_line(const char* line) {
-        const char* p1 = strchr(line, ':');
-        if (!p1) return false;
-        const char* p2 = strchr(p1 + 1, ':');
-        if (!p2) return false;
-
-        float lat = parse_float_mini(p1 + 1);
-        float lon = parse_float_mini(p2 + 1);
-
-        char name[16];
-        int name_len = p1 - line;
-        if (name_len > 15) name_len = 15;
-        memcpy(name, line, name_len);
-        name[name_len] = 0;
-
-        GeoMarker m;
-        m.lat = lat;
-        m.lon = lon;
-        m.tag = std::string(name);  // A GeoMarker struct miatt itt az az 1 db string konverzió maradhat
-        m.color = ui::Color::red();
-
-        store_marker(m);
-        return true;
+        text_poi_count.set(cnt_str);
     }
 };
 

@@ -35,35 +35,52 @@
 #include "mathdef.hpp"
 
 #include <array>
-#include <cstdio>
 #include <inttypes.h>
+#include <string.h>
 
 namespace ui {
 
+// Gyors string formázó, hogy elkerüljük az snprintf() hatalmas libc RAM foglalását
+static inline char* append_int_geomap(char* p, int32_t v) {
+    if (v < 0) {
+        *p++ = '-';
+        v = -v;
+    }
+    char temp[10];
+    int i = 0;
+    if (v == 0) {
+        *p++ = '0';
+        return p;
+    }
+    while (v > 0) {
+        temp[i++] = (v % 10) + '0';
+        v /= 10;
+    }
+    while (i > 0) {
+        *p++ = temp[--i];
+    }
+    return p;
+}
+
 #define MAX_MAP_ZOOM_IN 4000
 #define MAX_MAP_ZOOM_OUT 15
-#define MAP_ZOOM_RESOLUTION_LIMIT 10  // Max zoom-in to show map;
+#define MAP_ZOOM_RESOLUTION_LIMIT 10
 
 #define INVALID_LAT_LON 200
 #define INVALID_ANGLE 400
 
 #define GEOMAP_BANNER_HEIGHT (3 * 16)
-
 #define TILE_SIZE 256
 
-enum GeoMapMode {
-    DISPLAY,
-    PROMPT
-};
+enum GeoMapMode { DISPLAY,
+                  PROMPT };
 
 struct GeoPoint {
-   public:
     float x{0};
     float y{0};
 };
 
 struct GeoMarker {
-   public:
     float lat{0};
     float lon{0};
     uint16_t angle{0};
@@ -81,28 +98,19 @@ struct GeoMarker {
 };
 
 #ifdef _USE_GEOMAP_BMP_CACHE
-
 class BMPFileCache {
    public:
     static constexpr uint8_t SlotsCount = 9;
-
-    BMPFileCache() {
-    }
-
-    ~BMPFileCache() {
-        clear();
-    }
+    BMPFileCache() {}
+    ~BMPFileCache() { clear(); }
 
     BMPFile* get(const int32_t z, const int32_t x, const int32_t y) {
-        // Cache hit.
         for (auto& slot : slots_) {
             if (slot.used && slot.x == x && slot.y == y && slot.z == z) {
                 slot.last_used = next_stamp();
                 return &slot.bmp;
             }
         }
-
-        // Select free slot first, otherwise LRU slot.
         Slot* target = nullptr;
         uint16_t oldest = 0xFFFFu;
         for (auto& slot : slots_) {
@@ -115,25 +123,27 @@ class BMPFileCache {
                 target = &slot;
             }
         }
-
-        if (!target) {
-            return nullptr;
-        }
-
+        if (!target) return nullptr;
         if (target->used) {
             target->bmp.close();
             target->used = false;
         }
 
-        // OSM tile path convention: <base>/<z>/<x>/<y>.bmp
         char path_buffer[64];
-        snprintf(path_buffer, sizeof(path_buffer), "/OSM/%" PRId32 "/%" PRId32 "/%" PRId32 ".bmp", z, x, y);
+        char* p = path_buffer;
+        strcpy(p, "/OSM/");
+        p += 5;
+        p = append_int_geomap(p, z);
+        *p++ = '/';
+        p = append_int_geomap(p, x);
+        *p++ = '/';
+        p = append_int_geomap(p, y);
+        strcpy(p, ".bmp");
 
         if (!target->bmp.open(path_buffer, true)) {
             target->bmp.close();
             return nullptr;
         }
-
         target->x = x;
         target->y = y;
         target->z = z;
@@ -141,7 +151,6 @@ class BMPFileCache {
         target->used = true;
         return &target->bmp;
     }
-
     void clear() {
         for (auto& slot : slots_) {
             if (slot.used) {
@@ -160,14 +169,11 @@ class BMPFileCache {
         uint16_t last_used{};
         bool used{false};
     };
-
     uint16_t next_stamp() {
         if (++stamp_ == 0) {
             uint16_t v = 1;
             for (auto& slot : slots_) {
-                if (slot.used) {
-                    slot.last_used = v++;
-                }
+                if (slot.used) slot.last_used = v++;
             }
             stamp_ = v;
         }
@@ -176,15 +182,20 @@ class BMPFileCache {
     std::array<Slot, SlotsCount> slots_{};
     uint16_t stamp_{0};
 };
-
 #else
-
 class BMPFileCache {
    public:
     BMPFile* get(const int32_t z, const int32_t x, const int32_t y) {
-        // OSM tile path convention: <base>/<z>/<x>/<y>.bmp
         char path_buffer[64];
-        snprintf(path_buffer, sizeof(path_buffer), "/OSM/%" PRId32 "/%" PRId32 "/%" PRId32 ".bmp", z, x, y);
+        char* p = path_buffer;
+        strcpy(p, "/OSM/");
+        p += 5;
+        p = append_int_geomap(p, z);
+        *p++ = '/';
+        p = append_int_geomap(p, x);
+        *p++ = '/';
+        p = append_int_geomap(p, y);
+        strcpy(p, ".bmp");
 
         BMPFile* bmp = new BMPFile();
         if (!bmp->open(path_buffer, true)) {
@@ -195,29 +206,21 @@ class BMPFileCache {
         return bmp;
     }
 };
-
-#endif  // _USE_GEOMAP_BMP_CACHE
+#endif
 
 class GeoPos : public View {
    public:
-    enum alt_unit {
-        FEET = 0,
-        METERS
-    };
-    enum spd_unit {
-        NONE = 0,
-        MPH,
-        KMPH,
-        KNOTS,
-        HIDDEN = 255
-    };
+    enum alt_unit { FEET = 0,
+                    METERS };
+    enum spd_unit { NONE = 0,
+                    MPH,
+                    KMPH,
+                    KNOTS,
+                    HIDDEN = 255 };
 
     std::function<void(int32_t, float, float, int32_t)> on_change{};
-
     GeoPos(const Point pos, const alt_unit altitude_unit, const spd_unit speed_unit);
-
     void focus() override;
-
     void set_read_only(bool v);
     void set_altitude(int32_t altitude);
     void set_speed(int32_t speed);
@@ -228,7 +231,6 @@ class GeoPos : public View {
     void hide_altandspeed();
     float lat();
     float lon();
-
     void set_report_change(bool v);
 
    private:
@@ -239,100 +241,39 @@ class GeoPos : public View {
 
     Labels labels_position{
         {{1 * 8, UI_POS_Y(0)}, "Alt:", Theme::getInstance()->fg_light->foreground},
-        {{1 * 8, 1 * 16}, "Lat:    \xB0  '  \"", Theme::getInstance()->fg_light->foreground},  // 0xB0 is degree ° symbol in our 8x16 font
+        {{1 * 8, 1 * 16}, "Lat:    \xB0  '  \"", Theme::getInstance()->fg_light->foreground},
         {{1 * 8, 2 * 16}, "Lon:    \xB0  '  \"", Theme::getInstance()->fg_light->foreground},
     };
     Labels label_spd_position{
         {{15 * 8, UI_POS_Y(0)}, "Spd:", Theme::getInstance()->fg_light->foreground},
     };
-    NumberField field_altitude{
-        {6 * 8, UI_POS_Y(0)},
-        5,
-        {-1000, 50000},
-        250,
-        ' '};
+    NumberField field_altitude{{6 * 8, UI_POS_Y(0)}, 5, {-1000, 50000}, 250, ' '};
+    NumberField field_speed{{19 * 8, UI_POS_Y(0)}, 4, {0, 5000}, 1, ' '};
+    Text text_alt_unit{{12 * 8, UI_POS_Y(0), 2 * 8, 16}, ""};
+    Text text_speed_unit{{25 * 8, UI_POS_Y(0), 5 * 8, 16}, ""};
 
-    NumberField field_speed{
-        {19 * 8, UI_POS_Y(0)},
-        4,
-        {0, 5000},
-        1,
-        ' '};
-    Text text_alt_unit{
-        {12 * 8, UI_POS_Y(0), 2 * 8, 16},
-        ""};
-    Text text_speed_unit{
-        {25 * 8, UI_POS_Y(0), 5 * 8, 16},
-        ""};
+    NumberField field_lat_degrees{{5 * 8, 1 * 16}, 4, {-90, 90}, 1, ' '};
+    NumberField field_lat_minutes{{10 * 8, 1 * 16}, 2, {0, 59}, 1, ' ', true};
+    NumberField field_lat_seconds{{13 * 8, 1 * 16}, 2, {0, 59}, 1, ' ', true};
+    Text text_lat_decimal{{17 * 8, 1 * 16, 13 * 8, 1 * 16}, ""};
 
-    NumberField field_lat_degrees{
-        {5 * 8, 1 * 16},
-        4,
-        {-90, 90},
-        1,
-        ' '};
-    NumberField field_lat_minutes{
-        {10 * 8, 1 * 16},
-        2,
-        {0, 59},
-        1,
-        ' ',
-        true};
-    NumberField field_lat_seconds{
-        {13 * 8, 1 * 16},
-        2,
-        {0, 59},
-        1,
-        ' ',
-        true};
-    Text text_lat_decimal{
-        {17 * 8, 1 * 16, 13 * 8, 1 * 16},
-        ""};
-
-    NumberField field_lon_degrees{
-        {5 * 8, 2 * 16},
-        4,
-        {-180, 180},
-        1,
-        ' '};
-    NumberField field_lon_minutes{
-        {10 * 8, 2 * 16},
-        2,
-        {0, 59},
-        1,
-        ' ',
-        true};
-    NumberField field_lon_seconds{
-        {13 * 8, 2 * 16},
-        2,
-        {0, 59},
-        1,
-        ' ',
-        true};
-    Text text_lon_decimal{
-        {17 * 8, 2 * 16, 13 * 8, 1 * 16},
-        ""};
+    NumberField field_lon_degrees{{5 * 8, 2 * 16}, 4, {-180, 180}, 1, ' '};
+    NumberField field_lon_minutes{{10 * 8, 2 * 16}, 2, {0, 59}, 1, ' ', true};
+    NumberField field_lon_seconds{{13 * 8, 2 * 16}, 2, {0, 59}, 1, ' ', true};
+    Text text_lon_decimal{{17 * 8, 2 * 16, 13 * 8, 1 * 16}, ""};
 };
 
-enum MapMarkerStored {
-    MARKER_NOT_STORED,
-    MARKER_STORED,
-    MARKER_LIST_FULL
-};
-
-enum MapType {
-    MAP_TYPE_OSM,
-    MAP_TYPE_BIN
-};
+enum MapMarkerStored { MARKER_NOT_STORED,
+                       MARKER_STORED,
+                       MARKER_LIST_FULL };
+enum MapType { MAP_TYPE_OSM,
+               MAP_TYPE_BIN };
 
 class GeoMap : public Widget {
    public:
     std::function<void(float, float, bool)> on_move{};
-
     GeoMap(Rect parent_rect);
-
     void paint(Painter& painter) override;
-
     bool on_touch(const TouchEvent event) override;
     bool on_encoder(const EncoderEvent delta) override;
     bool on_keyboard(const KeyboardEvent event) override;
@@ -345,24 +286,14 @@ class GeoMap : public Widget {
     void set_manual_panning(bool v);
     bool manual_panning();
     void move(const float lon, const float lat);
-    void set_tag(std::string new_tag) {
-        tag_ = new_tag;
-    }
+    void set_tag(std::string new_tag) { tag_ = new_tag; }
     MapType get_map_type();
-
-    void set_angle(uint16_t new_angle) {
-        angle_ = new_angle;
-    }
-
+    void set_angle(uint16_t new_angle) { angle_ = new_angle; }
     bool map_file_opened() { return map_opened; }
-
-    void set_hide_center_marker(bool hide) {
-        hide_center_marker_ = hide;
-    }
+    void set_hide_center_marker(bool hide) { hide_center_marker_ = hide; }
     bool hide_center_marker() { return hide_center_marker_; }
 
     static const int NumMarkerListElements = 30;
-
     void clear_markers();
     MapMarkerStored store_marker(GeoMarker& marker);
 
@@ -378,23 +309,25 @@ class GeoMap : public Widget {
     void draw_map_grid(ui::Rect r, Painter& painter);
     void draw_switcher(Painter& painter);
     void map_read_line_bin(ui::Color* buffer, uint16_t pixels);
-    // open street map related
+
     uint8_t find_osm_file_tile();
     void set_osm_max_zoom(bool changeboth = false);
     bool draw_osm_file(int zoom, int tile_x, int tile_y, int relative_x, int relative_y, Painter& painter);
-    int lon2tile(double lon, int zoom);
-    int lat2tile(double lat, int zoom);
-    double lon_to_pixel_x_tile(double lon, int zoom);
-    double lat_to_pixel_y_tile(double lat, int zoom);
-    double tile_pixel_x_to_lon(int x, int zoom);
-    double tile_pixel_y_to_lat(int y, int zoom);
+
+    // STRICTLY 32-bit FLOAT NOW:
+    int lon2tile(float lon, int zoom);
+    int lat2tile(float lat, int zoom);
+    float lon_to_pixel_x_tile(float lon, int zoom);
+    float lat_to_pixel_y_tile(float lat, int zoom);
+    float tile_pixel_x_to_lon(int x, int zoom);
+    float tile_pixel_y_to_lat(int y, int zoom);
 
     std::vector<ui::Color> map_line_buffer{};
 
     uint8_t map_osm_zoom{5};
     uint8_t map_osm_real_zoom{5};
-    double viewport_top_left_px = 0;
-    double viewport_top_left_py = 0;
+    float viewport_top_left_px = 0.0f;
+    float viewport_top_left_py = 0.0f;
 
     bool manual_panning_{false};
     bool hide_center_marker_{false};
@@ -409,9 +342,9 @@ class GeoMap : public Widget {
     int16_t map_zoom{1};
 
     float lon_ratio{}, lat_ratio{};
-    double map_bottom{};
-    double map_world_lon{};
-    double map_offset{};
+    float map_bottom{};
+    float map_world_lon{};
+    float map_offset{};
     float x_pos{}, y_pos{};
     float prev_x_pos{32767.0f}, prev_y_pos{32767.0f};
     float lat_{};
@@ -421,8 +354,7 @@ class GeoMap : public Widget {
     uint16_t angle_{};
     std::string tag_{};
 
-    // the portapack's position data ( for example injected from serial )
-    GeoMarker my_pos{INVALID_LAT_LON, INVALID_LAT_LON, INVALID_ANGLE, ""};  // lat, lon, angle, tag
+    GeoMarker my_pos{INVALID_LAT_LON, INVALID_LAT_LON, INVALID_ANGLE, ""};
     int32_t my_altitude{0};
 
     int markerListLen{0};
@@ -453,11 +385,6 @@ class GeoMapView : public View {
                const std::function<void(int32_t, float, float, int32_t)> on_done);
     ~GeoMapView();
 
-    GeoMapView(const GeoMapView&) = delete;
-    GeoMapView(GeoMapView&&) = delete;
-    GeoMapView& operator=(const GeoMapView&) = delete;
-    GeoMapView& operator=(GeoMapView&&) = delete;
-
     void focus() override;
 
     void update_position(float lat, float lon, uint16_t angle, int32_t altitude, int32_t speed = 0);
@@ -465,17 +392,14 @@ class GeoMapView : public View {
     void update_my_orientation(uint16_t angle, bool refresh = false);
 
     MapType get_map_type();
-
     std::string title() const override { return "Map view"; };
 
     void clear_markers();
     MapMarkerStored store_marker(GeoMarker& marker);
-
     void update_tag(const std::string tag);
 
    private:
     NavigationView& nav_;
-
     void setup();
 
     const std::function<void(int32_t, float, float, int32_t)> on_done{};
@@ -489,17 +413,9 @@ class GeoMapView : public View {
     uint16_t angle_{};
     std::function<void(void)> on_close_{nullptr};
 
-    GeoPos geopos{
-        {0, 0},
-        altitude_unit_,
-        speed_unit_};
-
-    GeoMap geomap{
-        {0, GEOMAP_BANNER_HEIGHT, UI_POS_MAXWIDTH, UI_POS_MAXHEIGHT - 16 - GEOMAP_BANNER_HEIGHT}};
-
-    Button button_ok{
-        {UI_POS_MAXWIDTH - 15 * 8, 0, 15 * 8, 1 * 16},
-        "OK"};
+    GeoPos geopos{{0, 0}, altitude_unit_, speed_unit_};
+    GeoMap geomap{{0, GEOMAP_BANNER_HEIGHT, UI_POS_MAXWIDTH, UI_POS_MAXHEIGHT - 16 - GEOMAP_BANNER_HEIGHT}};
+    Button button_ok{{UI_POS_MAXWIDTH - 15 * 8, 0, 15 * 8, 1 * 16}, "OK"};
 };
 
 } /* namespace ui */
