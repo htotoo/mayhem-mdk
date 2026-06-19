@@ -105,6 +105,7 @@ bool BMPFile::open(const std::filesystem::path& file, bool readonly) {
     if (!((bmp_header.signature == 0x4D42) &&
           (bmp_header.planes == 1) &&
           (bmp_header.compression == 0 || bmp_header.compression == 3))) {
+        bmpimage.close();
         return false;
     }
 
@@ -114,6 +115,7 @@ bool BMPFile::open(const std::filesystem::path& file, bool readonly) {
             byte_per_px = 1;
             // bmpimage.seek(sizeof(bmp_header_t));
             // bmpimage.read(color_palette, 1024);
+            bmpimage.close();
             return false;  // niy
             break;
 
@@ -121,6 +123,7 @@ bool BMPFile::open(const std::filesystem::path& file, bool readonly) {
             byte_per_px = 2;
             type = 5;
             if (bmp_header.compression == 3) {
+                bmpimage.close();
                 return false;
             }  // niy
 
@@ -135,6 +138,7 @@ bool BMPFile::open(const std::filesystem::path& file, bool readonly) {
             break;
         default:
             // not supported
+            bmpimage.close();
             return false;
     }
     byte_per_row = (bmp_header.width * byte_per_px + 3) & ~3;
@@ -173,7 +177,7 @@ bool BMPFile::read_next_px(ui::Color& px, bool seek = true) {
             //*a = (val >> 15) & 0x01;            // 1-bit alpha
             uint8_t r = (val >> 10) & 0x1F;  // 5-bit red
             uint8_t g = (val >> 5) & 0x1F;   // 5-bit green
-            uint8_t b = (val)&0x1F;          // 5-bit blue
+            uint8_t b = (val) & 0x1F;        // 5-bit blue
             // expand
             r = (r << 3) | (r >> 2);
             g = (g << 3) | (g >> 2);
@@ -197,6 +201,53 @@ bool BMPFile::read_next_px(ui::Color& px, bool seek = true) {
             break;
     }
     if (seek) advance_curr_px();
+    return true;
+}
+
+bool BMPFile::read_next_px_cnt(ui::Color* px, uint32_t count, bool seek) {
+    if (!is_opened) return false;
+    size_t bytesneeded = byte_per_px * count;
+    while (bytesneeded > 0) {                                                        // read in batches
+        size_t currusedbytes = bytesneeded > 512 ? 170 * byte_per_px : bytesneeded;  // don't mind this magic number.
+        uint8_t buffer[currusedbytes];
+        auto res = bmpimage.read(buffer, currusedbytes);
+        if (res.is_error()) return false;
+        for (uint32_t i = 0; i < currusedbytes; i += byte_per_px, px++) {
+            switch (type) {
+                case 5: {
+                    // ARGB1555
+                    uint16_t val = buffer[i] | (buffer[i + 1] << 8);
+                    // Extract components
+                    //*a = (val >> 15) & 0x01;            // 1-bit alpha
+                    uint8_t r = (val >> 10) & 0x1F;  // 5-bit red
+                    uint8_t g = (val >> 5) & 0x1F;   // 5-bit green
+                    uint8_t b = (val) & 0x1F;        // 5-bit blue
+                    // expand
+                    r = (r << 3) | (r >> 2);
+                    g = (g << 3) | (g >> 2);
+                    b = (b << 3) | (b >> 2);
+                    *px = ui::Color(r, g, b);
+                    break;
+                }
+                case 2:  // 32
+                    *px = ui::Color(buffer[i + 2], buffer[i + 1], buffer[i]);
+                    break;
+
+                case 4: {  // 8-bit
+                    // uint8_t index = buffer[0];
+                    //  px = ui::Color(color_palette[index][2], color_palette[index][1], color_palette[index][0]);  // Palette is BGR
+                    // px = ui::Color(buffer[0]);  // niy, since needs a lot of ram for the palette
+                    break;
+                }
+                case 1:  // 24
+                default:
+                    *px = ui::Color(buffer[i + 2], buffer[i + 1], buffer[i]);
+                    break;
+            }
+        }
+        bytesneeded -= currusedbytes;
+    }
+    if (seek) advance_curr_px(count);
     return true;
 }
 
