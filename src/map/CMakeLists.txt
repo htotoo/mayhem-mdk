@@ -56,7 +56,7 @@ set(USE_LINK_GC yes)
 #set(USE_LDOPT --nostartfiles)
 
 # Enable this if you want link time optimizations (LTO) - this flag affects chibios only
-set(USE_LTO no)
+set(USE_LTO yes)
 
 # If enabled, this option allows to compile the application in THUMB mode.
 set(USE_THUMB yes)
