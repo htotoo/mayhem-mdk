@@ -38,7 +38,7 @@ GeoPos::GeoPos(
     const alt_unit altitude_unit,
     const spd_unit speed_unit)
     : altitude_unit_(altitude_unit), speed_unit_(speed_unit) {
-    set_parent_rect({pos, {screen_width, UI_POS_HEIGHT(3)}});
+    set_parent_rect({pos, {UI_POS_MAXWIDTH, UI_POS_HEIGHT(3)}});
 
     add_children({&labels_position,
                   &label_spd_position,
@@ -517,6 +517,11 @@ bool GeoMap::draw_osm_file(int zoom, int tile_x, int tile_y, int relative_x, int
             painter.draw_pixels({dest_x + r.left(), dest_row + r.top(), clip_w, 1}, map_line_buffer);
         }
     }
+
+#ifndef _USE_GEOMAP_BMP_CACHE
+    // Clean up the BMPFile object if caching is not used
+    delete bmp;
+#endif
     return true;
 }
 
